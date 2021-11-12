@@ -7,7 +7,7 @@
   modified 17 Jan 2021
   by Tom Igoe
 */
-const serverURL = 'wss://' + window.location.href + ':3000';
+let serverURL = 'wss://' + window.location.host + ':3000';
 
 let socket;
 // variables for the DOM elements:
