@@ -1,41 +1,53 @@
 /*
-WebSocket server example
+  Websocket server with express.js and express-ws.js
+  (https://www.npmjs.com/package/express-ws)
+  Serves an index page from /public. That page makes
+  a websocket client back to this server.
 
-The 'public' directory contains a p5.js sketch and HTML page that will connect to this server and put the sensor data in the HTML page.
-
-created 11 Nov 2017
-by Tom Igoe
+  created 17 Jan 2021
+  by Tom Igoe
 */
-var WebSocketServer = require("ws").Server; // webSocket library
 
-// configure the webSocket server:
-const wssPort = process.env.PORT || 8081; // port number for the webSocket server
-const wss = new WebSocketServer({ port: wssPort }); // the webSocket server
-var clients = new Array(); // list of client connections
 
-// ------------------------ webSocket Server functions
-function handleConnection(client, request) {
-  console.log("New Connection"); // you have a new client
-  clients.push(client); // add this client to the clients array
+var express = require('express');			    // include express.js
+// a local instance of express:
+var server = express();
+// instance of the websocket server:
+var wsServer = require('express-ws')(server); 
+// list of client connections:
+var clients = new Array;
+
+// serve static files from /public:
+server.use('/', express.static('public')); 
+
+// this runs after the server successfully starts:
+function serverStart() {
+  var port = this.address().port;
+  console.log('Server listening on port ' + port);
+}
+
+function handleWs(ws, request) {
+  console.log("New Connection");        // you have a new client
+  clients.push(ws);    // add this client to the clients array
 
   function endClient() {
     // when a client closes its connection
     // get the client's position in the array
     // and delete it from the array:
-    var position = clients.indexOf(client);
+    var position = clients.indexOf(ws);
     clients.splice(position, 1);
     console.log("connection closed");
   }
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
-    console.log(request.connection.remoteAddress + ": " + data);
-    broadcast(request.connection.remoteAddress + ": " + data);
+    console.log(request.connection.remoteAddress + ': ' + data);
+    broadcast(request.connection.remoteAddress + ': ' + data);
   }
 
   // set up client event listeners:
-  client.on("message", clientResponse);
-  client.on("close", endClient);
+  ws.on('message', clientResponse);
+  ws.on('close', endClient);
 }
 
 // This function broadcasts messages to all webSocket clients
@@ -46,10 +58,7 @@ function broadcast(data) {
   }
 }
 
-// listen for clients and handle them:
-wss.on("connection", handleConnection);
-
-// // listen for requests :)
-// const listener = app.listen(process.env.PORT, () => {
-//   console.log("Your app is listening on port " + listener.address().port);
-// });
+// start the server:
+server.listen(process.env.PORT || 8080, serverStart);
+// listen for websocket connections:
+server.ws('/', handleWs);

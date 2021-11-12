@@ -1,41 +1,74 @@
-// client-side js, loaded by index.html
-// run by the browser each time the page is loaded
+/*
+  WebSocket connection Script
+  Uses standard W3C WebSocket API, not socket.io API
+  Connects to a local websocket server
 
-console.log("hello world :o");
+  created 7 Jan 2021
+  modified 17 Jan 2021
+  by Tom Igoe
+*/
+const serverURL = 'wss://' + window.location.href + ':3000';
 
-// define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
+let socket;
+// variables for the DOM elements:
+let incomingSpan;
+let outgoingText;
+let connectionSpan;
+let connectButton;
 
-// a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
-  const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
+function setup() {
+  // get all the DOM elements that need listeners:
+  incomingSpan = document.getElementById('incoming');
+  outgoingText = document.getElementById('outgoing');
+  connectionSpan = document.getElementById('connection');
+  connectButton = document.getElementById('connectButton');
+  // set the listeners:
+  outgoingText.addEventListener('change', sendMessage);
+  connectButton.addEventListener('click', changeConnection);
+  openSocket(serverURL);
 }
 
-// fetch the initial list of dreams
-fetch("/dreams")
-  .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
-    // remove the loading text
-    dreamsList.firstElementChild.remove();
-  
-    // iterate through every dream and add it to our page
-    dreams.forEach(appendNewDream);
-  
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
+function openSocket(url) {
+  // open the socket:
+  socket = new WebSocket(url);
+  socket.addEventListener('open', openConnection);
+  socket.addEventListener('close', closeConnection);
+  socket.addEventListener('message', readIncomingMessage);
+}
 
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
 
-      // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
-    });
-  });
+function changeConnection(event) {
+  // open the connection if it's closed, or close it if open:
+  if (socket.readyState === WebSocket.CLOSED) {
+    openSocket(serverURL);
+  } else {
+    socket.close();
+  }
+}
+
+function openConnection() {
+  // display the change of state:
+  connectionSpan.innerHTML = "true";
+  connectButton.value = "Disconnect";
+}
+
+function closeConnection() {
+  // display the change of state:
+  connectionSpan.innerHTML = "false";
+  connectButton.value = "Connect";
+}
+
+function readIncomingMessage(event) {
+  // display the incoming message:
+  incomingSpan.innerHTML = event.data;
+}
+
+function sendMessage() {
+  //if the socket's open, send a message:
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(outgoingText.value);
+  }
+}
+
+// add a listener for the page to load:
+window.addEventListener('load', setup);
