@@ -54,11 +54,11 @@ function handleWs(ws, request) {
 function broadcast(data) {
   // iterate over the array of clients & send data to each
   for (c in clients) {
-    clients[c].send(JSON.stringify(data));
+    clients[c].send(data);
   }
 }
 
 // start the server:
-server.listen(process.env.PORT || 8080, serverStart);
+server.listen(process.env.PORT || 3000, serverStart);
 // listen for websocket connections:
 server.ws('/', handleWs);

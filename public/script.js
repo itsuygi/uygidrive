@@ -61,6 +61,11 @@ function closeConnection() {
 function readIncomingMessage(event) {
   // display the incoming message:
   incomingSpan.innerHTML = event.data;
+  var sensorData = JSON.parse(event.data);
+  if(sensorData) {
+
+    incomingSpan.innerHTML = JSON.parse(event.data);
+  }
 }
 
 function sendMessage() {
