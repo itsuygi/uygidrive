@@ -2,8 +2,10 @@
 
 A websocket server
 
+This app makes a simple HTTP server using Express.js 
+to serve static pages from the public directory, and it creates a webSocket server
+for incoming webSocket clients. 
 
-This app doesn't have an HTTP front end, it just listens 
-for websocket connections. So when you show it in a browser window, 
-you'll get the message "Upgrade required". You can ignore it 
-and just connect from your favorite client. 
+There are two HTML pages in the public directory:
+* index.html - creates a websocket client in plain JavaScript.
+* p5/index.html - creates a websocket client in p5.js. 
