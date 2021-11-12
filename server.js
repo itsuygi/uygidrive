@@ -53,7 +53,7 @@ function handleWs(ws, request) {
 // This function broadcasts messages to all webSocket clients
 function broadcast(data) {
   // iterate over the array of clients & send data to each
-  for (c in clients) {
+  for (let c in clients) {
     clients[c].send(data);
   }
 }
