@@ -42,7 +42,7 @@ function handleWs(ws, request) {
   // if a client sends a message, print it out:
   function clientResponse(data) {
     console.log(request.connection.remoteAddress + ': ' + data);
-    broadcast(request.connection.remoteAddress + ': ' + data);
+    broadcast(data);
   }
 
   // set up client event listeners:
