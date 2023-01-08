@@ -4,8 +4,8 @@
   "description": "A websocket server using express.js and express-ws.js",
   "main": "server.js",
   "dependencies": {
-    "express": "^4.17.1",
-    "express-ws": "^5.0.0"
+    "express": "^4.18.2",
+    "express-ws": "^5.0.2"
   },
   "devDependencies": {},
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tigoe/NodeExamples.git"
+    "url": ""
   },
   "keywords": [
     "websocket",
@@ -23,7 +23,7 @@
   "author": "Tom Igoe",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tigoe/NodeExamples/issues"
+    "url": ""
   },
-  "homepage": "https://github.com/tigoe/NodeExamples#readme"
+  "homepage": ""
 }
