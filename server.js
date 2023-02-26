@@ -11,19 +11,21 @@
 */
 
 var express = require("express"); // include express.js
+const { createServer } = require('http');
 // a local instance of express:
-var server = express();
+var app = express();
 // instance of the websocket server:
 var WebSocketServer = require("ws").Server; // webSocket library
 // configure the webSocket server:
 // const wssPort = 8080; // port number for the webSocket server
-const wss = new WebSocketServer({server, path:'/ws/'}); // the webSocket server
+const server = createServer(app);
+const wss = new WebSocketServer({ server }); // the webSocket server
 
 // list of client connections:
 var clients = new Array();
 
 // serve static files from /public:
-server.use("/", express.static("public"));
+app.use("/", express.static("public"));
 
 // this runs after the server successfully starts:
 function serverStart() {
@@ -64,6 +66,24 @@ function broadcast(data) {
 }
 
 // start the server:
-server.listen(process.env.PORT, serverStart);
+app.listen(process.env.PORT, serverStart);
 // listen for websocket clients and handle them:
-wss.on("connection", handleClient);
+// wss.on("connection", handleClient);
+
+// server.on("upgrade", function (request, socket, head) {
+//   socket.on("error", onSocketError);
+
+//   console.log("Parsing session from request...");
+
+//   console.log("Session is parsed!");
+
+//   socket.removeListener("error", onSocketError);
+
+//   wss.handleUpgrade(request, socket, head, function (ws) {
+//     wss.emit("connection", ws, request);
+//   });
+// });
+
+// function onSocketError(err) {
+//   console.error(err);
+// }
