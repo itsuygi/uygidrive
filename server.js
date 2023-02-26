@@ -2,6 +2,7 @@
 const express = require("express");
 const {createServer} = require("http");
 const {WebSocketServer} = require("ws");
+console.log(createServer);
 // make an instance of express:
 const app = express();
 // serve static content from the project's public folder:
