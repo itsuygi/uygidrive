@@ -1,23 +1,32 @@
+// include express, http, and ws libraries:
 const express = require("express");
 const {createServer} = require("http");
 const {WebSocketServer} = require("ws");
-
+// make an instance of express:
 const app = express();
+// serve static content from the project's public folder:
 app.use(express.static("public"));
+// make an instance of http server using express instance:
+const server = createServer(app);
+// WebSocketServer needs the http server instance:
+const wss = new WebSocketServer({ server });
+// list of client connections:
+var clients = new Array();
 
-// this runs after the server successfully starts:
+// this runs after the http server successfully starts:
 function serverStart() {
   var port = this.address().port;
   console.log("Server listening on port " + port);
 }
 
-// list of client connections:
-var clients = new Array();
-
+// this handles websocket connections:
 function handleClient(thisClient, request) {
-  console.log("New Connection"); // you have a new client
-  clients.push(thisClient); // add this client to the clients array
+  // you have a new client
+  console.log("New Connection"); 
+  // add this client to the clients array
 
+  clients.push(thisClient); 
+  
   function endClient() {
     // when a client closes its connection
     // get the client's position in the array
@@ -29,8 +38,8 @@ function handleClient(thisClient, request) {
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
-    console.log(request.connection.remoteAddress + ": " + data);
-    broadcast(request.connection.remoteAddress + ": " + data);
+    console.log(data.toString());
+    broadcast(data.toString());
   }
 
   // This function broadcasts messages to all webSocket clients
@@ -46,10 +55,7 @@ function handleClient(thisClient, request) {
   thisClient.on("close", endClient);
 }
 
-const server = createServer(app);
-const wss = new WebSocketServer({ server });
-
-wss.on("connection", handleClient);
-
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
+// start the websocket server listening for clients:
+wss.on("connection", handleClient);

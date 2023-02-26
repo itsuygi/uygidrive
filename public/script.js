@@ -1,7 +1,9 @@
 /*
   WebSocket connection Script
   Uses standard W3C WebSocket API, not socket.io API
-  Connects to a local websocket server
+  Connects to a local websocket server.
+  
+  This server is also stored at 
 
   created 7 Jan 2021
   modified 26 Feb 2023
@@ -10,7 +12,6 @@
 // get the server URL from the window.location:
 // change 'wss' to 'ws' for running without SSL):
 let serverURL = 'wss://' + window.location.host;
-
 // the webSocket connection:
 let socket;
 // variables for the DOM elements:
