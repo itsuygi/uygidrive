@@ -4,12 +4,12 @@
   Connects to a local websocket server
 
   created 7 Jan 2021
-  modified 11 Nov 2021
+  modified 26 Feb 2023
   by Tom Igoe
 */
 // get the server URL from the window.location:
 // change 'wss' to 'ws' for running without SSL):
-let serverURL = 'wss://' + window.location.host;
+let serverURL = 'wss://' + window.location.hostname + ':8080';
 // the webSocket connection:
 let socket;
 // variables for the DOM elements:
