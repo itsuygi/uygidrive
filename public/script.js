@@ -3,7 +3,7 @@
   Uses standard W3C WebSocket API, not socket.io API
   Connects to a local websocket server.
   
-  This server is also stored at 
+  This server is also stored at https://github.com/tigoe/websocket-examples/tree/main/ExpressWsServer/
 
   created 7 Jan 2021
   modified 26 Feb 2023

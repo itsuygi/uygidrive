@@ -7,7 +7,7 @@
     "start": "node server.js"
   },
   "name": "expresswsserver",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "a node.js server with express.js for HTTP and ws.js for websockets",
   "main": "server.js",
   "devDependencies": {},
