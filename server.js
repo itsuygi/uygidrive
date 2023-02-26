@@ -16,8 +16,8 @@ var server = express();
 // instance of the websocket server:
 var WebSocketServer = require("ws").Server; // webSocket library
 // configure the webSocket server:
-const wssPort = 9090; // port number for the webSocket server
-const wss = new WebSocketServer('/ws',{ port: wssPort }); // the webSocket server
+// const wssPort = 8080; // port number for the webSocket server
+const wss = new WebSocketServer({port:8080}); // the webSocket server
 
 // list of client connections:
 var clients = new Array();

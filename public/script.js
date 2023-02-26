@@ -9,7 +9,8 @@
 */
 // get the server URL from the window.location:
 // change 'wss' to 'ws' for running without SSL):
-let serverURL = 'ws://' + window.location.hostname + ':8080';
+let serverURL = 'wss://' + window.location.host;
+
 // the webSocket connection:
 let socket;
 // variables for the DOM elements:
