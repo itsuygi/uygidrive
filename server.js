@@ -43,6 +43,7 @@ function handleClient(thisClient, request) {
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
+    let bcastMessage = JSON.stringify(data);
     console.log(data.toString());
     broadcast(data.toString());
   }
