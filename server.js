@@ -16,7 +16,7 @@ const server = createServer(app);
 // WebSocketServer needs the http server instance:
 const wss = new WebSocketServer({ server });
 // list of client connections:
-var clients = new Array()
+var topicClients = new Map()
 
 // this runs after the http server successfully starts:
 function serverStart() {
@@ -24,9 +24,6 @@ function serverStart() {
   console.log("Server listening on port " + port);
 }
 
-class Client {
-  
-}
 
 function handleClient(thisClient, request) {
   console.log("New Connection handled"); 
@@ -39,10 +36,18 @@ function handleClient(thisClient, request) {
     // when a client closes its connection
     // get the client's position in the array
     // and delete it from the array:
-    var position = clients.indexOf(thisClient);
-    console.log(clients);
-    clients.splice(position, 1);
-    console.log("connection closed");
+    topicClients.forEach((clients, topic) => {
+    const index = clients.indexOf(client);
+    if (index !== -1) {
+      // İlgili istemciyi konudan çıkarın
+      clients.splice(index, 1);
+
+      if (clients.length === 0) {
+        // Eğer konuya artık kimse abone değilse, konuyu Map'ten kaldırın
+        topicClients.delete(topic);
+      }
+    }
+  });
   }
   
 
