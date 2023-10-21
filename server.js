@@ -16,7 +16,7 @@ const server = createServer(app);
 // WebSocketServer needs the http server instance:
 const wss = new WebSocketServer({ server });
 // list of client connections:
-var clients = new Array();
+var clients = {}
 
 // this runs after the http server successfully starts:
 function serverStart() {
@@ -28,7 +28,7 @@ function handleClient(thisClient, request) {
   console.log("New Connection handled"); 
   // add this client to the clients array
 
-  clients.push(thisClient); 
+  clients.push(key:thisClient,); 
   
   function endClient() {
     // when a client closes its connection
