@@ -40,18 +40,22 @@ function handleClient(thisClient, request) {
     // get the client's position in the array
     // and delete it from the array:
     var position = clients.indexOf(thisClient);
+    console.log(position);
     clients.splice(position, 1);
     console.log("connection closed");
   }
+  
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
-    console.log(data);
-    data = data.toString();
+
+    data = data.message
     
-    var position = clients.indexOf(data);
+    var position = clients.indexOf(thisClient);
+    console.log(position);
     
-    if (position) {
+    if (position != -1) {
+      console.log(clients[position])
       clients[position].username = data
     } else {
       console.log("no position found")
