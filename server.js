@@ -9,16 +9,18 @@ const {WebSocketServer} = require("ws");
 
 // make an instance of express:
 const app = express();
-// serve static content from the project's public folder:
+
 app.use(express.static("public"));
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
 
 const server = createServer(app);
-// WebSocketServer needs the http server instance:
+
 const wss = new WebSocketServer({ server });
-// list of client connections:
+
 var topicClients = new Map()
 
-// this runs after the http server successfully starts:
 function serverStart() {
   var port = this.address().port;
   console.log("Server listening on port " + port);
@@ -85,12 +87,15 @@ function sendToTopicClients(topic, message) {
   }
 }
 
-app.get('/sendMessageToTopic', (req, res) => {
-  var topic = req.query.topic
+app.post('/sendMessageToTopic', (req, res) => {
   var body = req.body
+  var req_data = JSON.parse(body)
   
-  if (topic && body) {
-    sendToTopicClients(topic, body);
+  var topic = req_data.topic
+  var message = req_data.message
+  
+  if (topic && message) {
+    sendToTopicClients(topic, message);
     res.send("Message sent to clients")
   } else {
     res.status(500).send("Error: no body or topic")
