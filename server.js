@@ -40,7 +40,7 @@ function handleClient(thisClient, request) {
     // get the client's position in the array
     // and delete it from the array:
     var position = clients.indexOf(thisClient);
-    console.log(position);
+    console.log(clients);
     clients.splice(position, 1);
     console.log("connection closed");
   }
