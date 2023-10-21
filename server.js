@@ -62,26 +62,40 @@ function handleClient(thisClient, request) {
       }
       topicClients.get(topic).push(thisClient);
     }
-    console.log(topicClients)
+    console.log(topicClients);
   }
 
   // This function broadcasts messages to all webSocket clients
-  function sendToTopicClients(topic, message) {
-    if (topicClients.has(topic)) {
-      const clients = topicClients.get(topic);
-
-      clients.forEach((client) => {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(JSON.stringify({ topic, message }));
-        }
-      });
-    }
-  }
+  
 
   // set up client event listeners:
   thisClient.on("message", clientResponse);
   thisClient.on("close", endClient);
 }
+
+function sendToTopicClients(topic, message) {
+  if (topicClients.has(topic)) {
+    const clients = topicClients.get(topic);
+
+    clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+       client.send(JSON.stringify({ topic, message }));
+      }
+    });
+  }
+}
+
+app.get('/sendMessageToTopic', (req, res) => {
+  var topic = req.query.topic
+  var body = req.body
+  
+  if (topic && body) {
+    sendToTopicClients(topic, body);
+    res.send("Message sent to clients")
+  } else {
+    res.status(500).send("Error: no body or topic")
+  }
+})
 
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
