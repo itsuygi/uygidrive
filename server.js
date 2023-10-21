@@ -56,7 +56,7 @@ function handleClient(thisClient, request) {
 
     if (data.type === 'subscribe') {
       // "subscribe" türündeki mesajlar, istemciyi bir konuya abone yapar
-      const topic = data.username;
+      const topic = data.topic;
 
       // İstemciyi konuya ekleyin
       if (!topicClients.has(topic)) {
@@ -78,18 +78,17 @@ function handleClient(thisClient, request) {
 function sendToTopicClients(topic, message) {
   if (topicClients.has(topic)) {
     const clients = topicClients.get(topic);
+    console.log(clients);
 
     clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-       client.send(JSON.stringify({ topic, message }));
-      }
+      client.send(JSON.stringify({ topic, message }));
+      console.log("sent")
     });
   }
 }
 
 app.post('/sendMessageToTopic', (req, res) => {
-  var body = req.body
-  var req_data = JSON.parse(body)
+  var req_data = req.body
   
   var topic = req_data.topic
   var message = req_data.message
