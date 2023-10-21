@@ -29,51 +29,52 @@ function handleClient(thisClient, request) {
   console.log("New Connection handled"); 
   // add this client to the clients array
 
-  clients.push({'client': thisClient, 'username': 'null'}); 
-  console.log(clients);
   
   function endClient() {
     // when a client closes its connection
     // get the client's position in the array
     // and delete it from the array:
     topicClients.forEach((clients, topic) => {
-    const index = clients.indexOf(client);
-    if (index !== -1) {
-      // İlgili istemciyi konudan çıkarın
-      clients.splice(index, 1);
-
-      if (clients.length === 0) {
-        // Eğer konuya artık kimse abone değilse, konuyu Map'ten kaldırın
-        topicClients.delete(topic);
+      const index = clients.indexOf(thisClient);
+      if (index !== -1) {
+        clients.splice(index, 1);
+        if (clients.length === 0) {
+          topicClients.delete(topic);
+        }
       }
-    }
-  });
+    });
   }
   
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
+    data = JSON.parse(data);
+    
+    console.log(data);
 
-    data = data.message
-    
-    var position = clients.indexOf(thisClient);
-    console.log(position);
-    
-    if (position != -1) {
-      console.log(clients[position])
-      clients[position].username = data
-    } else {
-      console.log("no position found")
+    if (data.type === 'subscribe') {
+      // "subscribe" türündeki mesajlar, istemciyi bir konuya abone yapar
+      const topic = data.username;
+
+      // İstemciyi konuya ekleyin
+      if (!topicClients.has(topic)) {
+        topicClients.set(topic, []);
+      }
+      topicClients.get(topic).push(thisClient);
     }
-    
-    console.log(clients);
+    console.log(topicClients)
   }
 
   // This function broadcasts messages to all webSocket clients
-  function broadcast(data) {
-    // iterate over the array of clients & send data to each
-    for (let c in clients) {
-      clients[c].send(data);
+  function sendToTopicClients(topic, message) {
+    if (topicClients.has(topic)) {
+      const clients = topicClients.get(topic);
+
+      clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ topic, message }));
+        }
+      });
     }
   }
 
