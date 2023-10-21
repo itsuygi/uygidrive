@@ -32,8 +32,8 @@ function handleClient(thisClient, request) {
   console.log("New Connection handled"); 
   // add this client to the clients array
 
-  clients.push({thisClient, "null"}); 
-  console.log(thisClient);
+  clients.push({'client': thisClient, 'username': 'null'}); 
+  console.log(clients);
   
   function endClient() {
     // when a client closes its connection
@@ -46,9 +46,18 @@ function handleClient(thisClient, request) {
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
-    let bcastMessage = JSON.stringify(data);
-    console.log(data.toString());
-    broadcast(data.toString());
+    console.log(data);
+    data = data.toString();
+    
+    var position = clients.indexOf(data);
+    
+    if (position) {
+      clients[position].username = data
+    } else {
+      console.log("no position found")
+    }
+    
+    console.log(clients);
   }
 
   // This function broadcasts messages to all webSocket clients
