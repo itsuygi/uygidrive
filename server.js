@@ -11,7 +11,7 @@ const {WebSocketServer} = require("ws");
 const app = express();
 // serve static content from the project's public folder:
 app.use(express.static("public"));
-// make an instance of http server using express instance:
+
 const server = createServer(app);
 // WebSocketServer needs the http server instance:
 const wss = new WebSocketServer({ server });
@@ -24,10 +24,8 @@ function serverStart() {
   console.log("Server listening on port " + port);
 }
 
-// this handles websocket connections:
 function handleClient(thisClient, request) {
-  // you have a new client
-  console.log("New Connection"); 
+  console.log("New Connection handled"); 
   // add this client to the clients array
 
   clients.push(thisClient); 
