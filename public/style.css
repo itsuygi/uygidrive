@@ -4,7 +4,11 @@ body {
   padding: 0;
   background-color: #f2f2f2;
   color: #333;
+  margin: auto;
+  width: 50%;
+  padding: 10px;
 }
+
 
 h1 {
   text-align: center;
@@ -63,3 +67,28 @@ input[type="range"] {
   margin-top: 10px;
   font-size: 18px;
 }
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: #efefef;
+  text-align: center;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center; /* Dikeyde ortala */
+}
+
+.volume-label {
+  flex: 1; /* Metin kutusu ve slider'ı yatayda eşit bir şekilde dağıt */
+}
+
+.slider {
+  flex: 2; /* Metin kutusu ve slider'ı yatayda eşit bir şekilde dağıt */
+  width: 100%;
+}
+

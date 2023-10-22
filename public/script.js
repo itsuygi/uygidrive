@@ -23,7 +23,6 @@ function setup() {
   outgoingText = document.getElementById('username');
   connectWidget = document.getElementById('connectWidget')
   connectionSpan = document.getElementById('connection');
-  connectButton = document.getElementById('connectButton');
   connectUsernameButton = document.getElementById('connectUsernameButton');
   connectionStatus = document.getElementById('status');
   musicStatusDiv = document.getElementById('musicStatus');
@@ -33,7 +32,6 @@ function setup() {
   volumeValue = document.getElementById('volumeValue');
   
   // set the listeners:
-  connectButton.addEventListener('click', changeConnection);
   connectUsernameButton.addEventListener('click', function(){
     sendMessage("subscribe", outgoingText.value)
   });
