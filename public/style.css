@@ -97,12 +97,20 @@ input[type="range"] {
 }
 
 .connect-status {
+  flex: 1; /* Bağlantı bilgilerini ve metinleri yatayda eşit bir şekilde dağıt */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 30px;
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center; /* Dikeyde ortala */
 }
 
 .connection-info {
-  flex: 1; /* Bağlantı bilgilerini ve metinleri yatayda eşit bir şekilde dağıt */
+  flex: 1;
 }
 
 .connect-widget {

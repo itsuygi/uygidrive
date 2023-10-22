@@ -19,16 +19,13 @@
     <button id="connectUsernameButton">Connect with username</button>
   </div>
 
-  
-  <br>
-
   <div id="connectStatus" class="connect-status">
     <div class="connection-info">
       <b>Connection:</b>
-      Connected to server: <span id="connection">false</span>
-      <label id="status">Not connected to player</label>
+      Connected to server: <span id="connection">false</span> <br>
+      <b id="status"> Not connected to player</b>
     </div>
-    <button id="connectButton" hidden="true" value="Disconnect">Connect</button>
+    <button id="connectButton" hidden="true" onclick="location.reload()">Reset connection</button>
   </div>
 
   <div id="musicStatus" hidden="true">

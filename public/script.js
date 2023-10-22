@@ -64,14 +64,11 @@ function changeConnection(event) {
 function openConnection() {
   // display the change of state:
   connectionSpan.innerHTML = "true";
-  connectButton.value = "Disconnect";
-  
 }
 
 function closeConnection() {
   // display the change of state:
   connectionSpan.innerHTML = "false";
-  connectButton.value = "Connect";
 }
 
 function readIncomingMessage(event) {
@@ -82,7 +79,9 @@ function readIncomingMessage(event) {
   console.log(dataJson);
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
-    connectionStatus.innerText = "Connected to player"
+    connectionStatus.innerHTML = "Connected to player"
+    connectionStatus.style.color = "#FF0000"
+    
     connectWidget.style.display = "none"
   } else if (dataJson.type == "play") {
     audio.src = dataJson.message
