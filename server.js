@@ -63,6 +63,7 @@ function handleClient(thisClient, request) {
         topicClients.set(topic, []);
       }
       topicClients.get(topic).push(thisClient);
+      thisClient.send("Connected")
     }
     console.log(topicClients);
   }

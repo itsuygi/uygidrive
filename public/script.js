@@ -8,6 +8,9 @@ let incomingSpan;
 let outgoingText;
 let connectionSpan;
 let connectButton;
+let connectionStatus;
+let musicStatusDiv;
+let musicInfo;
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -15,6 +18,10 @@ function setup() {
   outgoingText = document.getElementById('username');
   connectionSpan = document.getElementById('connection');
   connectButton = document.getElementById('connectButton');
+  connectionStatus = document.getElementById('status');
+  musicStatusDiv = document.getElementById('musicStatus');
+  musicInfo = document.getElementById('musicInfo');
+  
   // set the listeners:
   outgoingText.addEventListener('change', sendMessage);
   connectButton.addEventListener('click', changeConnection);
@@ -43,6 +50,7 @@ function openConnection() {
   // display the change of state:
   connectionSpan.innerHTML = "true";
   connectButton.value = "Disconnect";
+  
 }
 
 function closeConnection() {
@@ -54,6 +62,10 @@ function closeConnection() {
 function readIncomingMessage(event) {
   // display the incoming message:
   incomingSpan.innerHTML = event.data;
+  
+  if (event.data == "Connected") {
+    status.innerText = "Connected to player"
+  }
 }
 
 function sendMessage() {
