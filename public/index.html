@@ -4,24 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="script.js"></script>
-  <title>WebSocket</title>
+  <title>Remote Music</title>
 </head>
 <body>
-  <h1>WebSocket Client</h1>
+  <h1>Remote Music Client</h1>
   
-  <div>
-    <div id="connectWidget">
+  <div id="connectWidget">
     <b>Enter Username:</b>
     <input type="text" id="username">
     <button id="connectUsernameButton">Connect with username</button> <br>
   </div>
+  
+  <br>
 
   <div id="connectStatus">
    <b>Connection:</b>
     Connected to server: <span id="connection">false</span>
    <button id="connectButton" hidden="true">Connect</button> <br>
    <label id="status">Not connected to player</label>
-   <input id="refreshButton" type="button" value="Reload" onclick="refresh(this)" hidden="true">
+   <input id="refreshButton" type="button" value="Reset connection" onclick="location.reload()">
   </div>
 
   <div id="musicStatus" hidden="true">
@@ -37,8 +38,7 @@
     <input type="range" min="0" max="100" value="70" class="slider" id="volumeSlider" width="300px">
   </div>
         
-  </div>
-      Incoming message: <span id="incoming"></span><br>
+  Incoming message: <span id="incoming"></span><br>
   
   <audio id="audio" src="" autoplay> </audio>
 </body>

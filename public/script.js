@@ -6,8 +6,10 @@ let socket;
 
 let incomingSpan;
 let outgoingText;
+let connectWidget
 let connectionSpan;
 let connectButton;
+let connectUsernameButton;
 let connectionStatus;
 let musicStatusDiv;
 let musicInfo;
@@ -19,8 +21,10 @@ function setup() {
   // get all the DOM elements that need listeners:
   incomingSpan = document.getElementById('incoming');
   outgoingText = document.getElementById('username');
+  connectWidget = document.getElementById('connectWidget')
   connectionSpan = document.getElementById('connection');
   connectButton = document.getElementById('connectButton');
+  connectUsernameButton = document.getElementById('connectUsernameButton');
   connectionStatus = document.getElementById('status');
   musicStatusDiv = document.getElementById('musicStatus');
   musicInfo = document.getElementById('musicInfo');
@@ -29,10 +33,10 @@ function setup() {
   volumeValue = document.getElementById('volumeValue');
   
   // set the listeners:
-  outgoingText.addEventListener('change', function(){
+  connectButton.addEventListener('click', changeConnection);
+  connectUsernameButton.addEventListener('click', function(){
     sendMessage("subscribe", outgoingText.value)
   });
-  connectButton.addEventListener('click', changeConnection);
   
   volumeSlider.oninput = function() {
     handleVolume()
@@ -42,6 +46,7 @@ function setup() {
 
 function openSocket(url) {
   // open the socket:
+  connectionSpan.innerHTML = "Connecting..."
   socket = new WebSocket(url);
   socket.addEventListener('open', openConnection);
   socket.addEventListener('close', closeConnection);
@@ -80,6 +85,7 @@ function readIncomingMessage(event) {
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     connectionStatus.innerText = "Connected to player"
+    connectWidget.style.display = "none"
   } else if (dataJson.type == "play") {
     audio.src = dataJson.message
     audio.load();
