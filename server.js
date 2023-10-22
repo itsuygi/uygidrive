@@ -63,7 +63,7 @@ function handleClient(thisClient, request) {
         topicClients.set(topic, []);
       }
       topicClients.get(topic).push(thisClient);
-      thisClient.send(JSON.stringify({ "type":"connection", "message":"successful" }));
+      thisClient.send(JSON.stringify({ "type":"connection", "message":"successfull" }));
     }
     console.log(topicClients);
   }
