@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="script.js"></script>
   <link rel="stylesheet" href="style.css">
-  <title>Remote Music</title>
+  <title>RoLive Music</title>
 </head>
 <body>
-  <h1>Remote Music Client</h1>
+  <h1>RoLive Music System</h1>
   
   <div id="connectWidget" class="widget connect-widget">
     <div class="connect-input">
-      <b>Enter Username:</b>
+      <b>Enter Stream ID:</b>
       
       <input type="text" id="username">
     </div>
-    <button id="connectUsernameButton">Connect with username</button>
+    <button id="connectStreamIDButton">Connect</button>
   </div>
 
   <div id="connectStatus" class="connect-status">
     <div class="connection-info">
       <b>Connection:</b> <br>
       Connected to server: <span id="connection">false</span> <br>
-      <b id="status" style="color:red"> Not connected to player</b>
+      <b id="status" style="color:red"> Not connected to stream</b>
     </div>
     <button id="connectButton" hidden="true" onclick="location.reload()">Reset connection</button>
   </div>

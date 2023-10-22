@@ -23,7 +23,7 @@ function setup() {
   outgoingText = document.getElementById('username');
   connectWidget = document.getElementById('connectWidget')
   connectionSpan = document.getElementById('connection');
-  connectUsernameButton = document.getElementById('connectUsernameButton');
+  connectUsernameButton = document.getElementById('connectStreamIDButton');
   connectionStatus = document.getElementById('status');
   musicStatusDiv = document.getElementById('musicStatus');
   musicInfo = document.getElementById('musicInfo');
@@ -79,7 +79,7 @@ function readIncomingMessage(event) {
   console.log(dataJson);
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
-    connectionStatus.innerHTML = "Connected to player"
+    connectionStatus.innerHTML = "Connected to stream"
     connectionStatus.style.color = "green"
     
     connectWidget.style.display = "none"
