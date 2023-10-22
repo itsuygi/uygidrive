@@ -12,6 +12,8 @@ let connectionStatus;
 let musicStatusDiv;
 let musicInfo;
 let audio;
+let volumeSlider;
+let volumeValue;
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -23,12 +25,18 @@ function setup() {
   musicStatusDiv = document.getElementById('musicStatus');
   musicInfo = document.getElementById('musicInfo');
   audio = document.getElementById('audio');
+  volumeSlider = document.getElementById('volumeSlider');
+  volumeValue = document.getElementById('volumeValue');
   
   // set the listeners:
   outgoingText.addEventListener('change', function(){
     sendMessage("subscribe", outgoingText.value)
   });
   connectButton.addEventListener('click', changeConnection);
+  
+  volumeSlider.oninput = function() {
+    handleVolume()
+  };
   openSocket(serverURL);
 }
 
@@ -87,6 +95,13 @@ function sendMessage(type, message) {
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(sendJson));
   }
+}
+
+function handleVolume() {
+  let sliderValue = volumeSlider.value
+  volumeValue.innerHTML = sliderValue + "%"
+  
+  audio.volume = sliderValue / 100
 }
 
 

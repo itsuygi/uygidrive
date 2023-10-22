@@ -13,12 +13,13 @@
     <div id="connectWidget">
     <b>Enter Username:</b>
     <input type="text" id="username">
+    <button id="connectUsernameButton">Connect with username</button> <br>
   </div>
 
   <div id="connectStatus">
    <b>Connection:</b>
     Connected to server: <span id="connection">false</span>
-  <button id="connectButton">Connect</button> <br>
+   <button id="connectButton" hidden="true">Connect</button> <br>
    <label id="status">Not connected to player</label>
    <input id="refreshButton" type="button" value="Reload" onclick="refresh(this)" hidden="true">
   </div>
@@ -32,8 +33,8 @@
 
   <div>
     <b>Volume: </b>
-    <label id="volumeInfo">70%</label><br>
-    <input type="range" min="0" max="100" value="70" class="slider" id="volumeRange" width="300px">
+    <label id="volumeValue">70%</label><br>
+    <input type="range" min="0" max="100" value="70" class="slider" id="volumeSlider" width="300px">
   </div>
         
   </div>
