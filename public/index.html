@@ -8,13 +8,36 @@
 </head>
 <body>
   <h1>WebSocket Client</h1>
- 
+  
   <div>
-    Connected to server: <span id="connection">false</span><br>
-    <input type="button" id="connectButton" value="Connect"><br>
-    Username: <input type="text" id="username"><br>
-    <br>
-    Incoming message: <span id="incoming"></span><br>
+    <div id="connectWidget">
+      <b>Enter Username:</b>
+    <label id="setname"></label>
+    <input type="text" id="username">
+    <button id="connectButton">Connect</button>
   </div>
+
+  <div id="connectStatus">
+   <b>Connection:</b>
+    Connected to server: <span id="connection">false</span><br>
+   <label id="status"></label>
+   <input id="refreshButton" type="button" value="Reload" onclick="refresh(this)" hidden="true">
+  </div>
+
+  <div id="musicStatus">
+    <b>Music: </b>
+    <label id="musicInfo"></label>
+  </div>
+
+  <br>
+
+  <div>
+    <b>Volume: </b>
+    <label id="volumeInfo">70%</label><br>
+    <input type="range" min="0" max="100" value="70" class="slider" id="volumeRange" width="300px">
+  </div>
+        
+  </div>
+      Incoming message: <span id="incoming"></span><br>
 </body>
 </html>
