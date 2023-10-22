@@ -80,7 +80,7 @@ function readIncomingMessage(event) {
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     connectionStatus.innerHTML = "Connected to player"
-    connectionStatus.style.color = "#FF0000"
+    connectionStatus.style.color = "green"
     
     connectWidget.style.display = "none"
   } else if (dataJson.type == "play") {
