@@ -84,7 +84,7 @@ function sendToTopicClients(topic, message) {
 
     clients.forEach((client) => {
       client.send(JSON.stringify({ topic, message }));
-      console.log("sent")
+      console.log("")
     });
   }
 }
