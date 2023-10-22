@@ -66,9 +66,10 @@ function readIncomingMessage(event) {
   incomingSpan.innerHTML = event.data;
   
   let dataJson = JSON.parse(event.data);
+  console.log(dataJson);
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
-    status.innerText = "Connected to player"
+    connectionStatus.innerText = "Connected to player"
   }
 }
 

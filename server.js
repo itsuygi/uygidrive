@@ -56,7 +56,8 @@ function handleClient(thisClient, request) {
 
     if (data.type === 'subscribe') {
       // "subscribe" türündeki mesajlar, istemciyi bir konuya abone yapar
-      const topic = data.topic;
+      const topic = data.message;
+      console.log(topic);
 
       // İstemciyi konuya ekleyin
       if (!topicClients.has(topic)) {
