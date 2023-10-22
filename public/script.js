@@ -11,6 +11,7 @@ let connectButton;
 let connectionStatus;
 let musicStatusDiv;
 let musicInfo;
+let audio;
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -21,6 +22,7 @@ function setup() {
   connectionStatus = document.getElementById('status');
   musicStatusDiv = document.getElementById('musicStatus');
   musicInfo = document.getElementById('musicInfo');
+  audio = document.getElementById('audio');
   
   // set the listeners:
   outgoingText.addEventListener('change', function(){
@@ -71,7 +73,10 @@ function readIncomingMessage(event) {
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     connectionStatus.innerText = "Connected to player"
   } else if (dataJson.type == "play") {
-    
+    audio.src = dataJson.message
+    audio.load();
+  } else if (dataJson.type == "stop") {
+    audio.src = ""
   }
 }
 
