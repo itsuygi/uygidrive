@@ -110,5 +110,11 @@ function handleVolume() {
   audio.volume = sliderValue / 100
 }
 
+function ping() {
+  sendMessage("keepAlive", "ping")
+}
+
+setInterval(ping, 30000);
+
 
 window.addEventListener('load', setup);
