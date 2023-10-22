@@ -102,11 +102,12 @@ input[type="range"] {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 20px;
-  margin: 30px;
+  margin: 10px;
   
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center; /* Dikeyde ortala */
+  flex-direction: column;
 }
 
 .connection-info {
