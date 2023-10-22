@@ -23,7 +23,9 @@ function setup() {
   musicInfo = document.getElementById('musicInfo');
   
   // set the listeners:
-  outgoingText.addEventListener('change', sendMessage);
+  outgoingText.addEventListener('change', function(){
+    sendMessage("subscribe", outgoingText.value)
+  });
   connectButton.addEventListener('click', changeConnection);
   openSocket(serverURL);
 }
@@ -68,10 +70,12 @@ function readIncomingMessage(event) {
   }
 }
 
-function sendMessage() {
+function sendMessage(type, message) {
   //if the socket's open, send a message:
+  let sendJson = {"type":type, "message":message}
+  
   if (socket.readyState === WebSocket.OPEN) {
-    socket.send(outgoingText.value);
+    socket.send(JSON.stringify(sendJson));
   }
 }
 
