@@ -70,6 +70,8 @@ function readIncomingMessage(event) {
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     connectionStatus.innerText = "Connected to player"
+  } else if (dataJson.type == "play") {
+    
   }
 }
 

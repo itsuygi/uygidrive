@@ -1,9 +1,6 @@
 // include express, http, and ws libraries:
 const express = require("express");
-// the const {} syntax is called destructuring.
-// it allows you to pull just the one function 
-// you need from the libraries below without 
-// making an instance of the whole library:
+
 const {createServer} = require("http");
 const {WebSocketServer} = require("ws");
 
@@ -58,13 +55,26 @@ function handleClient(thisClient, request) {
       // "subscribe" türündeki mesajlar, istemciyi bir konuya abone yapar
       const topic = data.message;
       console.log(topic);
+      
+      let found = false
+      
+      topicClients.forEach((clients, topic) => {
+        const index = clients.indexOf(thisClient);
+        if (index !== -1) {
+          found = true
+        }
+      });
 
-      // İstemciyi konuya ekleyin
-      if (!topicClients.has(topic)) {
-        topicClients.set(topic, []);
+      
+      if (found == false) {
+        // İstemciyi konuya ekleyin
+        if (!topicClients.has(topic)) {
+          topicClients.set(topic, []);
+        }
+        
+        topicClients.get(topic).push(thisClient);
+        thisClient.send(JSON.stringify({ "type":"connection", "message":"successfull" }));
       }
-      topicClients.get(topic).push(thisClient);
-      thisClient.send(JSON.stringify({ "type":"connection", "message":"successfull" }));
     }
     console.log(topicClients);
   }
@@ -83,8 +93,7 @@ function sendToTopicClients(topic, message) {
     console.log(clients);
 
     clients.forEach((client) => {
-      client.send(JSON.stringify({ topic, message }));
-      console.log("")
+      client.send(JSON.stringify(message));
     });
   }
 }
