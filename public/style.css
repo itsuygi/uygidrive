@@ -1,0 +1,65 @@
+body {
+  font-family: 'Helvetica', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 28px;
+  color: #0072e3;
+}
+
+.widget {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 10px 0;
+}
+
+button:hover {
+  background-color: #005bbf;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 20px; /* Yüksekliği düşürüldü */
+  margin-top: 10px; /* Boşluk eklendi */
+}
+
+.message {
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 18px;
+}
