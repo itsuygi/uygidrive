@@ -10,19 +10,25 @@
 <body>
   <h1>Remote Music Client</h1>
   
-  <div id="connectWidget">
-    <b>Enter Username:</b>
-    <input type="text" id="username">
-    <button id="connectUsernameButton">Connect with username</button> <br>
+  <div id="connectWidget" class="widget connect-widget">
+    <div class="connect-input">
+      <b>Enter Username:</b>
+      
+      <input type="text" id="username">
+    </div>
+    <button id="connectUsernameButton">Connect with username</button>
   </div>
+
   
   <br>
 
-  <div id="connectStatus">
-   <b>Connection:</b>
-    Connected to server: <span id="connection">false</span>
-   <label id="status">Not connected to player</label>
-    <button id="refreshButton" type="button" onclick="location.reload()">Reset connection </button>
+  <div id="connectStatus" class="connect-status">
+    <div class="connection-info">
+      <b>Connection:</b>
+      Connected to server: <span id="connection">false</span>
+      <label id="status">Not connected to player</label>
+    </div>
+    <button id="connectButton" hidden="true" value="Disconnect">Connect</button>
   </div>
 
   <div id="musicStatus" hidden="true">
