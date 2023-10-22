@@ -1,20 +1,9 @@
-/*
-  WebSocket connection Script
-  Uses standard W3C WebSocket API, not socket.io API
-  Connects to a local websocket server.
-  
-  This server is also stored at https://github.com/tigoe/websocket-examples/tree/main/ExpressWsServer/
 
-  created 7 Jan 2021
-  modified 26 Feb 2023
-  by Tom Igoe
-*/
-// get the server URL from the window.location:
 // change 'wss' to 'ws' for running without SSL):
 let serverURL = 'wss://' + window.location.host;
-// the webSocket connection:
+
 let socket;
-// variables for the DOM elements:
+
 let incomingSpan;
 let outgoingText;
 let connectionSpan;
@@ -23,7 +12,7 @@ let connectButton;
 function setup() {
   // get all the DOM elements that need listeners:
   incomingSpan = document.getElementById('incoming');
-  outgoingText = document.getElementById('outgoing');
+  outgoingText = document.getElementById('username');
   connectionSpan = document.getElementById('connection');
   connectButton = document.getElementById('connectButton');
   // set the listeners:
@@ -74,5 +63,5 @@ function sendMessage() {
   }
 }
 
-// add a listener for the page to load:
+
 window.addEventListener('load', setup);
