@@ -13,10 +13,10 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
 const server = createServer(app);
-
 const wss = new WebSocketServer({ server });
 
 var topicClients = new Map()
+var lastData = {}
 
 function serverStart() {
   var port = this.address().port;
@@ -73,7 +73,13 @@ function handleClient(thisClient, request) {
         }
         
         topicClients.get(topic).push(thisClient);
-        thisClient.send(JSON.stringify({ "type":"connection", "message":"successfull" }));
+        
+        if (lastData[topic]) {
+          thisClient.send(JSON.stringify({ "type":"resumePlay", "message":lastData[topic] }));
+        } else {
+          thisClient.send(JSON.stringify({ "type":"connection", "message":"successfull" }));
+        }
+          
       }
     }
     console.log(topicClients);
@@ -103,6 +109,13 @@ app.post('/sendMessageToTopic', (req, res) => {
   
   var topic = req_data.topic
   var message = req_data.message
+  
+  if (message.type == "play") {
+    lastData[topic] = {"url": message.message, "timestamp": Date.now()}
+    console.log(lastData)
+  } else if (message.type == "stop") {
+    lastData[topic] = null
+  }
   
   if (topic && message) {
     sendToTopicClients(topic, message);
