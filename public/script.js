@@ -86,8 +86,22 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "play") {
     audio.src = dataJson.message
     audio.load();
+    audio.play();
   } else if (dataJson.type == "stop") {
     audio.src = ""
+  } else if (dataJson.type == "resumePlay") {
+    connectionStatus.innerHTML = "Connected to stream"
+    connectionStatus.style.color = "green"
+    
+    var timestamp = new Date(dataJson.message.timestamp * 1000)
+    var currentTime = Date.now()
+    var timeBetween = (currentTime.getTime() - timestamp.getTime() / 1000)
+    
+    console.log(timestamp);
+    console.log(currentTime);
+    console.log(timeBetween);
+    
+    audio.currentTime = timeBetween
   }
 }
 
