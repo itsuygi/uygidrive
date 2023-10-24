@@ -81,26 +81,28 @@ function readIncomingMessage(event) {
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     connectionStatus.innerHTML = "Connected to stream"
     connectionStatus.style.color = "green"
-    
     connectWidget.style.display = "none"
+    
   } else if (dataJson.type == "play") {
     audio.src = dataJson.message
     audio.load();
-    audio.play();
   } else if (dataJson.type == "stop") {
     audio.src = ""
   } else if (dataJson.type == "resumePlay") {
-    connectionStatus.innerHTML = "Connected to stream"
+    connectionStatus.innerHTML = "Connected to stream and synced"
     connectionStatus.style.color = "green"
+    connectWidget.style.display = "none"
     
-    var timestamp = new Date(dataJson.message.timestamp * 1000)
+    var timestamp = new Date(dataJson.message.timestamp)
     var currentTime = Date.now()
-    var timeBetween = (currentTime.getTime() - timestamp.getTime() / 1000)
+    var timeBetween = Math.abs(currentTime - timestamp) / 1000;
     
     console.log(timestamp);
     console.log(currentTime);
     console.log(timeBetween);
     
+    audio.src = dataJson.message.url
+    audio.load();
     audio.currentTime = timeBetween
   }
 }
