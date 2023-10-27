@@ -14,9 +14,10 @@ function setup() {
     const formData = new FormData(this);
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', '/upload', true);
+    xhr.open('POST', '/uploadFile', true);
     
     progressDiv.style.display = "block"
+    uploadForm.style.display = "none"
 
     xhr.upload.onprogress = function (e) {
       if (e.lengthComputable) {
@@ -29,7 +30,7 @@ function setup() {
     xhr.onload = function () {
       if (xhr.status === 200) {
         var url = xhr.responseText;
-        status.style.display = 'none';
+        progressDiv.style.display = 'none';
         successBox.style.display = 'block';
         fileURL.textContent = url;
         fileURL.href = url;

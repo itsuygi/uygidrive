@@ -60,7 +60,7 @@ h1 {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  display: block;
+  display: none;
 }
 
 .upload-button:hover {
@@ -127,6 +127,16 @@ h1 {
 
 .copy-button:hover {
   background-color: #005bbf;
+}
+
+.reload-button {
+  background-color: #d90429;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 

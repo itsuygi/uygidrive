@@ -10,16 +10,16 @@
   <div class="container">
     <h1>Upload Music</h1>
     <hr>
+    
     <form id="uploadForm" class="upload-form">
       <input type="file" name="musicFile" id="fileInput" class="file-input" style="display: none">
       <label for="fileInput" class="custom-file-input">Choose a file</label>
       <span id="selectedFileName" class="file-name">No file selected</span>
-      <input type="submit" value="Upload" id="uploadButton">
-      
+      <input type="submit" value="Upload" id="uploadButton" class="upload-button">
     </form>
-    <div id="progressContainer">
-      <hr>
-      <progress id="fileProgress" class="file-progress" value="0" max="100"></progress>
+    
+    <div class="progress-container" id="progressContainer">
+      <progress id="progressBar" class="file-progress" value="0" max="100"></progress>
       <span id="progressText" class="progress-text">0%</span>
     </div>
     
@@ -28,6 +28,7 @@
       <p class="success-text">File uploaded successfully!</p>
       <p class="url-text">URL: <a id="fileURL" href="#" target="_blank"></a></p>
       <button id="copyURLButton" class="copy-button">Copy URL</button>
+      <button id="reloadButton" class="reload-button">Upload another one</button>
     </div>
   </div>
   <script src="upload.js"></script>

@@ -139,7 +139,7 @@ app.get('/upload', (req, res) => {
   res.sendFile('upload.html', { root: __dirname + "/public/" });
 });
 
-app.post('/upload', upload.single('musicFile'), (req, res) => {
+app.post('/uploadFile', upload.single('musicFile'), (req, res) => {
   var fileName = req.protocol + '://' + req.get('host') + '/music/' + req.file.filename
   res.send(fileName);
 });
