@@ -3,6 +3,7 @@ const express = require("express");
 
 const {createServer} = require("http");
 const {WebSocketServer} = require("ws");
+const multer = require('multer');
 
 // make an instance of express:
 const app = express();
@@ -23,6 +24,16 @@ function serverStart() {
   console.log("Server listening on port " + port);
 }
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Dosyaların kaydedileceği klasörü belirtin
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Dosya adını nasıl değiştireceğinizi belirtin
+  },
+});
+
+const upload = multer({ storage: storage });
 
 function handleClient(thisClient, request) {
   console.log("New Connection handled"); 
@@ -122,7 +133,22 @@ app.post('/sendMessageToTopic', (req, res) => {
   } else {
     res.status(500).send("Error: no body or topic")
   }
-})
+});
+
+app.get('/upload', (req, res) => {
+  res.sendFile(__dirname + '/public/' + 'upload.html');
+});
+
+app.post('/upload', upload.single('musicFile'), (req, res) => {
+  res.send('Uploaded');
+});
+
+app.get('/music/:filename', (req, res) => {
+  const filename = req.params.filename;
+  res.sendFile(__dirname + '/uploads/' + filename);
+});
+
+
 
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
