@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/'); // Dosyaların kaydedileceği klasörü belirtin
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Dosya adını nasıl değiştireceğinizi belirtin
+    cb(null, file.originalname); // Dosya adını nasıl değiştireceğinizi belirtin
   },
 });
 
