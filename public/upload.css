@@ -1,0 +1,117 @@
+body {
+  font-family: 'Helvetica', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  text-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+  color: #0072e3;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.custom-file-input {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.custom-file-input:hover {
+  background-color: #005bbf;
+}
+
+.file-input {
+  display: none; /* Gerçek dosya yükleme düğmesini gizle */
+}
+
+
+.upload-button {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+}
+
+.upload-button:hover {
+  background-color: #005bbf;
+}
+
+.progress-bar-container {
+  display: none;
+  margin: 20px 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #0072e3;
+  border-radius: 3px;
+}
+
+.status {
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+.success-box {
+  display: none;
+  margin: 20px 0;
+}
+
+.success-text {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.url-text {
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.copy-button {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #005bbf;
+}

@@ -1,14 +1,33 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="upload.css">
   <title>RoLive Upload</title>
-  <script src="upload.js"></script>
 </head>
 <body>
-  <h1>Upload music</h1>
-  <form id="uploadForm">
-    <input type="file" name="musicFile" />
-    <input type="submit" value="Upload" />
-  </form>
-  <p id="status"></p>
+  <div class="container">
+    <h1>Upload Music</h1>
+    <form id="uploadForm" class="upload-form">
+      <input type="file" name="musicFile" id="fileInput" class="file-input" style="display:none">
+      <label for="fileInput" class="custom-file-input">Choose a file</label>
+      <input type="submit" value="Upload" class="upload-button">
+      
+    </form>
+    
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar"></div>
+      <p id="status" class="status">Waiting for upload...</p>
+    </div>
+    
+    <div id="successBox" class="success-box">
+      <hr>
+      <p class="success-text">File uploaded successfully!</p>
+      <p class="url-text">URL: <a id="fileURL" href="#" target="_blank"></a></p>
+      <button id="copyURLButton" class="copy-button">Copy URL</button>
+    </div>
+  </div>
+  <script src="upload.js"></script>
 </body>
 </html>
