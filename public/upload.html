@@ -1,12 +1,14 @@
 <html>
 <head>
   <title>RoLive Upload</title>
+  <script src="upload.js"></script>
 </head>
 <body>
   <h1>Upload music</h1>
-  <form action="/upload" method="post" enctype="multipart/form-data">
+  <form id="uploadForm">
     <input type="file" name="musicFile" />
-    <input type="submit" value="Yükle" />
+    <input type="submit" value="Upload" />
   </form>
+  <p id="status"></p>
 </body>
 </html>

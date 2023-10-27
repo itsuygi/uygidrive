@@ -140,7 +140,8 @@ app.get('/upload', (req, res) => {
 });
 
 app.post('/upload', upload.single('musicFile'), (req, res) => {
-  res.send('Uploaded');
+  var fileName = __dirname + '/uploads/' + req.file.filename
+  res.send(fileName);
 });
 
 app.get('/music/:filename', (req, res) => {
