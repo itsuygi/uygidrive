@@ -140,7 +140,7 @@ app.get('/upload', (req, res) => {
 });
 
 app.post('/upload', upload.single('musicFile'), (req, res) => {
-  var fileName = req.get('host') + '/music/' + req.file.filename
+  var fileName = req.protocol + '://' + req.get('host') + '/music/' + req.file.filename
   res.send(fileName);
 });
 
