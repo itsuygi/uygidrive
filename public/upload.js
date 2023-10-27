@@ -1,8 +1,10 @@
 function setup() {
   const uploadForm = document.getElementById('uploadForm');
+  const uploadButton = document.getElementById('uploadButton');
   const fileInput = document.getElementById('fileInput');
   const progressBar = document.getElementById('progressBar');
-  const status = document.getElementById('status');
+  const progressDiv = document.getElementById('progressContainer');
+  const progressText = document.getElementById('progressText');
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
   const copyURLButton = document.getElementById('copyURLButton');
@@ -13,12 +15,14 @@ function setup() {
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', '/upload', true);
+    
+    progressDiv.style.display = "block"
 
     xhr.upload.onprogress = function (e) {
       if (e.lengthComputable) {
         const percentComplete = Math.floor((e.loaded / e.total) * 100);
-        progressBar.style.width = percentComplete + '%';
-        status.textContent = 'Uploading: ' + percentComplete + '%';
+        progressBar.value = percentComplete;
+        progressText.textContent = percentComplete + '%';
       }
     };
 
@@ -45,6 +49,14 @@ function setup() {
     };
 
     xhr.send(formData);
+  });
+  
+  fileInput.addEventListener('change', function () {
+    const selectedFileName = document.getElementById('selectedFileName');
+    selectedFileName.textContent = this.files[0].name;
+    this.style.display = 'none';
+    
+    uploadButton.style.display = 'block';
   });
 }
 

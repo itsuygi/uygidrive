@@ -9,16 +9,18 @@
 <body>
   <div class="container">
     <h1>Upload Music</h1>
+    <hr>
     <form id="uploadForm" class="upload-form">
-      <input type="file" name="musicFile" id="fileInput" class="file-input" style="display:none">
+      <input type="file" name="musicFile" id="fileInput" class="file-input" style="display: none">
       <label for="fileInput" class="custom-file-input">Choose a file</label>
-      <input type="submit" value="Upload" class="upload-button">
+      <span id="selectedFileName" class="file-name">No file selected</span>
+      <input type="submit" value="Upload" id="uploadButton">
       
     </form>
-    
-    <div class="progress-bar-container">
-      <div id="progressBar" class="progress-bar"></div>
-      <p id="status" class="status">Waiting for upload...</p>
+    <div id="progressContainer">
+      <hr>
+      <progress id="fileProgress" class="file-progress" value="0" max="100"></progress>
+      <span id="progressText" class="progress-text">0%</span>
     </div>
     
     <div id="successBox" class="success-box">
