@@ -136,11 +136,11 @@ app.post('/sendMessageToTopic', (req, res) => {
 });
 
 app.get('/upload', (req, res) => {
-  res.sendFile(__dirname + '/public/' + 'upload.html');
+  res.sendFile('upload.html', { root: __dirname + "/public/" });
 });
 
 app.post('/upload', upload.single('musicFile'), (req, res) => {
-  var fileName = __dirname + '/uploads/' + req.file.filename
+  var fileName = req.get('host') + '/music/' + req.file.filename
   res.send(fileName);
 });
 

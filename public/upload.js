@@ -15,9 +15,10 @@ function setup() {
 
     xhr.onload = function () {
       if (xhr.status === 200) {
-        document.getElementById('status').textContent = 'Dosya başarıyla yüklendi';
+        var url = xhr.responseText
+        document.getElementById('status').innerHTML = 'File uploaded. URL: <a href"' + url + '"> ' + url + "</a>";
       } else {
-        document.getElementById('status').textContent = 'Dosya yükleme sırasında hata oluştu';
+        document.getElementById('status').innerHTML = 'Error while uploading!';
       }
     };
 
