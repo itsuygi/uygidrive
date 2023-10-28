@@ -79,7 +79,8 @@ function setup() {
           musicItem.classList.add('music-item');
           
           const musicName = document.createElement('span');
-          musicName.textContent = url;
+          var splitUrl = url.split("/")
+          musicName.textContent = splitUrl[splitUrl.length - 1];
           musicItem.appendChild(musicName);
 
           const copyLinkButton = document.createElement('button');
