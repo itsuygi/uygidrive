@@ -139,7 +139,7 @@ app.post('/sendMessageToTopic', (req, res) => {
 });
 
 function getFileUrl(fileName, req) {
-  var fileUrl = req.protocol + '://' + req.get('host') + '/music/' + fileName
+  var fileUrl = 'https://' + req.get('host') + '/music/' + fileName
   
   return fileUrl
 };

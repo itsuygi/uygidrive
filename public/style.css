@@ -80,7 +80,6 @@ input[type="range"] {
 }
 
 .footer {
-  position: absolute;
   right: 0;
   bottom: 0;
   left: 0;
@@ -113,6 +112,7 @@ input[type="range"] {
   flex-direction: column;
   align-items: center;
 }
+
 
 .connect-input,
 .connect-button {
