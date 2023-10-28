@@ -8,6 +8,7 @@ function setup() {
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
   const copyURLButton = document.getElementById('copyURLButton');
+  const musicList = document.getElementById('musicList');
 
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -59,6 +60,21 @@ function setup() {
     
     uploadButton.style.display = 'block';
   });
+  
+  const listXhr = new XMLHttpRequest();
+  listXhr.open('POST', '/list', true);
+  
+  listXhr.onload = function () {
+      if (listXhr.status === 200) {
+        var list = JSON.parse(listXhr.responseText);
+        
+        list.forEach(url => {
+          musicList.innerHTML = musicList.innerHTML + '<a href="' + url + '"> ' + url + '</a>'
+        });
+      } else {
+        status.textContent = 'Error while loading!';
+      }
+  };
 }
 
 window.addEventListener('load', setup);

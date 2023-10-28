@@ -138,7 +138,7 @@ app.post('/sendMessageToTopic', (req, res) => {
   }
 });
 
-function getFileUrl(fileName) {
+function getFileUrl(fileName, req) {
   var fileUrl = req.protocol + '://' + req.get('host') + '/music/' + fileName
   
   return fileUrl
@@ -149,8 +149,8 @@ app.get('/upload', (req, res) => {
 });
 
 app.post('/uploadFile', upload.single('musicFile'), (req, res) => {
-  var fileUrl = getFileUrl(req.file.filename)
-  res.send(fileName);
+  var fileUrl = getFileUrl(req.file.filename, req)
+  res.send(fileUrl);
 });
 
 app.get('/music/:filename', (req, res) => {
@@ -158,17 +158,16 @@ app.get('/music/:filename', (req, res) => {
   res.sendFile(__dirname + '/uploads/' + filename);
 });
 
-app.get('/musicList', (req, res) => {
+app.get('/upload/list', (req, res) => {
   fs.readdir('./uploads', (err, files) => {
     if (err) {
-      console.error('Error:', err);
-      res.
+      res.status(500).send("Error: ", err)
     } else {
       var list = []
       
       files.forEach(file => {
         const fileName = path.basename(file);
-        var fileUrl = getFileUrl(fileName)
+        var fileUrl = getFileUrl(fileName, req)
         
         list.push(fileUrl)
       });
