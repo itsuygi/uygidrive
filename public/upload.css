@@ -142,6 +142,17 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
+  position: relative;
+}
+
+.music-item::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  position: absolute;
+  top: 100%;
 }
 
 .copy-link-button {
@@ -152,6 +163,7 @@ h1 {
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
+  margin: 10px;
 }
 
 .copy-link-button:hover {

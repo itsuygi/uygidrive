@@ -75,7 +75,7 @@ function setup() {
         list.forEach(url => {
           const musicItem = document.createElement('div');
           musicItem.classList.add('music-item');
-
+          
           const musicName = document.createElement('span');
           musicName.textContent = url;
           musicItem.appendChild(musicName);
@@ -94,7 +94,6 @@ function setup() {
             copyLinkButton.textContent = "Copied!"
           });
           
-          music
           musicItem.appendChild(copyLinkButton);
           musicList.appendChild(musicItem);
         });
