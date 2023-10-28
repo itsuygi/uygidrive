@@ -64,6 +64,8 @@ function setup() {
   });
   
   function loadMusicList() {
+    musicList.innerHTML = 'Loading...';
+    
     const listXhr = new XMLHttpRequest();
     listXhr.open('GET', '/upload/list', true);
 
@@ -95,7 +97,13 @@ function setup() {
           });
           
           musicItem.appendChild(copyLinkButton);
+          
+          const line = document.createElement('div');
+          line.classList.add('line');
+          
           musicList.appendChild(musicItem);
+          
+          musicList.appendChild(line);
         });
       } else {
          musicList.innerHTML = 'Error while loading!';
