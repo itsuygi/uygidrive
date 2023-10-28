@@ -9,8 +9,6 @@
 </head>
 <body>
   <h1>RoLive Online Music</h1>
-  <hr>
-  <button>Upload Music</button>
   
   <div id="connectWidget" class="widget connect-widget">
     <div class="connect-input">
@@ -44,6 +42,11 @@
     </div>
     <input type="range" min="0" max="100" value="70" class="slider" id="volumeSlider">
   </div>
+  
+  <br>
+  <br>
+  
+  <center><button onclick="window.location.href='/upload';">Upload Music</button></center>
   
   <div class="footer">Incoming message: <span id="incoming"></span><br></div>
   <audio id="audio" src="" autoplay> </audio>

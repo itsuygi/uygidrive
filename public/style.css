@@ -18,13 +18,18 @@ h1 {
   color: #0072e3;
 }
 
-.widget {
+.widget, .connect-status {
+  flex: 1; /* Bağlantı bilgilerini ve metinleri yatayda eşit bir şekilde dağıt */
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 20px;
   margin: 10px;
+  
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center; /* Dikeyde ortala */
+  flex-direction: column;
 }
 
 label {
@@ -53,7 +58,7 @@ button {
   display: block;
   margin: 10px 0;
   flex:1;
-   text-align: center
+  text-align: center
 }
 
 button:hover {
@@ -98,19 +103,6 @@ input[type="range"] {
   width: 100%;
 }
 
-.connect-status {
-  flex: 1; /* Bağlantı bilgilerini ve metinleri yatayda eşit bir şekilde dağıt */
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 20px;
-  margin: 10px;
-  
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center; /* Dikeyde ortala */
-  flex-direction: column;
-}
 
 .connection-info {
   flex: 1;
