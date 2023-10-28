@@ -45,6 +45,8 @@ function setup() {
           document.body.removeChild(textArea);
           copyURLButton.textContent = 'URL Copied!';
         });
+
+        loadMusicList(); // Müzik listesini güncelle
       } else {
         status.textContent = 'Error while uploading!';
       }
@@ -61,21 +63,50 @@ function setup() {
     uploadButton.style.display = 'block';
   });
   
-  const listXhr = new XMLHttpRequest();
-  listXhr.open('GET', '/list', false);
-  
-  listXhr.onload = function () {
+  function loadMusicList() {
+    const listXhr = new XMLHttpRequest();
+    listXhr.open('GET', '/upload/list', true);
+
+    listXhr.onload = function () {
       if (listXhr.status === 200) {
-        var list = JSON.parse(listXhr.responseText);
-        
-        console.log(list);
+        const list = JSON.parse(listXhr.responseText);
+        musicList.innerHTML = '';
+
         list.forEach(url => {
-          musicList.innerHTML = musicList.innerHTML + '<a href="' + url + '"> ' + url + '</a>'
+          const musicItem = document.createElement('div');
+          musicItem.classList.add('music-item');
+
+          const musicName = document.createElement('span');
+          musicName.textContent = url;
+          musicItem.appendChild(musicName);
+
+          const copyLinkButton = document.createElement('button');
+          copyLinkButton.textContent = 'Copy URL';
+          copyLinkButton.classList.add('copy-link-button');
+          copyLinkButton.addEventListener('click', function () {
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            copyLinkButton.textContent = "Copied!"
+          });
+          
+          music
+          musicItem.appendChild(copyLinkButton);
+          musicList.appendChild(musicItem);
         });
       } else {
          musicList.innerHTML = 'Error while loading!';
       }
-  };
+    };
+
+    listXhr.send();
+  }
+
+  loadMusicList();
 }
 
 window.addEventListener('load', setup);

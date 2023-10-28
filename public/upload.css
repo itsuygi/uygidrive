@@ -4,9 +4,10 @@ body {
   padding: 0;
   background-color: #f2f2f2;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .container {
@@ -48,9 +49,8 @@ h1 {
 }
 
 .file-input {
-  display: none; /* Gerçek dosya yükleme düğmesini gizle */
+  display: none;
 }
-
 
 .upload-button {
   background-color: #2a9d8f;
@@ -60,44 +60,36 @@ h1 {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  display: none;
 }
 
 .upload-button:hover {
   background-color: #005bbf;
 }
 
-.file-input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .file-name {
   margin: 10px 0;
   font-weight: bold;
-  font-size: 16px;
 }
 
-
-.progress-bar-container {
+.progress-container {
   display: none;
   margin: 20px 0;
   flex-direction: column;
   align-items: center;
 }
 
-.progress-bar {
+.file-progress {
   width: 100%;
   height: 20px;
   background-color: #0072e3;
-  border-radius: 3px;
+  border-radius: 5px;
+  border: none;
 }
 
-.status {
+.progress-text {
   font-weight: bold;
-  margin-top: 10px;
   font-size: 18px;
+  margin-top: 10px;
 }
 
 .success-box {
@@ -139,23 +131,29 @@ h1 {
   cursor: pointer;
 }
 
-
-.progress-container {
-  text-align: center;
-  margin: 20px 0;
-  display: none;
+.music-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.file-progress {
-  width: 100%;
-  height: 20px;
+.music-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.copy-link-button {
   background-color: #0072e3;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.progress-text {
-  font-weight: bold;
-  font-size: 18px;
-  margin-top: 10px;
+.copy-link-button:hover {
+  background-color: #005bbf;
 }
