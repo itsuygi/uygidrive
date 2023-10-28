@@ -62,17 +62,18 @@ function setup() {
   });
   
   const listXhr = new XMLHttpRequest();
-  listXhr.open('POST', '/list', true);
+  listXhr.open('GET', '/list', false);
   
   listXhr.onload = function () {
       if (listXhr.status === 200) {
         var list = JSON.parse(listXhr.responseText);
         
+        console.log(list);
         list.forEach(url => {
           musicList.innerHTML = musicList.innerHTML + '<a href="' + url + '"> ' + url + '</a>'
         });
       } else {
-        status.textContent = 'Error while loading!';
+         musicList.innerHTML = 'Error while loading!';
       }
   };
 }

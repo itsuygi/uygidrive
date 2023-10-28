@@ -171,8 +171,6 @@ app.get('/upload/list', (req, res) => {
         
         list.push(fileUrl)
       });
-      
-      console.log(list);
     }
     res.send(JSON.stringify(list));
   });
