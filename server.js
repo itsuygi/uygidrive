@@ -3,6 +3,9 @@ const express = require("express");
 
 const {createServer} = require("http");
 const {WebSocketServer} = require("ws");
+  
+const fs = require("fs");
+const path = require("path")
 const multer = require('multer');
 
 // make an instance of express:
@@ -135,18 +138,45 @@ app.post('/sendMessageToTopic', (req, res) => {
   }
 });
 
+function getFileUrl(fileName) {
+  var fileUrl = req.protocol + '://' + req.get('host') + '/music/' + fileName
+  
+  return fileUrl
+};
+
 app.get('/upload', (req, res) => {
   res.sendFile('upload.html', { root: __dirname + "/public/" });
 });
 
 app.post('/uploadFile', upload.single('musicFile'), (req, res) => {
-  var fileName = req.protocol + '://' + req.get('host') + '/music/' + req.file.filename
+  var fileUrl = getFileUrl(req.file.filename)
   res.send(fileName);
 });
 
 app.get('/music/:filename', (req, res) => {
   const filename = req.params.filename;
   res.sendFile(__dirname + '/uploads/' + filename);
+});
+
+app.get('/musicList', (req, res) => {
+  fs.readdir('./uploads', (err, files) => {
+    if (err) {
+      console.error('Error:', err);
+      res.
+    } else {
+      var list = []
+      
+      files.forEach(file => {
+        const fileName = path.basename(file);
+        var fileUrl = getFileUrl(fileName)
+        
+        list.push(fileUrl)
+      });
+      
+      console.log(list);
+    }
+    res.send(JSON.stringify(list));
+  });
 });
 
 
