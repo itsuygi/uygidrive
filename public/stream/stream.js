@@ -30,13 +30,12 @@ function setup() {
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
   });
   
-  
-  var obtainedStreamId = sendMessage("GET", "/getStreamId")
-        
-  console.log("Obtained stream id: ", obtainedStreamId)
-  streamId.innerText = obtainedStreamId
-        
-  topic = obtainedStreamId
+  sendMessage("GET", "/getStreamId").then((obtainedStreamId) => {
+    console.log("Obtained stream id: ", obtainedStreamId)
+    streamId.innerText = obtainedStreamId
+
+    topic = obtainedStreamId
+  });
 }
 
 function openSocket(url) {
@@ -107,23 +106,25 @@ function readIncomingMessage(event) {
   }
 }
 
-function sendMessage(method, url, message) {
+async function sendMessage(method, url, message) {
   //if the socket's open, send a message:
   const xhr = new XMLHttpRequest();
 
   xhr.open(method, url, true);
 
-  xhr.onload = function () {
+  xhr.onload = await function () {
      if (xhr.status === 200) {
        var result = xhr.responseText;
+       
+       console.log(result)
      
-        return result;
+       return result;
     } else {
-      return 'Error!';
+       return 'Error!';
     }
   };
 
-  xhr.send(message);
+  await xhr.send(message);
 }
 
 
