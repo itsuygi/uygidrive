@@ -6,7 +6,8 @@ let socket;
 
 let incomingSpan;
 let outgoingText;
-let streamWidget
+let streamWidget;
+let streamId
 let connectionSpan;
 let streamURLButton;
 let connectionStatus;
@@ -18,17 +19,24 @@ function setup() {
   incomingSpan = document.getElementById('incoming');
   outgoingText = document.getElementById('url');
   streamWidget = document.getElementById('streamWidget')
+  streamId = document.getElementById('streamId')
   connectionSpan = document.getElementById('connection');
-  streamURLButton = document.getElementById('connectStreamIDButton');
+  streamURLButton = document.getElementById('streamURLButton');
   connectionStatus = document.getElementById('status');
   audio = document.getElementById('audio');
   
   
   streamURLButton.addEventListener('click', function(){
-    sendMessage("/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
+    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
   });
   
-  openSocket(serverURL);
+  
+  var obtainedStreamId = sendMessage("GET", "/getStreamId")
+        
+  console.log("Obtained stream id: ", obtainedStreamId)
+  streamId.innerText = obtainedStreamId
+        
+  topic = obtainedStreamId
 }
 
 function openSocket(url) {
@@ -99,13 +107,23 @@ function readIncomingMessage(event) {
   }
 }
 
-function sendMessage(type, message) {
+function sendMessage(method, url, message) {
   //if the socket's open, send a message:
-  let sendJson = {"type":type, "message":message}
-  
-  if (socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify(sendJson));
-  }
+  const xhr = new XMLHttpRequest();
+
+  xhr.open(method, url, true);
+
+  xhr.onload = function () {
+     if (xhr.status === 200) {
+       var result = xhr.responseText;
+     
+        return result;
+    } else {
+      return 'Error!';
+    }
+  };
+
+  xhr.send(message);
 }
 
 

@@ -148,6 +148,12 @@ function getFileUrl(fileName, req) {
   return fileUrl
 };
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+}
+
 app.get('/upload', (req, res) => {
   res.sendFile('upload.html', { root: __dirname + "/public/upload" });
 });
@@ -187,9 +193,12 @@ app.get('/stream', (req, res) => {
 app.get('/getStreamId', (req, res) => {
   var id = 0
   do
-    id = 
-  while (topicClients.has(topic) == false);
-  res.send();
+    id = getRandomInt(1000,99999)
+  while (topicClients.has(id) == true);
+  
+  console.log(id)
+  
+  res.send(id.toString());
 });
 
 // start the server:
