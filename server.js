@@ -61,7 +61,11 @@ function handleClient(thisClient, request) {
 
   // if a client sends a message, print it out:
   function clientResponse(data) {
-    data = JSON.parse(data);
+    try {
+      data = JSON.parse(data);
+    } catch {
+      console.log("Failed to convert client response to JSON.")
+    }
     
     console.log(data);
 
@@ -145,7 +149,7 @@ function getFileUrl(fileName, req) {
 };
 
 app.get('/upload', (req, res) => {
-  res.sendFile('upload.html', { root: __dirname + "/public/" });
+  res.sendFile('upload.html', { root: __dirname + "/public/upload" });
 });
 
 app.post('/uploadFile', upload.single('musicFile'), (req, res) => {
@@ -174,6 +178,10 @@ app.get('/upload/list', (req, res) => {
     }
     res.send(JSON.stringify(list));
   });
+});
+
+app.get('/stream', (req, res) => {
+  res.sendFile('stream.html', { root: __dirname + "/public/stream" });
 });
 
 // start the server:

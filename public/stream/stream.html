@@ -4,26 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="script.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <title>Online Music</title>
+  <link rel="stylesheet" href="stream.css">
+  <title>Stream Music</title>
 </head>
 <body>
-  <h1>Online Music</h1>
+  <h1>Stream Music</h1>
   
-  <div id="connectWidget" class="widget connect-widget">
-    <div class="connect-input">
-      <b>Enter Stream ID:</b>
+  <div id="streamWidget" class="widget stream-widget">
+    <div class="stream-input">
+      <b>Your Stream ID:</b>
       
-      <input type="text" id="username">
+      <a>36273</a>
     </div>
-    <button id="connectStreamIDButton">Connect</button>
   </div>
+  
 
   <div id="connectStatus" class="connect-status">
     <div class="connection-info">
       <b>Connection:</b> <br>
       <li id="connection" >No server connection</li>
-      <li id="status" style="color:red"> Not connected to stream</li>
     </div>
     <button id="connectButton" hidden="true" onclick="location.reload()">Reset connection</button>
   </div>
