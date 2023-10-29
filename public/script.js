@@ -63,13 +63,19 @@ function changeConnection(event) {
 
 function openConnection() {
   // display the change of state:
-  connectionSpan.innerHTML = "true";
+  connectionSpan.innerHTML = "Connected to server";
+  connectionSpan.style.color = "green"
 }
 
 function closeConnection() {
   // display the change of state:
-  connectionSpan.innerHTML = "false";
+  connectionSpan.innerHTML = "Not server connection";
+  connectionSpan.style.color = "red"
+  
+  connectionStatus.innerHTML = "Not connected to stream"
+  connectionStatus.style.color = "red"
 }
+
 
 function readIncomingMessage(event) {
   // display the incoming message:
@@ -79,7 +85,7 @@ function readIncomingMessage(event) {
   console.log(dataJson);
   
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
-    connectionStatus.innerHTML = "Connected to stream"
+    connectionStatus.innerHTML = "Listening to stream"
     connectionStatus.style.color = "green"
     connectWidget.style.display = "none"
     

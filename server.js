@@ -176,8 +176,6 @@ app.get('/upload/list', (req, res) => {
   });
 });
 
-
-
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
 // start the websocket server listening for clients:
