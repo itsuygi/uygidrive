@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="script.js"></script>
+  <script src="stream.js"></script>
   <link rel="stylesheet" href="stream.css">
   <title>Stream Music</title>
 </head>
@@ -18,6 +18,14 @@
     </div>
   </div>
   
+  <div id="urlWidget" class="widget url-widget">
+    <div class="connect-input">
+      <b>Enter Music URL:</b> 
+      
+      <input type="text" id="url">
+    </div>
+    <button id="streamURLButton">Stream</button>
+  </div>
 
   <div id="connectStatus" class="connect-status">
     <div class="connection-info">
@@ -34,18 +42,6 @@
 
   <br>
   
-  <div class="volume-control">
-    <div class="volume-label">
-      <b>Volume: </b>
-      <label id="volumeValue">38%</label>
-    </div>
-    <input type="range" min="0" max="100" value="70" class="slider" id="volumeSlider">
-  </div>
-  
-  <br>
-  <br>
-  <br>
-  
   <hr>
   <br>
   
@@ -54,10 +50,6 @@
       Go to upload page to see user uploaded musics, or upload your own.
     </a>
     <a href="/upload" target="_blank" class="button">Upload Music</a>
-    <a>
-      Go to stream page to stream music without the game.
-    </a>
-    <a href="/stream" target="_blank" class="button">Stream Music</a>
   </div>
   
   <footer class="widget footer">

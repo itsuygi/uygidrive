@@ -184,6 +184,14 @@ app.get('/stream', (req, res) => {
   res.sendFile('stream.html', { root: __dirname + "/public/stream" });
 });
 
+app.get('/getStreamId', (req, res) => {
+  var id = 0
+  do
+    id = 
+  while (topicClients.has(topic) == false);
+  res.send();
+});
+
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
 // start the websocket server listening for clients:
