@@ -82,8 +82,10 @@ input[type="range"] {
 .footer {
   padding: 1rem;
   background-color: #efefef;
-  text-align: center;
-  display: flex;
+  
+  white-space: nowrap; /* Metni yatayda taşınmasını önler */
+  overflow: auto; /* Metni kesip gizler */
+  text-overflow: ellipsis; /* Metni kesip üç nokta ile gösterir */
 }
 
 .volume-control {
@@ -118,4 +120,6 @@ input[type="range"] {
   text-align: center;
 }
 
-
+.upload-site {
+  padding: 10px 20px 10px;
+}

@@ -22,8 +22,8 @@
   <div id="connectStatus" class="connect-status">
     <div class="connection-info">
       <b>Connection:</b> <br>
-      Connected to server: <span id="connection">false</span> <br>
-      <b id="status" style="color:red"> Not connected to stream</b>
+      <a id="connection" >No server connection</a> <br>
+      <a id="status" style="color:red"> Not connected to stream</a>
     </div>
     <button id="connectButton" hidden="true" onclick="location.reload()">Reset connection</button>
   </div>
@@ -46,14 +46,20 @@
   <br>
   <br>
   
-  <div class="widget">
-    <a>
+  <hr>
+  <br>
+  
+  <div class="widget upload-site">
+    <b>
       Go to upload page to see user uploaded musics, or upload your own.
-    </a>
+    </b>
     <button onclick="window.location.href='/upload';">Upload Music</button>
   </div>
   
-  <footer class="footer">Incoming message: <span id="incoming"></span><br></footer>
+  <footer class="widget footer">
+    Incoming message: 
+    <span id="incoming"></span>
+  </footer>
   <audio id="audio" src="" autoplay> </audio>
 </body>
 </html>
