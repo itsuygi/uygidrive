@@ -175,6 +175,7 @@ app.post('/uploadFile', upload.single('musicFile'), (req, res) => {
 
 app.get('/music/:filename', (req, res) => {
   const filename = req.params.filename;
+  console.log("Sending file: " + filename)
   res.sendFile(__dirname + '/uploads/' + filename);
 });
 
