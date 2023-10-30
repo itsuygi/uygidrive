@@ -21,6 +21,7 @@ const wss = new WebSocketServer({ server });
 
 var topicClients = new Map()
 var lastData = {}
+var streamerIPs = {}
 
 function serverStart() {
   var port = this.address().port;
@@ -127,6 +128,10 @@ app.post('/sendMessageToTopic', (req, res) => {
   var topic = req_data.topic
   var message = req_data.message
   
+  if (streamerIPs[topic] && streamerIPs) {
+    
+  }
+  
   if (message.type == "play") {
     lastData[topic] = {"url": message.message, "timestamp": Date.now()}
     console.log(lastData)
@@ -197,6 +202,13 @@ app.get('/getStreamId', (req, res) => {
   while (topicClients.has(id) == true);
   
   console.log(id)
+  
+  const IP = req.headers["x-forwarded-for"].split(",")[0];
+  console.log(IP); 
+  
+  streamerIPs[id] = IP
+  
+  console.log(streamerIPs); 
   
   res.send(id.toString());
 });
