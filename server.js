@@ -135,6 +135,8 @@ app.post('/sendMessageToTopic', (req, res) => {
   
   if (streamerIPs[topic] && streamerIPs[topic] !== IP) {
     res.status(401).send("Unauthorized")
+    
+    return "Unauthorized"
   }
   
   if (message.type == "play") {
