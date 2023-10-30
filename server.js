@@ -128,8 +128,13 @@ app.post('/sendMessageToTopic', (req, res) => {
   var topic = req_data.topic
   var message = req_data.message
   
-  if (streamerIPs[topic] && streamerIPs) {
-    
+  const IP = req.headers["x-forwarded-for"].split(",")[0];
+  console.log(IP)
+  console.log(streamerIPs)
+  console.log(streamerIPs[topic])
+  
+  if (streamerIPs[topic] && streamerIPs[topic] !== IP) {
+    res.status(401).send("Unauthorized")
   }
   
   if (message.type == "play") {
