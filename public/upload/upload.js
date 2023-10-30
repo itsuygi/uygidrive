@@ -9,6 +9,8 @@ function setup() {
   const fileURL = document.getElementById('fileURL');
   const copyURLButton = document.getElementById('copyURLButton');
   const musicList = document.getElementById('musicList');
+  const errorBox = document.getElementById('errorBox');
+  const errorMessage = document.getElementById('errorMessage');
 
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -46,9 +48,10 @@ function setup() {
           copyURLButton.textContent = 'URL Copied!';
         });
 
-        loadMusicList(); // Müzik listesini güncelle
+        loadMusicList();
       } else {
-        status.textContent = 'Error while uploading!';
+        errorMessage.innerText = xhr.responseText;
+        errorBox.style.display = "block";
       }
     };
 
@@ -62,6 +65,8 @@ function setup() {
     
     uploadButton.style.display = 'block';
   });
+  
+  loadMusicList();
   
   function loadMusicList() {
     musicList.innerHTML = 'Loading...';
@@ -110,11 +115,7 @@ function setup() {
          musicList.innerHTML = 'Error while loading!';
       }
     };
-
-    listXhr.send();
   }
-
-  loadMusicList();
 }
-
+  
 window.addEventListener('load', setup);

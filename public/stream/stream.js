@@ -4,7 +4,6 @@ let serverURL = 'wss://' + window.location.host;
 
 let socket;
 
-let incomingSpan;
 let outgoingText;
 let streamWidget;
 let streamId
@@ -16,7 +15,6 @@ let audio;
 let topic = 0
 
 function setup() {
-  incomingSpan = document.getElementById('incoming');
   outgoingText = document.getElementById('url');
   streamWidget = document.getElementById('streamWidget')
   streamId = document.getElementById('streamId')

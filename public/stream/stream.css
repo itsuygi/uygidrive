@@ -83,15 +83,6 @@ input[type="range"] {
   font-size: 18px;
 }
 
-.footer {
-  padding: 1rem;
-  background-color: #efefef;
-  
-  white-space: nowrap; /* Metni yatayda taşınmasını önler */
-  overflow: auto; /* Metni kesip gizler */
-  text-overflow: ellipsis; /* Metni kesip üç nokta ile gösterir */
-}
-
 .volume-control {
   display: flex;
   align-items: center; /* Dikeyde ortala */

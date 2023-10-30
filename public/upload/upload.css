@@ -92,12 +92,12 @@ h1 {
   margin-top: 10px;
 }
 
-.success-box {
+.result-box {
   display: none;
   margin: 20px 0;
 }
 
-.success-text {
+.success-text, .error-text {
   font-weight: bold;
   font-size: 18px;
 }
