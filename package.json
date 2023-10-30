@@ -12,6 +12,7 @@
   "description": "a node.js server with express.js for HTTP and ws.js for websockets",
   "main": "server.js",
   "devDependencies": {},
+  "engines": { "node": "16.x" },
   "keywords": [
     "node",
     "express",
