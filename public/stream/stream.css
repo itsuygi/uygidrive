@@ -123,3 +123,7 @@ input[type="range"] {
 .upload-site {
   padding: 10px 20px 10px;
 }
+
+.reset-button {
+  background-color: #DC143C;
+}

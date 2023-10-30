@@ -10,7 +10,6 @@ let streamWidget;
 let streamId
 let connectionSpan;
 let streamURLButton;
-let connectionStatus;
 let stopStreamButton;
 let audio;
 
@@ -24,7 +23,6 @@ function setup() {
   connectionSpan = document.getElementById('connection');
   streamURLButton = document.getElementById('streamURLButton');
   stopStreamButton = document.getElementById('stopStreamButton');
-  connectionStatus = document.getElementById('status');
   audio = document.getElementById('audio');
   
   
