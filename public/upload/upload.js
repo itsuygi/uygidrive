@@ -50,7 +50,7 @@ function setup() {
 
         loadMusicList();
       } else {
-        errorMessage.innerText = xhr.responseText;
+        errorMessage.innerHTML = xhr.responseText;
         errorBox.style.display = "block";
       }
     };
@@ -115,7 +115,9 @@ function setup() {
          musicList.innerHTML = 'Error while loading!';
       }
     };
-  }
+    
+    listXhr.send()
+  };
 }
   
 window.addEventListener('load', setup);
