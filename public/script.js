@@ -145,5 +145,4 @@ function ping() {
 setInterval(ping, 30000);
 
 
-
 window.addEventListener("load", setup);

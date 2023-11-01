@@ -13,6 +13,8 @@ const multer = require("multer");
 const app = express();
 
 app.use(express.static("public"));
+app.use('/common',express.static(path.join(__dirname, 'public/common')));
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
