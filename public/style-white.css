@@ -121,3 +121,39 @@ input[type="range"] {
 .upload-site {
   padding: 10px 20px 10px;
 }
+
+/* Tema değiştirme düğmesi için stiller */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.theme-icon {
+  font-size: 24px;
+}
+
+.theme-icon i {
+  font-size: inherit;
+}
+
+/* Gece teması için stiller */
+.dark-theme .theme-toggle {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+
+/* Işık tema için stiller */
+.light-theme .theme-toggle {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #333;
+}
+
