@@ -22,8 +22,6 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-var fileupload = require("express-fileupload");
-app.use(fileupload());
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -64,7 +62,7 @@ const multerStorage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: multerStorage });
+const upload = multer({ storage: multer.memoryStorage() });
 
 
 // Socket
@@ -210,36 +208,27 @@ app.get("/upload", (req, res) => {
 //  res.send(fileUrl);
 //});
 
-app.post("/uploadFile", upload.single("musicFile"), (req,res) => {
-  console.log(req.body.file)
+app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
   try {
     if (!req.file) {
-      return res.status(400).send("Dosya eksik veya hatalı.");
+      return res.status(400).send('Dosya eksik veya hatalı.');
     }
-    
-    const file = req.file;
 
-    const fileBuffer = Buffer.from(file.data, 'base64');
+    const file = req.file;
+    const filename = file.originalname;
+    const fileBuffer = file.buffer;
+
     const fileOptions = {
-      gzip: true,
       metadata: {
-        contentType: 'audio/mpeg',
-      },
+        contentType: file.mimetype // Dosya türünü ayarlayın (ör. 'audio/mpeg')
+      }
     };
 
-    bucket.upload(fileBuffer, {
-      destination: file.name,
-      metadata: fileOptions.metadata,
-      
-    })
-    .then(() => {
-      const fileUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
-      res.status(200).send(fileUrl);
-    })
-    .catch((error) => {
-      console.error('Dosya yükleme hatası:', error);
-      res.status(500).send(error);
-    });
+    await bucket.file(filename).save(fileBuffer, fileOptions);
+    await bucket.file(filename).makePublic()
+
+    const fileUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+    res.status(200).send(fileUrl);
   } catch (error) {
     console.error('Dosya yükleme hatası:', error);
     res.status(500).send(error);
