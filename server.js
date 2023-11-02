@@ -235,20 +235,20 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
   }
 });
 
-//app.get("/music/:filename", (req, res) => {
-//  const filename = req.params.filename;
-//  console.log("Sending file: " + filename);
-//  res.sendFile(__dirname + "/uploads/" + filename);
-//});
+app.get("/localUpload/:filename", (req, res) => {
+ const filename = req.params.filename;
+  console.log("Sending file: " + filename);
+  
+  res.set("Content-Type", "audio/mpeg")
+  res.sendFile(__dirname + "/uploads/" + filename);
+});
 
 app.get("/music/:filename", async (req, res) => {
-  
   try {
     const filename = req.params.filename;
     const file = bucket.file(filename);
     const [fileContent] = await file.download();
 
-    res.set("Content-Type", "audio/mpeg");
     res.send(fileContent)
   } catch (error) {
     console.log(error)
