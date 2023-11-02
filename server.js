@@ -249,6 +249,7 @@ app.get("/music/:filename", async (req, res) => {
     const file = bucket.file(filename);
     const [fileContent] = await file.download();
 
+    res.set("Content-Type", "audio/mpeg")
     res.send(fileContent)
   } catch (error) {
     console.log("Error getting file: ", error)
