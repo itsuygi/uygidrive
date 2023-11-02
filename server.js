@@ -251,7 +251,7 @@ app.get("/music/:filename", async (req, res) => {
 
     res.send(fileContent)
   } catch (error) {
-    console.log(error)
+    console.log("Error getting file: ", error)
     res.status(500).send(error)
   }
   
