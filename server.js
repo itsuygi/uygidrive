@@ -35,11 +35,14 @@ const firebaseConfig = {
   measurementId: "G-8EVXCHSNMB"
 };
 
+const bucketName = 'gs://uygi-online-music.appspot.com'
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'gs://uygi-online-music.appspot.com'
+  storageBucket: bucketName
 });
 
+const bucket = admin.storage().bucket();
 
 // Local variables
 var topicClients = new Map();
@@ -208,27 +211,36 @@ app.get("/upload", (req, res) => {
 
 app.post("/uploadFile", (req,res) => {
   try {
-    const file = req.body.file; // Gönderilen dosya
+    const file = req.files;
 
     if (!file) {
-      return res.status(400).json({ message: 'Dosya eksik veya hatalı.' });
+      return res.status(400).send("No file or corrupted");
     }
 
     const fileBuffer = Buffer.from(file, 'base64');
-    const filename = `${Date.now()}.mp3`;
+    const filename = file.originalname;
     const fileOptions = {
       gzip: true,
       metadata: {
-        contentType: 'audio/mpeg'
-      }
+        contentType: 'audio/mpeg',
+      },
     };
 
-    await bucket.file(filename).save(fileBuffer, fileOptions);
-
-    res.status(200).json({ message: 'Dosya yüklendi.' });
+    bucket.upload(fileBuffer, {
+      destination: filename,
+      metadata: fileOptions.metadata,
+    })
+    .then(() => {
+      const fileUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+      res.status(200).send(fileUrl);
+    })
+    .catch((error) => {
+      console.error('Dosya yükleme hatası:', error);
+      res.status(500).send(error);
+    });
   } catch (error) {
     console.error('Dosya yükleme hatası:', error);
-    res.status(500).json({ message: 'Dosya yüklenirken hata oluştu.' });
+    res.status(500).send(error);
   }
 });
 
@@ -240,18 +252,20 @@ app.post("/uploadFile", (req,res) => {
 
 app.get("/music/:filename", (req, res) => {
   const filename = req.params.filename;
+  const file = bucket.file(filename);
 
-  const fileRef = storageRef.child(filename);
-  
-  fileRef.getDownloadURL().then(url => {
-    res.redirect(url);
-  }).catch(error => {
-    console.error('Error while getting the file:', error);
-    res.status(500).send('Error');
-  });
+  file.getSignedUrl({ action: "read", expires: "03-09-2491" })
+    .then((urls) => {
+      const url = urls[0];
+      res.redirect(url);
+    })
+    .catch((error) => {
+      console.error("Dosya alınırken hata oluştu:", error);
+      res.status(500).send("Hata");
+    });
 });
 
-app.get("/upload/list", (req, res) => {
+/*app.get("/upload/list", (req, res) => {
   fs.readdir("./uploads", (err, files) => {
     if (err) {
       res.status(500).send("Error: ", err);
@@ -267,6 +281,23 @@ app.get("/upload/list", (req, res) => {
     }
     res.send(JSON.stringify(list));
   });
+}); */
+
+app.get("/upload/list", (req, res) => {
+  bucket.getFiles()
+    .then((results) => {
+      const files = results[0];
+
+      const fileUrls = files.map((file) => {
+        return `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+      });
+
+      res.json(fileUrls);
+    })
+    .catch((error) => {
+      console.error("Dosyaları listelerken hata oluştu:", error);
+      res.status(500).json({ message: "Dosyaları listelerken hata oluştu." });
+    });
 });
 
 // Streaming
