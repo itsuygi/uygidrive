@@ -227,7 +227,7 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
     await bucket.file(filename).save(fileBuffer, fileOptions);
     await bucket.file(filename).makePublic()
 
-    const fileUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+    const fileUrl = getFileUrl(filename, req)
     res.status(200).send(fileUrl);
   } catch (error) {
     console.error('Dosya yükleme hatası:', error);
@@ -241,11 +241,22 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
 //  res.sendFile(__dirname + "/uploads/" + filename);
 //});
 
-app.get("/music/:filename", (req, res) => {
-  const filename = req.params.filename;
-  const file = bucket.file(filename);
+app.get("/music/:filename", async (req, res) => {
+  
+  try {
+    const filename = req.params.filename;
+    const file = bucket.file(filename);
+    const [fileContent] = await file.download();
 
-  file.getSignedUrl({ action: "read", expires: "03-09-2491" })
+    res.set("Content-Type", "audio/mpeg");
+    res.send(fileContent)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send(error)
+  }
+  
+
+  /*file.getSignedUrl({ action: "read", expires: "03-09-2491" })
     .then((urls) => {
       const url = urls[0];
       res.redirect(url);
@@ -253,7 +264,7 @@ app.get("/music/:filename", (req, res) => {
     .catch((error) => {
       console.error("Dosya alınırken hata oluştu:", error);
       res.status(500).send("Hata");
-    });
+    });*/
 });
 
 /*app.get("/upload/list", (req, res) => {
@@ -280,7 +291,7 @@ app.get("/upload/list", (req, res) => {
       const files = results[0];
 
       const fileUrls = files.map((file) => {
-        return `https://storage.googleapis.com/${bucket.name}/${file.name}`;
+        return getFileUrl(file.name, req)
       });
 
       res.json(fileUrls);
