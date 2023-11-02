@@ -195,10 +195,6 @@ function getRandomInt(min, max) {
 
 // Uploading
 
-async function uploadFile(file) {
-  const fileRef = storageRef.child(file.originalname);
-  await fileRef.put(file.buffer);
-}
 
 app.get("/upload", (req, res) => {
   res.sendFile("upload.html", { root: __dirname + "/public/upload" });
@@ -210,14 +206,35 @@ app.get("/upload", (req, res) => {
 //});
 
 app.post("/uploadFile", (req,res) => {
-  const file = req.file;
-   uploadFile(file)
+  const file = req.file; 
+
+  const fileRef = storageRef.child(file.originalname);
+  
+  fileRef.put(file.buffer).then(() => {
+    res.send('Dosya başarıyla yüklendi.');
+  }).catch(error => {
+    console.error('Error while file uploading.', error);
+    res.status(500).send('Error');
+  });
 });
+
+//app.get("/music/:filename", (req, res) => {
+//  const filename = req.params.filename;
+//  console.log("Sending file: " + filename);
+//  res.sendFile(__dirname + "/uploads/" + filename);
+//});
 
 app.get("/music/:filename", (req, res) => {
   const filename = req.params.filename;
-  console.log("Sending file: " + filename);
-  res.sendFile(__dirname + "/uploads/" + filename);
+
+  const fileRef = storageRef.child(filename);
+  
+  fileRef.getDownloadURL().then(url => {
+    res.redirect(url);
+  }).catch(error => {
+    console.error('Error while getting the file:', error);
+    res.status(500).send('Error');
+  });
 });
 
 app.get("/upload/list", (req, res) => {
