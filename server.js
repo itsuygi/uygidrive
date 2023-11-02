@@ -22,6 +22,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
+var fileupload = require("express-fileupload");
+app.use(fileupload());
+
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
@@ -210,8 +213,9 @@ app.get("/upload", (req, res) => {
 //});
 
 app.post("/uploadFile", (req,res) => {
+  console.log(req.files)
   try {
-    const file = req.files;
+    const file = req.file;
 
     if (!file) {
       return res.status(400).send("No file or corrupted");
