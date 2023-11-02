@@ -38,11 +38,9 @@ const firebaseConfig = {
   measurementId: "G-8EVXCHSNMB"
 };
 
-const bucketName = 'gs://uygi-online-music.appspot.com'
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: bucketName
+  storageBucket: "gs://uygi-online-music.appspot.com"
 });
 
 const bucket = admin.storage().bucket();
@@ -66,7 +64,7 @@ const multerStorage = multer.diskStorage({
   },
 });
 
-//const upload = multer({ storage: storage });
+const upload = multer({ storage: multerStorage });
 
 
 // Socket
@@ -212,14 +210,14 @@ app.get("/upload", (req, res) => {
 //  res.send(fileUrl);
 //});
 
-app.post("/uploadFile", (req,res) => {
-  console.log(req.files)
+app.post("/uploadFile", upload.single("musicFile"), (req,res) => {
+  console.log(req.body.file)
   try {
-    const file = req.files.musicFile;
-
-    if (!file) {
-      return res.status(400).send("No file or corrupted");
+    if (!req.file) {
+      return res.status(400).send("Dosya eksik veya hatalı.");
     }
+    
+    const file = req.file;
 
     const fileBuffer = Buffer.from(file.data, 'base64');
     const fileOptions = {
