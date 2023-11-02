@@ -215,14 +215,13 @@ app.get("/upload", (req, res) => {
 app.post("/uploadFile", (req,res) => {
   console.log(req.files)
   try {
-    const file = req.file;
+    const file = req.files.musicFile;
 
     if (!file) {
       return res.status(400).send("No file or corrupted");
     }
 
-    const fileBuffer = Buffer.from(file, 'base64');
-    const filename = file.originalname;
+    const fileBuffer = Buffer.from(file.data, 'base64').toString("base64");
     const fileOptions = {
       gzip: true,
       metadata: {
@@ -231,8 +230,9 @@ app.post("/uploadFile", (req,res) => {
     };
 
     bucket.upload(fileBuffer, {
-      destination: filename,
+      destination: file.name,
       metadata: fileOptions.metadata,
+      public: true,
     })
     .then(() => {
       const fileUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
