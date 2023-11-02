@@ -10,8 +10,8 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 
-const firebase = require('firebase/app');
-require('firebase/storage');
+const admin = require('firebase-admin');
+const serviceAccount = require('./uygi-online-music-firebase-adminsdk-jpnoz-9adaf422a6.json');
 
 const app = express();
 
@@ -35,10 +35,11 @@ const firebaseConfig = {
   measurementId: "G-8EVXCHSNMB"
 };
 
-firebase.initializeApp(firebaseConfig);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: 'gs://uygi-online-music.appspot.com'
+});
 
-const storage = firebase.storage();
-const storageRef = storage.ref();
 
 // Local variables
 var topicClients = new Map();
@@ -59,7 +60,7 @@ const multerStorage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+//const upload = multer({ storage: storage });
 
 
 // Socket
@@ -206,16 +207,29 @@ app.get("/upload", (req, res) => {
 //});
 
 app.post("/uploadFile", (req,res) => {
-  const file = req.file; 
+  try {
+    const file = req.body.file; // Gönderilen dosya
 
-  const fileRef = storageRef.child(file.originalname);
-  
-  fileRef.put(file.buffer).then(() => {
-    res.send('Dosya başarıyla yüklendi.');
-  }).catch(error => {
-    console.error('Error while file uploading.', error);
-    res.status(500).send('Error');
-  });
+    if (!file) {
+      return res.status(400).json({ message: 'Dosya eksik veya hatalı.' });
+    }
+
+    const fileBuffer = Buffer.from(file, 'base64');
+    const filename = `${Date.now()}.mp3`;
+    const fileOptions = {
+      gzip: true,
+      metadata: {
+        contentType: 'audio/mpeg'
+      }
+    };
+
+    await bucket.file(filename).save(fileBuffer, fileOptions);
+
+    res.status(200).json({ message: 'Dosya yüklendi.' });
+  } catch (error) {
+    console.error('Dosya yükleme hatası:', error);
+    res.status(500).json({ message: 'Dosya yüklenirken hata oluştu.' });
+  }
 });
 
 //app.get("/music/:filename", (req, res) => {
