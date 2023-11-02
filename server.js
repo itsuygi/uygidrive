@@ -10,6 +10,9 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 
+const firebase = require('firebase/app');
+require('firebase/storage');
+
 const app = express();
 
 app.use(express.static("public"));
@@ -22,6 +25,21 @@ app.use(bodyParser.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+const firebaseConfig = {
+  apiKey: "AIzaSyArZ2P4Vy3pcQq20HCeY-XA6mJoB3G1OuM",
+  authDomain: "uygi-online-music.firebaseapp.com",
+  projectId: "uygi-online-music",
+  storageBucket: "uygi-online-music.appspot.com",
+  messagingSenderId: "213078311484",
+  appId: "1:213078311484:web:59b2e3f19c360348ffb939",
+  measurementId: "G-8EVXCHSNMB"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
+const storageRef = storage.ref();
+
 // Local variables
 var topicClients = new Map();
 var lastData = {};
@@ -32,7 +50,7 @@ function serverStart() {
   console.log("Server listening on port " + port);
 }
 
-const storage = multer.diskStorage({
+const multerStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
   },
@@ -177,13 +195,23 @@ function getRandomInt(min, max) {
 
 // Uploading
 
+async function uploadFile(file) {
+  const fileRef = storageRef.child(file.originalname);
+  await fileRef.put(file.buffer);
+}
+
 app.get("/upload", (req, res) => {
   res.sendFile("upload.html", { root: __dirname + "/public/upload" });
 });
 
-app.post("/uploadFile", upload.single("musicFile"), (req, res) => {
-  var fileUrl = getFileUrl(req.file.filename, req);
-  res.send(fileUrl);
+//app.post("/uploadFile", upload.single("musicFile"), (req, res) => {
+//  var fileUrl = getFileUrl(req.file.filename, req);
+//  res.send(fileUrl);
+//});
+
+app.post("/uploadFile", (req,res) => {
+  const file = req.file;
+   uploadFile(file)
 });
 
 app.get("/music/:filename", (req, res) => {
