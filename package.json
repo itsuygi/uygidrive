@@ -2,7 +2,8 @@
   "dependencies": {
     "express": "^4.18.2",
     "ws": "^8.12.1",
-    "multer": "^1.4.4"
+    "multer": "^1.4.4",
+    "firebase-admin": "^11.11.0"
   },
   "scripts": {
     "start": "node server.js"
@@ -12,7 +13,9 @@
   "description": "a node.js server with express.js for HTTP and ws.js for websockets",
   "main": "server.js",
   "devDependencies": {},
-  "engines": { "node": "16.x" },
+  "engines": {
+    "node": "16.x"
+  },
   "keywords": [
     "node",
     "express",
