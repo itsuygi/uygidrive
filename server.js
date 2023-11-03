@@ -42,7 +42,7 @@ const multerStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
-  filefilter: function (req, file, cb) {
+  fileFilter: function (req, file, cb) {
     console.log(isValidMimeType(file.mimetype))
     if (!isValidMimeType(file.mimetype)) {
       return cb(new Error("Only music files accepted."), false);
