@@ -22,19 +22,9 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
-const firebaseConfig = {
-  apiKey: "AIzaSyArZ2P4Vy3pcQq20HCeY-XA6mJoB3G1OuM",
-  authDomain: "uygi-online-music.firebaseapp.com",
-  projectId: "uygi-online-music",
-  storageBucket: "uygi-online-music.appspot.com",
-  messagingSenderId: "213078311484",
-  appId: "1:213078311484:web:59b2e3f19c360348ffb939",
-  measurementId: "G-8EVXCHSNMB"
-};
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -59,6 +49,12 @@ const multerStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
+  },
+  fileFilter: function (req, file, cb) {
+    if (!file.originalname.match(/\.(mp3|wav|ogg)$/)) {
+      return cb(new Error("Only music files!"), false);
+    }
+    cb(null, true);
   },
 });
 
