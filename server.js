@@ -26,12 +26,38 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 
+// Uploading setup
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "gs://uygi-online-music.appspot.com"
 });
 
 const bucket = admin.storage().bucket();
+
+const multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+  filefilter: function (req, file, cb) {
+    console.log(isValidMimeType(file.mimetype))
+    if (!isValidMimeType(file.mimetype)) {
+      return cb(new Error("Only music files accepted."), false);
+    }
+    cb(null, true);
+  },
+});
+
+function isValidMimeType(mimeType) {
+  const validMimeTypes = ["audio/mpeg", "audio/wav", "audio/ogg"];
+  return validMimeTypes.includes(mimeType);
+}
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 
 // Local variables
 var topicClients = new Map();
@@ -42,23 +68,6 @@ function serverStart() {
   var port = this.address().port;
   console.log("Server listening on port " + port);
 }
-
-const multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-  fileFilter: function (req, file, cb) {
-    if (!file.originalname.match(/\.(mp3|wav|ogg)$/)) {
-      return cb(new Error("Only music files!"), false);
-    }
-    cb(null, true);
-  },
-});
-
-const upload = multer({ storage: multer.memoryStorage() });
 
 
 // Socket
@@ -194,20 +203,14 @@ function getRandomInt(min, max) {
 
 // Uploading
 
-
 app.get("/upload", (req, res) => {
   res.sendFile("upload.html", { root: __dirname + "/public/upload" });
 });
 
-//app.post("/uploadFile", upload.single("musicFile"), (req, res) => {
-//  var fileUrl = getFileUrl(req.file.filename, req);
-//  res.send(fileUrl);
-//});
-
 app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
   try {
     if (!req.file) {
-      return res.status(400).send('Dosya eksik veya hatalı.');
+      return res.status(400).send('No file or non-accepted file type.');
     }
 
     const file = req.file;
@@ -251,36 +254,8 @@ app.get("/music/:filename", async (req, res) => {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
   }
-  
-
-  /*file.getSignedUrl({ action: "read", expires: "03-09-2491" })
-    .then((urls) => {
-      const url = urls[0];
-      res.redirect(url);
-    })
-    .catch((error) => {
-      console.error("Dosya alınırken hata oluştu:", error);
-      res.status(500).send("Hata");
-    });*/
 });
 
-/*app.get("/upload/list", (req, res) => {
-  fs.readdir("./uploads", (err, files) => {
-    if (err) {
-      res.status(500).send("Error: ", err);
-    } else {
-      var list = [];
-
-      files.forEach((file) => {
-        const fileName = path.basename(file);
-        var fileUrl = getFileUrl(fileName, req);
-
-        list.push(fileUrl);
-      });
-    }
-    res.send(JSON.stringify(list));
-  });
-}); */
 
 app.get("/upload/list", (req, res) => {
   bucket.getFiles()
@@ -329,3 +304,39 @@ app.get("/getStreamId", (req, res) => {
 server.listen(process.env.PORT || 3000, serverStart);
 // start the websocket server listening for clients:
 wss.on("connection", handleClient);
+
+
+// Old codes
+
+//app.post("/uploadFile", upload.single("musicFile"), (req, res) => {
+//  var fileUrl = getFileUrl(req.file.filename, req);
+//  res.send(fileUrl);
+//});
+
+/*app.get("/upload/list", (req, res) => {
+  fs.readdir("./uploads", (err, files) => {
+    if (err) {
+      res.status(500).send("Error: ", err);
+    } else {
+      var list = [];
+
+      files.forEach((file) => {
+        const fileName = path.basename(file);
+        var fileUrl = getFileUrl(fileName, req);
+
+        list.push(fileUrl);
+      });
+    }
+    res.send(JSON.stringify(list));
+  });
+}); */
+
+/*file.getSignedUrl({ action: "read", expires: "03-09-2491" })
+    .then((urls) => {
+      const url = urls[0];
+      res.redirect(url);
+    })
+    .catch((error) => {
+      console.error("Dosya alınırken hata oluştu:", error);
+      res.status(500).send("Hata");
+    });*/
