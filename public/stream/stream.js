@@ -28,7 +28,7 @@ function setup() {
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
     setTimeout(function() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-    }, 2000);
+    }, 3000);
   });
   
   stopStreamButton.addEventListener('click', function(){
@@ -60,9 +60,11 @@ function readIncomingMessage(event) {
 
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     console.log("[Socket]: Connected to stream successfully.")
-  } else if (dataJson.type == "play") {
+  } else if (dataJson.type == "load") {
     audio.src = dataJson.message;
     audio.load();
+  } else if (dataJson.type == "play") {
+    audio.play()
   } else if (dataJson.type == "stop") {
     audio.src = "";
   }
