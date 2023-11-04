@@ -16,6 +16,8 @@ let audio;
 let volumeSlider;
 let volumeValue;
 
+let downloaded = {}
+
 function setup() {
   // get all the DOM elements that need listeners:
   incomingSpan = document.getElementById("incoming");
@@ -79,6 +81,19 @@ function closeConnection() {
   connectionStatus.style.color = "red";
 }
 
+function downloadMusic(url) {
+  fetch(url)
+  .then(response => response.arrayBuffer()) // URL'den byte'ları al
+  .then(buffer => {
+    let blobSrc = URL.createObjectURL(new Blob([buffer])); // Blob oluştur ve src olarak ayarla
+    
+    downloaded[url] = blobSrc
+  })
+  .catch(error => {
+    console.error('Müzik yüklenirken hata oluştu:', error);
+  });
+}
+
 function readIncomingMessage(event) {
   // display the incoming message:
   incomingSpan.innerHTML = event.data;
@@ -91,13 +106,17 @@ function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
-    audio.src = dataJson.message;
-    audio.play();
+    if (downloaded[dataJson.message]) {
+      audio.src = downloaded[dataJson.message]
+    } else {
+      audio.src = dataJson.message;
+      audio.load()
+    }
+    
   } else if (dataJson.type == "stop") {
     audio.src = "";
   } else if (dataJson.type == "load") {
-    audio.src = dataJson.message;
-    audio.load()
+    downloadMusic(dataJson.message)
   } else if (dataJson.type == "resumePlay") {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";
