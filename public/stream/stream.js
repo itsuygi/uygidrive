@@ -36,7 +36,7 @@ function setup() {
   });
   
   stopStreamButton.addEventListener('click', function(){
-    handleStatus("Sent stop message", "block")
+    handleStatus("Music stopped.", "")
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "stop"}})
   });
   

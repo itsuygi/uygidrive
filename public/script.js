@@ -103,7 +103,7 @@ function readIncomingMessage(event) {
   console.log(dataJson);
 
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
-    connectionStatus.innerHTML = "Listening to stream";
+    connectionStatus.innerHTML = "Listening to stream: " + outgoingText.value;
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
