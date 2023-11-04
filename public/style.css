@@ -16,6 +16,10 @@ h1 {
   color: #0072e3;
 }
 
+h3 {
+  text-align: center;
+}
+
 .widget,
 .connect-status {
   flex: 1; /* Bağlantı bilgilerini ve metinleri yatayda eşit bir şekilde dağıt */
