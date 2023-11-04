@@ -88,6 +88,7 @@ function downloadMusic(url) {
     let blobSrc = URL.createObjectURL(new Blob([buffer])); // Blob oluştur ve src olarak ayarla
     
     downloaded[url] = blobSrc
+    console.log(downloaded)
   })
   .catch(error => {
     console.error('Müzik yüklenirken hata oluştu:', error);
