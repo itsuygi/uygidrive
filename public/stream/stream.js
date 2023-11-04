@@ -1,6 +1,6 @@
 
 // change 'wss' to 'ws' for running without SSL):
-let serverURL = 'wss://' + window.location.host;
+let serverURL = 'wss://' + window.location.origin;
 
 let socket;
 
@@ -47,8 +47,8 @@ function setup() {
 
 function openSocket(url) {
   socket = new WebSocket(url);
-  socket.addEventListener("open", openConnection);
-  socket.addEventListener("close", closeConnection);
+  //socket.addEventListener("open", openConnection);
+  //socket.addEventListener("close", closeConnection);
   socket.addEventListener("message", readIncomingMessage);
   
   sendSocketMessage("subscribe", topic)
@@ -73,6 +73,8 @@ function sendSocketMessage(type, message) {
 
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(sendJson));
+  } else {
+    console.log("[Socket]: tried to sent socket message but there is no socket connection")
   }
 }
 
@@ -85,7 +87,6 @@ function handleAudio(url, state){
   }
   
 }
-
 
 async function sendMessage(method, url, message) {
   //if the socket's open, send a message:
