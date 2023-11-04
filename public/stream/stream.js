@@ -27,12 +27,12 @@ function setup() {
   
   
   streamURLButton.addEventListener('click', function(){
-    handleStatus("Sending load message...", "block")
+    handleStatus("Waiting for every listener to sync...", "")
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
     setTimeout(function() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-      handleStatus("Sent play message.", "block")
-    }, 4000);
+      handleStatus("Started to play.", "")
+    }, 5000);
   });
   
   stopStreamButton.addEventListener('click', function(){
