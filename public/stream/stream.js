@@ -1,6 +1,6 @@
 
 // change 'wss' to 'ws' for running without SSL):
-let serverURL = 'wss://' + window.location.origin;
+let serverURL = 'wss://' + window.location.host;
 
 let socket;
 
@@ -40,18 +40,17 @@ function setup() {
     streamId.innerText = value
 
     topic = value
+    sendSocketMessage("subscribe", topic)
   });
   
   openSocket();
 }
 
-function openSocket(url) {
-  socket = new WebSocket(url);
+function openSocket() {
+  socket = new WebSocket(serverURL);
   //socket.addEventListener("open", openConnection);
   //socket.addEventListener("close", closeConnection);
   socket.addEventListener("message", readIncomingMessage);
-  
-  sendSocketMessage("subscribe", topic)
 }
 
 function readIncomingMessage(event) {
