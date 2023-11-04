@@ -91,7 +91,8 @@ function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
-    audio.play()
+    audio.src = dataJson.message;
+    audio.play();
   } else if (dataJson.type == "stop") {
     audio.src = "";
   } else if (dataJson.type == "load") {
