@@ -133,6 +133,7 @@ function readIncomingMessage(event) {
       
     } else {
       audio.src = dataJson.message;
+      audio.load()
     }
   } else if (dataJson.type == "stop") {
     audio.src = "";
