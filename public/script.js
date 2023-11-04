@@ -120,6 +120,12 @@ function readIncomingMessage(event) {
     if (encodedURI == audio.src) {
       audio.currentTime = 0
       console.log("Resetted time")
+      
+      try {
+        audio.play()
+      } catch(error) {
+        console.log("Error while manually play", error)
+      }
     } else {
       audio.src = dataJson.message;
     }
@@ -127,9 +133,11 @@ function readIncomingMessage(event) {
     audio.src = "";
   } else if (dataJson.type == "load") {
     //downloadMusic(dataJson.message)
-    audio.muted = true
     audio.src = dataJson.message
+    audio.muted = true
+    audio.load();
     console.log("Setted src while muted")
+    
   } else if (dataJson.type == "resumePlay") {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";

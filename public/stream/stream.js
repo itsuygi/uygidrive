@@ -32,7 +32,7 @@ function setup() {
     setTimeout(function() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
       handleStatus("Sent play message.", "block")
-    }, 3500);
+    }, 4000);
   });
   
   stopStreamButton.addEventListener('click', function(){
@@ -80,9 +80,14 @@ function readIncomingMessage(event) {
     if (encodedURI == audio.src) {
       audio.currentTime = 0
       console.log("Resetted time.")
+      try {
+        audio.play()
+      } catch(error) {
+        console.log("Error while manually play", error)
+      }
     } else {
       audio.src = dataJson.message;
-    }
+    };
   } else if (dataJson.type == "stop") {
     audio.src = "";
   }
