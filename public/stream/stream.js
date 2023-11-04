@@ -12,7 +12,7 @@ let streamURLButton;
 let stopStreamButton;
 let audio;
 
-let topic = 0
+let topic
 
 function setup() {
   outgoingText = document.getElementById('url');
@@ -41,6 +41,39 @@ function setup() {
 
     topic = value
   });
+  
+  openSocket();
+}
+
+function openSocket(url) {
+  socket = new WebSocket(url);
+  socket.addEventListener("open", openConnection);
+  socket.addEventListener("close", closeConnection);
+  socket.addEventListener("message", readIncomingMessage);
+  
+  sendSocketMessage("subscribe", topic)
+}
+
+function readIncomingMessage(event) {
+  let dataJson = JSON.parse(event.data);
+  console.log(dataJson);
+
+  if (dataJson.type == "connection" && dataJson.message == "successfull") {
+    console.log("[Socket]: Connected to stream successfully.")
+  } else if (dataJson.type == "play") {
+    audio.src = dataJson.message;
+    audio.load();
+  } else if (dataJson.type == "stop") {
+    audio.src = "";
+  }
+}
+
+function sendSocketMessage(type, message) {
+  let sendJson = { type: type, message: message };
+
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify(sendJson));
+  }
 }
 
 function handleAudio(url, state){
@@ -52,20 +85,6 @@ function handleAudio(url, state){
   }
   
 }
-
-function openConnection() {
-  // display the change of state:
-  connectionSpan.innerHTML = "Connected to server";
-  connectionSpan.style.color = "green"
-}
-
-function closeConnection() {
-  // display the change of state:
-  connectionSpan.innerHTML = "Not server connection";
-  connectionSpan.style.color = "red"
-}
-
-
 
 
 async function sendMessage(method, url, message) {
