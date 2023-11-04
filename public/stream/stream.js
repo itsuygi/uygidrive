@@ -73,9 +73,13 @@ function readIncomingMessage(event) {
     audio.muted = true
     audio.src = dataJson.message
   } else if (dataJson.type == "play") {
-    if (dataJson.message == audio.src) {
-      audio.muted = false
+    let encodedURI = encodeURI(dataJson.message)
+    console.log(encodedURI, audio.src)
+    audio.muted = false
+    
+    if (encodedURI == audio.src) {
       audio.currentTime = 0
+      console.log("Resetted time.")
     } else {
       audio.src = dataJson.message;
     }
