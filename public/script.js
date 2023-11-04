@@ -107,17 +107,22 @@ function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
-    if (downloaded[dataJson.message]) {
+    /*if (downloaded[dataJson.message]) {
       audio.src = downloaded[dataJson.message]
     } else {
       audio.src = dataJson.message;
       audio.load()
-    }
+    }*/
     
+    if (dataJsonç)
+    audio.src = dataJson.message;
   } else if (dataJson.type == "stop") {
     audio.src = "";
   } else if (dataJson.type == "load") {
-    downloadMusic(dataJson.message)
+    //downloadMusic(dataJson.message)
+    audio.muted = true
+    audio.src = dataJson.message
+    
   } else if (dataJson.type == "resumePlay") {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";
