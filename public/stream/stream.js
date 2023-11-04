@@ -25,13 +25,14 @@ function setup() {
   
   
   streamURLButton.addEventListener('click', function(){
-    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-    handleAudio(outgoingText.value, true);
+    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
+    setTimeout(function() {
+      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
+    }, 2000);
   });
   
   stopStreamButton.addEventListener('click', function(){
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "stop"}})
-    handleAudio(outgoingText.value, false);
   });
   
   

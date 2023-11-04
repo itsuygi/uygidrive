@@ -87,9 +87,10 @@ function readIncomingMessage(event) {
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
     audio.src = dataJson.message;
-    audio.load();
   } else if (dataJson.type == "stop") {
     audio.src = "";
+  } else if (dataJson.type == "load") {
+    audio.load()
   } else if (dataJson.type == "resumePlay") {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";
