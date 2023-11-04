@@ -114,15 +114,20 @@ function readIncomingMessage(event) {
       audio.load()
     }*/
     
-    if (dataJsonç)
-    audio.src = dataJson.message;
+    if (dataJson.message == audio.src) {
+      audio.muted = false
+      audio.currentTime = 0
+      console.log("unmuted")
+    } else {
+      audio.src = dataJson.message;
+    }
   } else if (dataJson.type == "stop") {
     audio.src = "";
   } else if (dataJson.type == "load") {
     //downloadMusic(dataJson.message)
     audio.muted = true
     audio.src = dataJson.message
-    
+    console.log("Setted src while muted")
   } else if (dataJson.type == "resumePlay") {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";
