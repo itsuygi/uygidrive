@@ -38,6 +38,11 @@ function setup() {
   volumeSlider.oninput = function () {
     handleVolume();
   };
+  
+  audio.addEventListener('canplaythrough', function() { 
+     console.log("Audio loaded.")
+  }, false);
+  
   openSocket(serverURL);
 }
 
@@ -131,10 +136,6 @@ function ping() {
   sendMessage("keepAlive", "ping");
 }
 setInterval(ping, 30000);
-
-audio.addEventListener('canplaythrough', function() { 
-   console.log("Audio loaded.")
-}, false);
 
 
 window.addEventListener("load", setup);

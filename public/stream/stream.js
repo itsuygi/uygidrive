@@ -49,6 +49,10 @@ function setup() {
     sendSocketMessage("subscribe", topic)
   });
   
+  audio.addEventListener('canplaythrough', function() { 
+     console.log("Audio loaded.")
+  }, false);
+  
   openSocket();
 }
 
