@@ -132,5 +132,9 @@ function ping() {
 }
 setInterval(ping, 30000);
 
+audio.addEventListener('canplaythrough', function() { 
+   console.log("Audio loaded.")
+}, false);
+
 
 window.addEventListener("load", setup);
