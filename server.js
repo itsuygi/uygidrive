@@ -227,7 +227,7 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
     await bucket.file(filename).makePublic()
 
     const fileUrl = getFileUrl(filename, req)
-    res.status(200).send(fileUrl);
+    res.send(fileUrl);
   } catch (error) {
     console.error('Dosya yükleme hatası:', error);
     res.status(500).send(error);
