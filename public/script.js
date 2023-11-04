@@ -125,6 +125,7 @@ function readIncomingMessage(event) {
       if (audio.paused) {
         try {
           audio.play()
+          console.log("Started manually")
         } catch(error) {
           console.log("Error while manually play", error)
         }
