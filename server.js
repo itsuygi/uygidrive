@@ -229,8 +229,8 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
     const fileUrl = getFileUrl(filename, req)
     res.send(fileUrl);
   } catch (error) {
-    console.error('Dosya yükleme hatası:', error);
-    res.status(500).send(error);
+    console.error('File uploading error:', error);
+    res.status(500).send(error.message);
   }
 });
 
