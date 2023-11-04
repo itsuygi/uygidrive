@@ -117,15 +117,19 @@ function readIncomingMessage(event) {
     let encodedURI = encodeURI(dataJson.message)
     
     audio.muted = false
+    console.log(encodedURI, audio.src)
     if (encodedURI == audio.src) {
       audio.currentTime = 0
       console.log("Resetted time")
       
-      try {
-        audio.play()
-      } catch(error) {
-        console.log("Error while manually play", error)
+      if (audio.paused) {
+        try {
+          audio.play()
+        } catch(error) {
+          console.log("Error while manually play", error)
+        }
       }
+      
     } else {
       audio.src = dataJson.message;
     }
