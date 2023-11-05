@@ -11,7 +11,7 @@ const path = require("path");
 const multer = require("multer");
 
 const admin = require('firebase-admin');
-const serviceAccount = require('./uygi-online-music-firebase-adminsdk-jpnoz-9adaf422a6.json');
+const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
 
 const app = express();
 
