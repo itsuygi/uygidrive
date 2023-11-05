@@ -109,9 +109,10 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
     
-    audio.muted = false
+    
     console.log(encodedURI, audio.src)
     if (encodedURI == audio.src) {
+      audio.muted = false
       audio.currentTime = 0
       console.log("Resetted time")
       
@@ -125,8 +126,11 @@ function readIncomingMessage(event) {
       }
       
     } else {
+      console.log("Playing without sync")
+      audio.muted = false
+      audio.src = "";
       audio.src = dataJson.message;
-      audio.load()
+      audio.load();
     }
   } else if (dataJson.type == "stop") {
     audio.src = "";
