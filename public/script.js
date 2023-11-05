@@ -129,7 +129,6 @@ function readIncomingMessage(event) {
       audio.muted = false
       
       audio.src = dataJson.message;
-      audio.load();
     }
   } else if (dataJson.type == "stop") {
     audio.src = "";
