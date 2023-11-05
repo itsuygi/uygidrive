@@ -44,7 +44,7 @@ function setup() {
   
   audio.addEventListener('canplaythrough', function() { 
      console.log("Audio loaded.")
-  }, false);
+  });
   
   audio.onended = function() {
     console.log("Audio ended")
@@ -134,10 +134,11 @@ function readIncomingMessage(event) {
     audio.src = "";
     hasLoaded = false
   } else if (dataJson.type == "load") {
-    //downloadMusic(dataJson.message)
-    audio.src = dataJson.message
+    audio.src = dataJson.message.url;
     audio.load();
-    audio.muted = true
+    audio.currentTime = 0;
+    
+    //audio.muted = true
     hasLoaded = true
     
     console.log("Setted src while muted")
