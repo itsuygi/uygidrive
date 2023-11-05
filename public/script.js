@@ -109,9 +109,12 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
     
+    audio.muted = false
+    audio.currentTime = 0
+    console.log("Resetted time")
     
     console.log(encodedURI, audio.src)
-    if (encodedURI == audio.src) {
+    /*if (encodedURI == audio.src) {
       audio.muted = false
       audio.currentTime = 0
       console.log("Resetted time")
@@ -131,14 +134,15 @@ function readIncomingMessage(event) {
       audio.src = "";
       audio.src = dataJson.message;
       audio.load();
-    }
+    }*/
   } else if (dataJson.type == "stop") {
     audio.src = "";
   } else if (dataJson.type == "load") {
     //downloadMusic(dataJson.message)
     audio.src = dataJson.message
-    audio.muted = true
     audio.load();
+    audio.muted = true
+    
     console.log("Setted src while muted")
     
   } else if (dataJson.type == "resumePlay") {
