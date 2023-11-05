@@ -126,7 +126,6 @@ function readIncomingMessage(event) {
       
     } else {
       console.log("Playing without sync")
-      audio.muted = false
       
       audio.src = dataJson.message;
     }
