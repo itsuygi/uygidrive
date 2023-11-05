@@ -337,6 +337,10 @@ app.get("/registerStreamId", (req, res) => {
   res.send("Registered stream id");
 });
 
+app.get("/list", (req, res) => {
+  res.json(topicClients);
+});
+
 
 // Server handling
 
