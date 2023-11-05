@@ -38,15 +38,17 @@
     </div>
     <button id="connectButton" hidden="true" onclick="location.reload()">Reset connection</button>
   </div>
+  
+  <br>
 
-  <div id="musicStatus" hidden="true">
+  <div id="musicStatus" hidden>
     <b>Music: </b>
-    <label id="musicInfo"></label>
+    <label id="musicInfo">Nothing is playing.</label>
   </div>
 
   <br>
   
-  <div class="volume-control">
+  <div class="volume-control" hidden>
     <div class="volume-label">
       <b>Volume: </b>
       <label id="volumeValue">38%</label>
