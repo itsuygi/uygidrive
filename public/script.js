@@ -134,11 +134,11 @@ function readIncomingMessage(event) {
     audio.src = "";
     hasLoaded = false
   } else if (dataJson.type == "load") {
-    audio.src = dataJson.message.url;
+    audio.muted = true
+    audio.src = dataJson.message;
     audio.load();
     audio.currentTime = 0;
     
-    //audio.muted = true
     hasLoaded = true
     
     console.log("Setted src while muted")
