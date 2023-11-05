@@ -27,29 +27,40 @@ function setup() {
   audio = document.getElementById('audio');
   status = document.getElementById('status');
   
-  function waitFor(conditionFunction) {
+  function waitFor(conditionFunction, maxRetries) {
+    return new Promise(async (resolve, reject) => {
+      let retries = 0;
 
-    const poll = resolve => {
-      if(conditionFunction()) resolve();
-      else setTimeout(_ => new Error("Timeout"), 4000);
-    }
+      async function poll() {
+        if (conditionFunction()) {
+          resolve();
+        } else {
+          retries++;
+          if (retries <= maxRetries) {
+            audio.load()
+            await new Promise(resolve => setTimeout(resolve, 4000)); // 4 saniye bekle
+            poll();
+          } else {
+            reject(new Error("Exceeded maximum retries"));
+          }
+        }
+      }
 
-    return new Promise(poll);
+      poll();
+    });
   }
   
   streamURLButton.addEventListener('click', async function(){
     handleStatus("Waiting for every listener to sync...", "")
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
-    /*setTimeout(function() {
-      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-      handleStatus("Started to play.", "")
-    }, 5000);*/
+    
+    const maxRetries = 3; 
     try {
-      await waitFor(_ => hasDownloaded === true);
-      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-      handleStatus("Started to play.", "")
-    } catch(error) {
-      console.error(error)
+      await waitFor(_ => hasDownloaded === true, maxRetries);
+      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}});
+      handleStatus("Started to play.", "");
+    } catch (error) {
+      console.error("Exceeded maximum retries. Music could not be loaded.");
     }
     
   });
