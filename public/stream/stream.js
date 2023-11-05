@@ -31,7 +31,7 @@ function setup() {
 
     const poll = resolve => {
       if(conditionFunction()) resolve();
-      else setTimeout(_ => poll(resolve), 400);
+      else setTimeout(_ => new Error("Timeout"), 4000);
     }
 
     return new Promise(poll);
@@ -44,10 +44,14 @@ function setup() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
       handleStatus("Started to play.", "")
     }, 5000);*/
-    await waitFor(_ => hasDownloaded === true);
+    try {
+      await waitFor(_ => hasDownloaded === true);
+      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
+      handleStatus("Started to play.", "")
+    } catch(error) {
+      console.error(error)
+    }
     
-    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-    handleStatus("Started to play.", "")
   });
   
   stopStreamButton.addEventListener('click', function(){
