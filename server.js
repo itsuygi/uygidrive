@@ -219,7 +219,7 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
 
     const fileOptions = {
       metadata: {
-        contentType: file.mimetype // Dosya türünü ayarlayın (ör. 'audio/mpeg')
+        contentType: file.mimetype
       }
     };
 
@@ -269,8 +269,8 @@ app.get("/upload/list", (req, res) => {
       res.json(fileUrls);
     })
     .catch((error) => {
-      console.error("Dosyaları listelerken hata oluştu:", error);
-      res.status(500).json({ message: "Dosyaları listelerken hata oluştu." });
+      console.error("Error while listing the files:", error);
+      res.status(500).send(error.message);
     });
 });
 
