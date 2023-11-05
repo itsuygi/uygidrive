@@ -17,6 +17,7 @@ let volumeSlider;
 let volumeValue;
 
 let downloaded = {}
+let hasLoaded = false
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -44,6 +45,11 @@ function setup() {
   audio.addEventListener('canplaythrough', function() { 
      console.log("Audio loaded.")
   }, false);
+  
+  audio.onended = function() {
+    console.log("Audio ended")
+    hasLoaded = false
+  };
   
   openSocket(serverURL);
 }
@@ -108,21 +114,19 @@ function readIncomingMessage(event) {
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
-     
-    audio.src = dataJson.message
+    
     audio.muted = false
     audio.currentTime = 0
     console.log("Resetted time")
     
-    console.log(encodedURI, audio.src)
-    /*if (encodedURI == audio.src) {
+    if (hasLoaded == true) {
       audio.muted = false
       audio.currentTime = 0
       console.log("Resetted time")
       
       if (audio.paused) {
         try {
-          audio.src = dataJson.message;
+          audio.load();
           console.log("Started manually")
         } catch(error) {
           console.log("Error while manually play", error)
@@ -132,17 +136,19 @@ function readIncomingMessage(event) {
     } else {
       console.log("Playing without sync")
       audio.muted = false
-      audio.src = "";
+      
       audio.src = dataJson.message;
       audio.load();
-    }*/
+    }
   } else if (dataJson.type == "stop") {
     audio.src = "";
+    hasLoaded = false
   } else if (dataJson.type == "load") {
     //downloadMusic(dataJson.message)
     audio.src = dataJson.message
     audio.load();
     audio.muted = true
+    hasLoaded = true
     
     console.log("Setted src while muted")
     

@@ -14,6 +14,7 @@ let audio;
 let status;
 
 let topic
+let hasLoaded = false
 
 function setup() {
   outgoingText = document.getElementById('url');
@@ -53,6 +54,11 @@ function setup() {
      console.log("Audio loaded.")
   }, false);
   
+  audio.onended = function() {
+    console.log("Audio ended")
+    hasLoaded = false
+  };
+  
   openSocket();
 }
 
@@ -72,6 +78,7 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "load") {
     audio.muted = true
     audio.src = dataJson.message
+    hasLoaded = true
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
     console.log(encodedURI, audio.src)
@@ -94,6 +101,7 @@ function readIncomingMessage(event) {
     };
   } else if (dataJson.type == "stop") {
     audio.src = "";
+    hasLoaded = false
   }
 }
 
