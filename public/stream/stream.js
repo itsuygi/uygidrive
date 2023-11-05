@@ -26,14 +26,24 @@ function setup() {
   audio = document.getElementById('audio');
   status = document.getElementById('status');
   
+  function loadHandler() {
+    console.log("Audio loaded, sending request")
+    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
+    handleStatus("Started to play.", "")
+    
+    audio.removeEventListener('canplaythrough', loadHandler())
+  }
+  
   
   streamURLButton.addEventListener('click', function(){
     handleStatus("Waiting for every listener to sync...", "")
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
-    setTimeout(function() {
+    /*setTimeout(function() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
       handleStatus("Started to play.", "")
-    }, 5000);
+    }, 5000);*/
+    
+    audio.addEventListener('canplaythrough', loadHandler, false);
   });
   
   stopStreamButton.addEventListener('click', function(){
@@ -52,6 +62,7 @@ function setup() {
   
   audio.addEventListener('canplaythrough', function() { 
      console.log("Audio loaded.")
+    
   }, false);
   
   audio.onended = function() {
