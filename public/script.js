@@ -137,7 +137,6 @@ function readIncomingMessage(event) {
     audio.muted = true
     audio.src = dataJson.message;
     audio.load();
-    audio.currentTime = 0;
     
     hasLoaded = true
     
