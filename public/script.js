@@ -107,13 +107,6 @@ function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
-    /*if (downloaded[dataJson.message]) {
-      audio.src = downloaded[dataJson.message]
-    } else {
-      audio.src = dataJson.message;
-      audio.load()
-    }*/
-    
     let encodedURI = encodeURI(dataJson.message)
     
     audio.muted = false
