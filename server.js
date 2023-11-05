@@ -331,7 +331,7 @@ app.get("/registerStreamId", (req, res) => {
   const IP = req.headers["x-forwarded-for"].split(",")[0];
   console.log(IP);
 
-  streamerIPs[id] = IP;
+  //streamerIPs[id] = IP;
   console.log(streamerIPs);
 
   res.send("Registered stream id");
