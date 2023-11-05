@@ -58,6 +58,8 @@ function isValidMimeType(mimeType) {
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+let memoryStorage = {}
+
 
 // Local variables
 var topicClients = new Map();
@@ -245,11 +247,23 @@ app.get("/localUpload/:filename", (req, res) => {
 app.get("/music/:filename", async (req, res) => {
   try {
     const filename = req.params.filename;
-    const file = bucket.file(filename);
-    const [fileContent] = await file.download();
+    
+    if (memoryStorage[filename]) {
+      console.log("Found file in memory: ", filename)
+      res.set('Content-Type', 'audio/mpeg');
+      console.log(memoryStorage[filename])
+      res.send(memoryStorage[filename]);
+    } else {
+      console.log("File didn't found on memory, downloading: ", filename)
+      const file = bucket.file(filename);
+      const fileContent = await file.download();
+      
+      const fileData = fileContent[0];
+      memoryStorage[filename] = fileData;
 
-    res.set("Content-Type", "audio/mpeg")
-    res.send(fileContent)
+      res.set("Content-Type", "audio/mpeg")
+      res.send(fileContent)
+    }
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
