@@ -25,6 +25,12 @@ app.use(bodyParser.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+// Memory function
+
+function getMemoryUsage() {
+  let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
+  return Math.round( Number(total_rss) / 1e6 ) - 60;
+}
 
 // Uploading setup
 
@@ -258,9 +264,19 @@ app.get("/music/:filename", async (req, res) => {
       const file = bucket.file(filename);
       const fileContent = await file.download();
       
-      const fileData = fileContent[0];
-      memoryStorage[filename] = fileData;
-
+      let memory = getMemoryUsage()
+      let memoryUsage = Math.round((memory * 100)/ 512 )
+      
+      console.log("File downloaded: ", filename)
+      console.log("Memory usage: %", memoryUsage)
+      
+      if (memoryUsage < 90) {
+        const fileData = fileContent[0];
+        memoryStorage[filename] = fileData;
+        
+        console.log("File saved to memory, enough space: ", filename)
+      }
+      
       res.set("Content-Type", "audio/mpeg")
       res.send(fileContent)
     }
