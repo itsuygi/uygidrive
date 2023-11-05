@@ -115,22 +115,13 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
     
-    audio.muted = false
-    audio.currentTime = 0
-    console.log("Resetted time")
-    
     if (hasLoaded == true) {
       audio.muted = false
       audio.currentTime = 0
       console.log("Resetted time")
       
       if (audio.paused) {
-        try {
-          audio.load();
-          console.log("Started manually")
-        } catch(error) {
-          console.log("Error while manually play", error)
-        }
+        
       }
       
     } else {
@@ -147,7 +138,7 @@ function readIncomingMessage(event) {
     //downloadMusic(dataJson.message)
     audio.src = dataJson.message
     audio.load();
-    audio.muted = true
+    audio.muted = false
     hasLoaded = true
     
     console.log("Setted src while muted")
