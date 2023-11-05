@@ -128,6 +128,7 @@ function readIncomingMessage(event) {
       console.log("Playing without sync")
       
       audio.src = dataJson.message;
+      audio.load()
     }
   } else if (dataJson.type == "stop") {
     audio.src = "";
