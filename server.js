@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+
 // Memory function
 
 function getMemoryUsage() {
@@ -79,7 +80,6 @@ function serverStart() {
 
 
 // Socket
-
 function handleClient(thisClient, request) {
   console.log("New Connection handled");
   // add this client to the clients array
