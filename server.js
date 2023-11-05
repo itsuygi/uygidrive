@@ -327,8 +327,8 @@ app.get("/getStreamId", (req, res) => {
   res.send(id.toString());
 });
 
-app.post("/registerStreamId", (req, res) => {
-  const id = req.params.streamId
+app.get("/registerStreamId", (req, res) => {
+  const id = req.query.streamId
   
   const IP = req.headers["x-forwarded-for"].split(",")[0];
   console.log(IP);
