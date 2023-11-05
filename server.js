@@ -143,8 +143,6 @@ function handleClient(thisClient, request) {
     console.log(topicClients);
   }
 
-  // This function broadcasts messages to all webSocket clients
-
   // set up client event listeners:
   thisClient.on("message", clientResponse);
   thisClient.on("close", endClient);
