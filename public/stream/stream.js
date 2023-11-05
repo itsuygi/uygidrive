@@ -15,6 +15,7 @@ let status;
 
 let topic
 let hasLoaded = false
+let hasDownloaded = false
 
 function setup() {
   outgoingText = document.getElementById('url');
@@ -26,24 +27,27 @@ function setup() {
   audio = document.getElementById('audio');
   status = document.getElementById('status');
   
-  function loadHandler() {
-    console.log("Audio loaded, sending request")
-    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
-    handleStatus("Started to play.", "")
-    
-    audio.removeEventListener('canplaythrough', loadHandler())
+  function waitFor(conditionFunction) {
+
+    const poll = resolve => {
+      if(conditionFunction()) resolve();
+      else setTimeout(_ => poll(resolve), 400);
+    }
+
+    return new Promise(poll);
   }
   
-  
-  streamURLButton.addEventListener('click', function(){
+  streamURLButton.addEventListener('click', async function(){
     handleStatus("Waiting for every listener to sync...", "")
     sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
     /*setTimeout(function() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
       handleStatus("Started to play.", "")
     }, 5000);*/
+    await waitFor(_ => hasDownloaded === true);
     
-    audio.addEventListener('canplaythrough', loadHandler, false);
+    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}})
+    handleStatus("Started to play.", "")
   });
   
   stopStreamButton.addEventListener('click', function(){
@@ -61,8 +65,8 @@ function setup() {
   });
   
   audio.addEventListener('canplaythrough', function() { 
-     console.log("Audio loaded.")
-    
+    console.log("Audio loaded.")
+    hasDownloaded = true
   }, false);
   
   audio.onended = function() {
@@ -87,6 +91,7 @@ function readIncomingMessage(event) {
   if (dataJson.type == "connection" && dataJson.message == "successfull") {
     console.log("[Socket]: Connected to stream successfully.")
   } else if (dataJson.type == "load") {
+    hasDownloaded = false
     audio.muted = true
     audio.src = dataJson.message
     hasLoaded = true
@@ -113,6 +118,7 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "stop") {
     audio.src = "";
     hasLoaded = false
+    hasDownloaded = false
   }
 }
 
