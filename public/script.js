@@ -108,7 +108,8 @@ function readIncomingMessage(event) {
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
     let encodedURI = encodeURI(dataJson.message)
-    
+     
+    audio.src = dataJson.message
     audio.muted = false
     audio.currentTime = 0
     console.log("Resetted time")
