@@ -312,7 +312,7 @@ app.get("/stream", (req, res) => {
 
 app.get("/getStreamId", (req, res) => {
   var id = 0;
-  do id = getRandomInt(1000, 99999);
+  do id = getRandomInt(1000, 9999);
   while (topicClients.has(id) == true);
 
   console.log(id);
@@ -325,6 +325,18 @@ app.get("/getStreamId", (req, res) => {
   console.log(streamerIPs);
 
   res.send(id.toString());
+});
+
+app.post("/registerStreamId", (req, res) => {
+  const id = req.params.streamId
+  
+  const IP = req.headers["x-forwarded-for"].split(",")[0];
+  console.log(IP);
+
+  streamerIPs[id] = IP;
+  console.log(streamerIPs);
+
+  res.send("Registered stream id");
 });
 
 
