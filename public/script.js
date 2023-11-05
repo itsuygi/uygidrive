@@ -138,7 +138,7 @@ function readIncomingMessage(event) {
     //downloadMusic(dataJson.message)
     audio.src = dataJson.message
     audio.load();
-    audio.muted = false
+    audio.muted = true
     hasLoaded = true
     
     console.log("Setted src while muted")
