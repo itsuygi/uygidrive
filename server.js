@@ -376,7 +376,7 @@ function createMessageJson(topic, type, message) {
   return newMessage
 }
 
-function checkCommand(command, body) {
+/*function checkCommand(command, body) {
   const commandConfig = APICommands[command]
   
   if (commandConfig == undefined) {
@@ -392,7 +392,7 @@ function checkCommand(command, body) {
   }
   
   return true
-}
+}*/
 
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
@@ -403,7 +403,7 @@ function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, token_data) => {
     if (err) {
-      return res.status(403).send('Forbidden');
+      return res.status(403).send(err);
     } else if (token_data.id !== req.body.id) {
       return res.status(401).send('Unauthorized');
     }
@@ -423,8 +423,8 @@ router.post('/play', authenticateToken, (req, res) => {
   const url = body.url;
   
   if (topic == undefined || url == undefined)  {
-    res.json({'result': "error", 'message': "Missing parameters"})
-    return
+    return res.json({'result': "error", 'message': "Missing parameters"})
+    
   }
  
   let message = createMessageJson(topic, "play", url)
@@ -439,8 +439,7 @@ router.post('/load', authenticateToken, (req, res) => {
   const url = body.url;
   
   if (topic == undefined || url == undefined)  {
-    res.json({'result': "error", 'message': "Missing parameters"})
-    return
+    return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
   let message = createMessageJson(topic, "load", url)
@@ -455,14 +454,23 @@ router.post('/stop', authenticateToken, (req, res) => {
   const url = body.url;
   
   if (topic == undefined)  {
-    res.json({'result': "error", 'message': "Missing parameters"})
-    return
+    return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
   let message = createMessageJson(topic, "stop", url)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
+})
+
+router.get('/getAccessToken', (req, res) => { 
+  const topic = req.body.id;
+  if (topic == undefined) {
+    return res.json({'result': "error", 'message': "Missing parameters"}) 
+  }
+  const token = generateAccessToken({'id': topic})
+
+  res.json({ token });
 })
 
 app.use('/api', router)
