@@ -394,43 +394,44 @@ function checkCommand(command, body) {
   return true
 }
 
-router.use((req, res, next) => {
-  if (command !== "getAccessToken") {
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
+function verifyToken(token) {
+  
 
-  if (token == null) return res.sendStatus(401)
+  if (token == null) return 401
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     console.log(err)
+    if (err) return 403
 
-    if (err) return res.sendStatus(403)
-
-    next()
   })
-})
+}
 
 router.get('/', (req, res) => {
   res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
 })
 
-router.post('/:command', (req, res) => { 
+router.post('/:command', async (req, res) => { 
   const command = req.params.command;
   const body = req.body;
   const topic = body.id;
   const url = body.url;
-
-  let check = checkCommand(command, body)
-
-  if (check !== true) {
-     res.json({'result': "error", 'message': check})
-
-     return
-   }
+  
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
   
   if (command !== "getAccessToken") {
+    let check = checkCommand(command, body)
+
+    if (check !== true) {
+       res.json({'result': "error", 'message': check})
+
+       return
+    }
+    
+    await verifyToken(req, res)
+    
     let message = createMessageJson(topic, command, url)
-     sendToTopicClients(topic, message)
+    sendToTopicClients(topic, message)
 
     res.json({'result': "successful", 'message': "Message sent to clients."})
   } else {
