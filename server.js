@@ -2,6 +2,7 @@
 // Uses Websockets and API to stream music to stream IDs, and upload files.
 
 const express = require("express");
+const router = express.Router();
 
 const { createServer } = require("http");
 const { WebSocketServer } = require("ws");
@@ -15,12 +16,8 @@ const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOU
 
 const app = express();
 
-const api = require('./api')
-
 app.use(express.static("public"));
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
-
-app.use('/api', api)
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
@@ -344,6 +341,24 @@ app.get("/registerStreamId", (req, res) => {
 app.get("/list", (req, res) => {
   res.json(topicClients);
 });
+
+
+
+//API
+
+router.get('/', (req, res) => {
+  res.send('Welcome to this very cool Songroom API homepage!')
+})
+
+router.post('/playWithLoad/:topic', (req, res) => { // First sends a load message then the play message for extra sync.
+  const topic = req.params.topic;
+  const req_data = req.body;
+  
+  sendToTopicClients(topic, {'type': "play", {}})
+  res.send('About')
+})
+
+app.use('/api', router)
 
 
 // Server handling

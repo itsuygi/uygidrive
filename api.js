@@ -10,9 +10,11 @@ router.get('/', (req, res) => {
 })
 
 router.get('/about', (req, res) => {
-  res.send('About birds')
+  res.send('About')
 })
 
-
+router.get('/playWithLoad', (req, res) => { // First sends a load message then the play message for extra sync.
+  res.send('About')
+})
 
 module.exports = router
