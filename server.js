@@ -346,6 +346,25 @@ app.get("/list", (req, res) => {
 
 //API
 
+let messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
+
+messageForm = JSON.stringify(messageForm)
+
+function createMessageJson(topic, type, message) {
+  let newMessage = messageForm
+  
+  newMessage.topic = topic
+  
+  if (type) {
+    newMessage.message.type = type
+    newMessage.message.message = message
+  } else {
+    newMessage.message = message
+  }
+  
+  return newMessage
+}
+
 router.get('/', (req, res) => {
   res.send('Welcome to this very cool Songroom API homepage!')
 })
@@ -354,7 +373,9 @@ router.post('/playWithLoad/:topic', (req, res) => { // First sends a load messag
   const topic = req.params.topic;
   const req_data = req.body;
   
-  sendToTopicClients(topic, {'type': "play", {}})
+  let message = createMessageJson(topic, "load", req_data)
+  sendToTopicClients(topic, message)
+  
   res.send('About')
 })
 
