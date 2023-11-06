@@ -20,8 +20,9 @@ app.use(express.static("public"));
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(express.json());
+
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -348,8 +349,6 @@ app.get("/list", (req, res) => {
 
 let messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
 
-messageForm = JSON.stringify(messageForm)
-
 function createMessageJson(topic, type, message) {
   let newMessage = messageForm
   
@@ -362,6 +361,7 @@ function createMessageJson(topic, type, message) {
     newMessage.message = message
   }
   
+  console.log(newMessage)
   return newMessage
 }
 
@@ -369,14 +369,14 @@ router.get('/', (req, res) => {
   res.send('Welcome to this very cool Songroom API homepage!')
 })
 
-router.post('/playWithLoad/:topic', (req, res) => { // First sends a load message then the play message for extra sync.
+router.post('/:topic/play', (req, res) => { // First sends a load message then the play message for extra sync.
   const topic = req.params.topic;
   const req_data = req.body;
   
   let message = createMessageJson(topic, "load", req_data)
   sendToTopicClients(topic, message)
   
-  res.send('About')
+  res.json({'result': "succesful", 'message': "Message sent to clients."})
 })
 
 app.use('/api', router)
