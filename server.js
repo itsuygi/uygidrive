@@ -352,9 +352,7 @@ const APICommands = {
   'load': ["topic", "url", "type"],
 }
 
-const varToString = varObj => Object.keys(varObj)[0]
-
-let messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
+const messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
 
 function createMessageJson(topic, type, message) {
   let newMessage = messageForm
@@ -376,9 +374,17 @@ function checkCommand(command, topic, url) {
   const commandConfig = APICommands[command]
   
   if (commandConfig == null) {
-    return "No command found"
+    return "Invalid command."
   }
   
+  if (commandConfig["topic"] !== undefined && topic == null) {
+    return "No topic/id given."
+  }
+  
+  console.log(commandConfig["url"])
+  if (commandConfig["url"] !== undefined && url == null) {
+    return "No url/message given."
+  }
   
 }
 
@@ -393,7 +399,7 @@ router.post('/:topic/:command', (req, res) => {
   
   let check = checkCommand(command, topic, url)
   
-  if (check !== null) {
+  if (check !== undefined) {
     res.json({'result': "error", 'message': check})
     
     return
@@ -402,7 +408,7 @@ router.post('/:topic/:command', (req, res) => {
   let message = createMessageJson(topic, command, url)
   sendToTopicClients(topic, message)
   
-  res.json({'result': "succesful", 'message': "Message sent to clients."})
+  res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
 app.use('/api', router)
