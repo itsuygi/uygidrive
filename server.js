@@ -346,6 +346,14 @@ app.get("/list", (req, res) => {
 
 //API
 
+const APICommands = {
+  'play': ["topic", "url", "type"],
+  'stop': ["topic"],
+  'load': ["topic", "url", "type"],
+}
+
+const varToString = varObj => Object.keys(varObj)[0]
+
 let messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
 
 function createMessageJson(topic, type, message) {
@@ -364,14 +372,32 @@ function createMessageJson(topic, type, message) {
   return newMessage
 }
 
+function checkCommand(command, topic, url) {
+  const commandConfig = APICommands[command]
+  
+  if (commandConfig == null) {
+    return "No command found"
+  }
+  
+  
+}
+
 router.get('/', (req, res) => {
-  res.send('Welcome to this very cool Songroom API homepage!')
+  res.send('Welcome to very cool Songroom API homepage!')
 })
 
 router.post('/:topic/:command', (req, res) => { 
   const command = req.params.command;
   const topic = req.params.topic;
   const url = req.query.url;
+  
+  let check = checkCommand(command, topic, url)
+  
+  if (check !== null) {
+    res.json({'result': "error", 'message': check})
+    
+    return
+  }
   
   let message = createMessageJson(topic, command, url)
   sendToTopicClients(topic, message)
