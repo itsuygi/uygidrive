@@ -115,9 +115,11 @@ function waitFor(conditionFunction, maxRetries) {
         } else {
           retries++;
           if (retries <= maxRetries) {
-            console.log("[WaitFor ]")
+            console.log("[Music Load]: Trying to load. Tries: ", retries)
+            
             audio.load()
-            await new Promise(resolve => setTimeout(resolve, 4000)); // 4 saniye bekle
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -161,15 +163,15 @@ async function readIncomingMessage(event) {
     hasLoaded = false
     hasDownloaded = false
   } else if (dataJson.type == "load") {
+    audio.muted = true
+    audio.src = dataJson.message;
+    
     const maxRetries = 3; 
     try {
       await waitFor(_ => hasDownloaded === true, maxRetries);
     } catch (error) {
-      console.error("Exceeded maximum retries. Music could not be loaded.");
+      console.error("Exceeded maximum retries.");
     }
-    audio.muted = true
-    audio.src = dataJson.message;
-    audio.load();
     
     hasLoaded = true
     

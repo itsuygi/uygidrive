@@ -37,8 +37,9 @@ function setup() {
         } else {
           retries++;
           if (retries <= maxRetries) {
+            console.log("[Music Load]: Trying to load. Tries: ", retries)
             audio.load()
-            await new Promise(resolve => setTimeout(resolve, 4000)); // 4 saniye bekle
+            await new Promise(resolve => setTimeout(resolve, 4000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -60,7 +61,7 @@ function setup() {
       sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}});
       handleStatus("Started to play.", "");
     } catch (error) {
-      console.error("Exceeded maximum retries. Music could not be loaded.");
+      console.error("Exceeded maximum retries.");
     }
     
   });
