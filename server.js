@@ -389,7 +389,7 @@ function checkCommand(command, topic, url) {
 }
 
 router.get('/', (req, res) => {
-  res.send('Welcome to very cool Songroom API homepage!')
+  res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
 })
 
 router.post('/:topic/:command', (req, res) => { 
