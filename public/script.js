@@ -18,6 +18,7 @@ let volumeValue;
 
 let downloaded = {}
 let hasLoaded = false
+let hasDownloaded = false
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -32,6 +33,7 @@ function setup() {
   audio = document.getElementById("audio");
   volumeSlider = document.getElementById("volumeSlider");
   volumeValue = document.getElementById("volumeValue");
+  
 
   // set the listeners:
   connectUsernameButton.addEventListener("click", function () {
@@ -43,12 +45,14 @@ function setup() {
   };
   
   audio.addEventListener('canplaythrough', function() { 
-     console.log("Audio loaded.")
+    console.log("Audio loaded.")
+    hasDownloaded = true
   });
   
   audio.onended = function() {
     console.log("Audio ended")
     hasLoaded = false
+    hasDownloaded = false
   };
   
   openSocket(serverURL);
@@ -101,7 +105,31 @@ function downloadMusic(url) {
   });
 }
 
-function readIncomingMessage(event) {
+function waitFor(conditionFunction, maxRetries) {
+    return new Promise(async (resolve, reject) => {
+      let retries = 0;
+
+      async function poll() {
+        if (conditionFunction()) {
+          resolve();
+        } else {
+          retries++;
+          if (retries <= maxRetries) {
+            console.log("[WaitFor ]")
+            audio.load()
+            await new Promise(resolve => setTimeout(resolve, 4000)); // 4 saniye bekle
+            poll();
+          } else {
+            reject(new Error("Exceeded maximum retries"));
+          }
+        }
+      }
+
+      poll();
+    });
+  }
+
+async function readIncomingMessage(event) {
   // display the incoming message:
   incomingSpan.innerHTML = event.data;
 
@@ -113,8 +141,6 @@ function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
-    let encodedURI = encodeURI(dataJson.message)
-    
     if (hasLoaded == true) {
       audio.muted = false
       audio.currentTime = 0
@@ -133,7 +159,14 @@ function readIncomingMessage(event) {
   } else if (dataJson.type == "stop") {
     audio.src = "";
     hasLoaded = false
+    hasDownloaded = false
   } else if (dataJson.type == "load") {
+    const maxRetries = 3; 
+    try {
+      await waitFor(_ => hasDownloaded === true, maxRetries);
+    } catch (error) {
+      console.error("Exceeded maximum retries. Music could not be loaded.");
+    }
     audio.muted = true
     audio.src = dataJson.message;
     audio.load();
