@@ -370,45 +370,54 @@ function createMessageJson(topic, type, message) {
   return newMessage
 }
 
-function checkCommand(command, topic, url) {
+function checkCommand(command, body) {
   const commandConfig = APICommands[command]
   
-  if (commandConfig == null) {
+  if (commandConfig == undefined) {
     return "Invalid command."
   }
-  
-  if (commandConfig["topic"] !== undefined && topic == null) {
+  console.log(commandConfig)
+  if (commandConfig.topic !== undefined && body.id == undefined) {
     return "No topic/id given."
   }
   
   console.log(commandConfig["url"])
-  if (commandConfig["url"] !== undefined && url == null) {
+  if (commandConfig.url !== undefined && body.url == undefined) {
     return "No url/message given."
   }
   
+  return true
 }
 
 router.get('/', (req, res) => {
   res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
 })
 
-router.post('/:topic/:command', (req, res) => { 
-  const command = req.params.command;
-  const topic = req.params.topic;
-  const url = req.query.url;
-  
-  let check = checkCommand(command, topic, url)
-  
-  if (check !== undefined) {
-    res.json({'result': "error", 'message': check})
+router.post('/:command', (req, res) => { 
+  try {
+    const command = req.params.command;
+    const body = req.body
+    const topic = body.id;
+    const url = body.url;
     
-    return
+    console.log(body)
+
+    let check = checkCommand(command, body)
+
+    if (check !== true) {
+      res.json({'result': "error", 'message': check})
+
+      return
+    }
+
+    let message = createMessageJson(topic, command, url)
+    sendToTopicClients(topic, message)
+
+    res.json({'result': "successful", 'message': "Message sent to clients."})
+  } catch(error) {
+    res.json({'result': "error", 'message': error.message})
   }
   
-  let message = createMessageJson(topic, command, url)
-  sendToTopicClients(topic, message)
-  
-  res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
 app.use('/api', router)
