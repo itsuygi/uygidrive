@@ -20,7 +20,6 @@ app.use(express.static("public"));
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
 const bodyParser = require("body-parser");
-app.use(express.urlencoded());
 app.use(express.json());
 
 
@@ -354,7 +353,7 @@ function createMessageJson(topic, type, message) {
   
   newMessage.topic = topic
   
-  if (type) {
+    if (type) {
     newMessage.message.type = type
     newMessage.message.message = message
   } else {
@@ -369,11 +368,12 @@ router.get('/', (req, res) => {
   res.send('Welcome to this very cool Songroom API homepage!')
 })
 
-router.post('/:topic/play', (req, res) => { // First sends a load message then the play message for extra sync.
+router.post('/:topic/:command', (req, res) => { 
+  const command = req.params.command;
   const topic = req.params.topic;
-  const req_data = req.body;
+  const url = req.query.url;
   
-  let message = createMessageJson(topic, "load", req_data)
+  let message = createMessageJson(topic, command, url)
   sendToTopicClients(topic, message)
   
   res.json({'result': "succesful", 'message': "Message sent to clients."})
