@@ -15,8 +15,12 @@ const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOU
 
 const app = express();
 
+const api = require('./api')
+
 app.use(express.static("public"));
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
+
+app.use('/api', api)
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded());
