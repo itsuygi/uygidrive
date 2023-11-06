@@ -10,6 +10,7 @@ const { WebSocketServer } = require("ws");
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
+const jwt = require('jsonwebtoken');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
