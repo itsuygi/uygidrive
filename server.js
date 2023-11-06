@@ -208,8 +208,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
-function generateAccessToken(id) {
-  return jwt.sign({'id': id}, process.env.TOKEN_SECRET, { expiresIn: '10h' });
+function generateAccessToken(data) {
+  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: '10h' });
 }
 
 
@@ -357,6 +357,7 @@ const APICommands = {
   'load': ["topic", "url", "type"],
 }
 
+
 const messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
 
 function createMessageJson(topic, type, message) {
@@ -393,6 +394,22 @@ function checkCommand(command, body) {
   return true
 }
 
+router.use((req, res, next) => {
+  if (command !== "getAccessToken") {
+  const authHeader = req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    console.log(err)
+
+    if (err) return res.sendStatus(403)
+
+    next()
+  })
+})
+
 router.get('/', (req, res) => {
   res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
 })
@@ -410,13 +427,16 @@ router.post('/:command', (req, res) => {
 
      return
    }
-
-   let message = createMessageJson(topic, command, url)
-   sendToTopicClients(topic, message)
-
-  res.json({'result': "successful", 'message': "Message sent to clients."})
-
   
+  if (command !== "getAccessToken") {
+    let message = createMessageJson(topic, command, url)
+     sendToTopicClients(topic, message)
+
+    res.json({'result': "successful", 'message': "Message sent to clients."})
+  } else {
+    const token = generateAccessToken({ id: topic });
+    res.json(token);
+  }
 })
 
 app.use('/api', router)
