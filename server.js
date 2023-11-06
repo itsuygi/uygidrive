@@ -376,13 +376,12 @@ function checkCommand(command, body) {
   if (commandConfig == undefined) {
     return "Invalid command."
   }
-  console.log(commandConfig)
-  if (commandConfig.topic !== undefined && body.id == undefined) {
+  console.log(commandConfig, commandConfig['topic'])
+  if (body.id == undefined) {
     return "No topic/id given."
   }
-  
-  console.log(commandConfig["url"])
-  if (commandConfig.url !== undefined && body.url == undefined) {
+
+  if (commandConfig["url"] !== undefined && body["url"] == null) {
     return "No url/message given."
   }
   
@@ -394,29 +393,24 @@ router.get('/', (req, res) => {
 })
 
 router.post('/:command', (req, res) => { 
-  try {
-    const command = req.params.command;
-    const body = req.body
-    const topic = body.id;
-    const url = body.url;
-    
-    console.log(body)
+  const command = req.params.command;
+  const body = req.body;
+  const topic = body.id;
+  const url = body.url;
 
-    let check = checkCommand(command, body)
+  let check = checkCommand(command, body)
 
-    if (check !== true) {
-      res.json({'result': "error", 'message': check})
+  if (check !== true) {
+     res.json({'result': "error", 'message': check})
 
-      return
-    }
+     return
+   }
 
-    let message = createMessageJson(topic, command, url)
-    sendToTopicClients(topic, message)
+   let message = createMessageJson(topic, command, url)
+   sendToTopicClients(topic, message)
 
-    res.json({'result': "successful", 'message': "Message sent to clients."})
-  } catch(error) {
-    res.json({'result': "error", 'message': error.message})
-  }
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+
   
 })
 
