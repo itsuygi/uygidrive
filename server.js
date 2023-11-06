@@ -393,6 +393,7 @@ function checkCommand(command, body) {
   
   return true
 }
+
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
 
@@ -400,30 +401,65 @@ function authenticateToken(req, res, next) {
     return res.status(401).send('Unauthorized');
   }
 
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, token_data) => {
     if (err) {
       return res.status(403).send('Forbidden');
+    } else if (token_data.id !== req.body.id) {
+      return res.status(401).send('Unauthorized');
     }
 
-    req.user = user;
     next();
   });
 }
+
 
 router.get('/', (req, res) => {
   res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
 })
 
-router.post('/play', async (req, res) => { 
+router.post('/play', authenticateToken, (req, res) => { 
   const body = req.body;
   const topic = body.id;
   const url = body.url;
   
-  if (topic == undefined && url == undefined) {
-    res.json({'result': "error", 'message': "Message sent to clients."})
+  if (topic == undefined || url == undefined)  {
+    res.json({'result': "error", 'message': "Missing parameters"})
+    return
   }
  
   let message = createMessageJson(topic, "play", url)
+  sendToTopicClients(topic, message)
+
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+})
+
+router.post('/load', authenticateToken, (req, res) => { 
+  const body = req.body;
+  const topic = body.id;
+  const url = body.url;
+  
+  if (topic == undefined || url == undefined)  {
+    res.json({'result': "error", 'message': "Missing parameters"})
+    return
+  }
+ 
+  let message = createMessageJson(topic, "load", url)
+  sendToTopicClients(topic, message)
+
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+})
+
+router.post('/stop', authenticateToken, (req, res) => { 
+  const body = req.body;
+  const topic = body.id;
+  const url = body.url;
+  
+  if (topic == undefined)  {
+    res.json({'result': "error", 'message': "Missing parameters"})
+    return
+  }
+ 
+  let message = createMessageJson(topic, "stop", url)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
