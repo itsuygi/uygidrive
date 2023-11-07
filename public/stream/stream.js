@@ -74,7 +74,7 @@ function setup() {
     sendMessage("POST", "/stop", {"id": topic})
   });
   
-  sendMessage("GET", "/getStreamId").then((data) => {
+  sendMessage("GET", "/createStream").then((data) => {
     let id = data.id
     let token = data.accessToken
     console.log("Obtained stream id: ", id)

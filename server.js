@@ -430,7 +430,7 @@ router.get('/getAccessToken', (req, res) => {
   res.json({ token });
 })
 
-router.get("/getStreamId", (req, res) => {
+router.get("/createStream", (req, res) => {
   var id = 0;
   do id = getRandomInt(1000, 9999);
   while (topicClients.has(id) == true);
