@@ -55,12 +55,13 @@ function setup() {
   
   streamURLButton.addEventListener('click', async function(){
     handleStatus("Waiting for every listener to sync...", "")
-    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "load", "message": outgoingText.value}})
+    sendMessage("POST", "/load", {"id": topic})
     
     const maxRetries = 3; 
     try {
       await waitFor(_ => hasDownloaded === true, maxRetries);
-      sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "play", "message": outgoingText.value}});
+      
+      sendMessage("POST", "/play", {"id": topic, "url": outgoingText.value});
       handleStatus("Started to play.", "");
     } catch (error) {
       console.error("Exceeded maximum retries.");
@@ -70,15 +71,18 @@ function setup() {
   
   stopStreamButton.addEventListener('click', function(){
     handleStatus("Music stopped.", "")
-    sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "stop"}})
+    sendMessage("POST", "/stop", {"id": topic})
   });
   
-  
-  sendMessage("GET", "/getStreamId").then((value) => {
-    console.log("Obtained stream id: ", value)
-    streamId.innerText = value
+  sendMessage("GET", "/getStreamId").then((data) => {
+    let id = data.id
+    let token = data.accessToken
+    console.log("Obtained stream id: ", id)
+    streamId.innerText = id
 
-    topic = value
+    topic = id
+    accessToken = token
+    
     sendSocketMessage("subscribe", topic)
   });
   
@@ -189,9 +193,14 @@ async function sendMessage(method, url, message) {
     req.open(method, xmlUrl);
     
     req.setRequestHeader("Content-Type", "application/json");
+    req.setRequestHeader("Authorization", accessToken);
+    
     req.onload = function() {
       if (req.status == 200) {
-        resolve(req.response);
+        let responseJson = JSON.parse(req.response)
+        
+        console.log("[Request Handler]: Request result: ", responseJson)
+        resolve(responseJson);
       } else {
         resolve("error");
       }
@@ -210,7 +219,7 @@ setInterval(ping, 30000);
 window.addEventListener('load', setup);
 
 window.onbeforeunload = function(){
-  sendMessage("POST", "/sendMessageToTopic", {"topic": topic, "message": {"type": "stop"}})
+  sendMessage("POST", "/stop", {"id": topic})
   handleAudio(outgoingText.value, false);
   
   return ""

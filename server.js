@@ -314,33 +314,18 @@ app.get("/stream", (req, res) => {
   res.sendFile("stream.html", { root: __dirname + "/public/stream" });
 });
 
-app.get("/getStreamId", (req, res) => {
-  var id = 0;
-  do id = getRandomInt(1000, 9999);
-  while (topicClients.has(id) == true);
-
-  console.log(id);
-
-  const IP = req.headers["x-forwarded-for"].split(",")[0];
-  console.log(IP);
-
-  streamerIPs[id] = IP;
-
-  console.log(streamerIPs);
-
-  res.send(id.toString());
-});
 
 app.get("/registerStreamId", (req, res) => {
   const id = req.query.streamId
   
-  const IP = req.headers["x-forwarded-for"].split(",")[0];
+  /*const IP = req.headers["x-forwarded-for"].split(",")[0];
   console.log(IP);
+  streamerIPs[id] = IP;*/
+  const accessToken = generateAccessToken({'id': id})
+  
+  console.log(accessToken);
 
-  //streamerIPs[id] = IP;
-  console.log(streamerIPs);
-
-  res.send("Registered stream id");
+  res.json({'id': id, 'accessToken': accessToken});
 });
 
 app.get("/list", (req, res) => {
@@ -472,6 +457,25 @@ router.get('/getAccessToken', (req, res) => {
 
   res.json({ token });
 })
+
+router.get("/getStreamId", (req, res) => {
+  var id = 0;
+  do id = getRandomInt(1000, 9999);
+  while (topicClients.has(id) == true);
+
+  console.log(id);
+
+  /*const IP = req.headers["x-forwarded-for"].split(",")[0];
+  console.log(IP);
+
+  streamerIPs[id] = IP;
+
+  console.log(streamerIPs);*/
+  
+  const accessToken = generateAccessToken({'id': id})
+
+  res.json({'id': id, 'accessToken': accessToken});
+});
 
 app.use('/api', router)
 
