@@ -13,6 +13,8 @@ let stopStreamButton;
 let audio;
 let status;
 
+let accessToken
+
 let topic
 let hasLoaded = false
 let hasDownloaded = false
@@ -179,10 +181,13 @@ function handleStatus(message, display) {
 }
 
 async function sendMessage(method, url, message) {
-  //if the socket's open, send a message:
+  const host = window.location.host
+  let xmlUrl = host + "/api" + url
+  
   let messagePromise = new Promise(function(resolve) {
     let req = new XMLHttpRequest();
-    req.open(method, url);
+    req.open(method, xmlUrl);
+    
     req.setRequestHeader("Content-Type", "application/json");
     req.onload = function() {
       if (req.status == 200) {
