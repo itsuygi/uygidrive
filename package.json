@@ -13,7 +13,7 @@
   },
   "name": "expresswsserver",
   "version": "0.0.3",
-  "description": "a node.js server with express.js for HTTP and ws.js for websockets",
+  "description": "a node.js server with express.js for streaming music room via ids",
   "main": "server.js",
   "devDependencies": {},
   "engines": {
@@ -25,6 +25,5 @@
     "ws",
     "websockets"
   ],
-  "author": "Tom Igoe",
-  "license": "ISC"
+  "author": "Uygi"
 }

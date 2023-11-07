@@ -151,6 +151,7 @@ function handleClient(thisClient, request) {
 }
 
 function sendToTopicClients(topic, message) {
+  topic = topic.toString()
   if (topicClients.has(topic)) {
     const clients = topicClients.get(topic);
     console.log(clients);
@@ -432,8 +433,9 @@ router.get('/getAccessToken', (req, res) => {
 
 router.get("/createStream", (req, res) => {
   var id = 0;
-  do id = getRandomInt(1000, 9999);
+  do id = getRandomInt(1000, 9999).toString();
   while (topicClients.has(id) == true);
+  
   console.log(id);
   
   const accessToken = generateAccessToken({'id': id})
@@ -443,6 +445,7 @@ router.get("/createStream", (req, res) => {
 
 router.get("/registerStreamId", (req, res) => {
   const id = req.query.streamId
+  id = id.toString()
   
   const accessToken = generateAccessToken({'id': id})
   
