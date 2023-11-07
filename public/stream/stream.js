@@ -55,7 +55,7 @@ function setup() {
   
   streamURLButton.addEventListener('click', async function(){
     handleStatus("Waiting for every listener to sync...", "")
-    sendMessage("POST", "/load", {"id": topic})
+    sendMessage("POST", "/load", {"id": topic, "url": outgoingText.value})
     
     const maxRetries = 3; 
     try {
@@ -166,7 +166,7 @@ function waitForSocketConnection(socket, callback){
                 waitForSocketConnection(socket, callback);
             }
 
-        }, 5); // wait 5 milisecond for the connection
+        }, 2000); // wait 5 milisecond for the connection
 }
 
 function handleAudio(url, state){
@@ -186,7 +186,7 @@ function handleStatus(message, display) {
 
 async function sendMessage(method, url, message) {
   const host = window.location.host
-  let xmlUrl = host + "/api" + url
+  let xmlUrl = "https://" + host + "/api" + url
   
   let messagePromise = new Promise(function(resolve) {
     let req = new XMLHttpRequest();

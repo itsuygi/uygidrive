@@ -342,21 +342,14 @@ const APICommands = {
   'load': ["topic", "url", "type"],
 }
 
-
-const messageForm = {'topic': "TOPIC", 'message': {'type': "TYPE", 'message': "MESSAGE"}}
-
-function createMessageJson(topic, type, message) {
-  let newMessage = messageForm
+function createMessageJson(type, message) {
+  let newMessage = {}
   
-  newMessage.topic = topic
+  newMessage.type = type
   
-    if (type) {
-    newMessage.message.type = type
-    newMessage.message.message = message
-  } else {
+  if (message) {
     newMessage.message = message
   }
-  
   console.log(newMessage)
   return newMessage
 }
@@ -412,7 +405,7 @@ router.post('/play', authenticateToken, (req, res) => {
     
   }
  
-  let message = createMessageJson(topic, "play", url)
+  let message = createMessageJson("play", url)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
@@ -427,7 +420,7 @@ router.post('/load', authenticateToken, (req, res) => {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
-  let message = createMessageJson(topic, "load", url)
+  let message = createMessageJson("load", url)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
@@ -436,13 +429,12 @@ router.post('/load', authenticateToken, (req, res) => {
 router.post('/stop', authenticateToken, (req, res) => { 
   const body = req.body;
   const topic = body.id;
-  const url = body.url;
   
   if (topic == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
-  let message = createMessageJson(topic, "stop", url)
+  let message = createMessageJson("stop")
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
