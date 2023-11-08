@@ -317,12 +317,6 @@ app.get("/stream", (req, res) => {
 
 //API
 
-const APICommands = {
-  'play': ["topic", "url", "type"],
-  'stop': ["topic"],
-  'load': ["topic", "url", "type"],
-}
-
 function createMessageJson(type, message) {
   let newMessage = {}
   
@@ -373,7 +367,7 @@ function authenticateToken(req, res, next) {
 
 
 router.get('/', (req, res) => {
-  res.send('<h1>Welcome to very cool Songroom API homepage!</h1> <h3>Here is a game for you </h3> <br> <iframe src="https://openprocessing.org/sketch/493297/embed/" width="700" height="700"></iframe>')
+  res.sendFile("api.html", { root: __dirname + "/public/api" });
 })
 
 router.post('/play', authenticateToken, (req, res) => { 
