@@ -322,27 +322,38 @@ const APIList = [
         "endpoint": "/api/getAccessToken",
         "description": "Creates a access token which is linked to your stream id in order to access the api.",
         "body": "{'id': '1234'}",
-        "response": "{'token': 'ey125436...'}"
+        "response": "{'token': 'ey125436...'}",
+        "method": "GET"
+    },
+    {
+        "endpoint": "/api/createStream",
+        "description": "This endpoint generates stream id and access token for it.",
+        "body": "No body",
+        "response": "{'id': '1234', 'accessToken': 'ey1234....'}",
+        "method": "GET"
     },
     {
         "endpoint": "/api/play",
         "description": "This endpoint plays music for sent stream id.",
         "body": "{'id': '1234', 'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
-        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
+        "method": "POST"
     },
     
     {
         "endpoint": "/api/stop",
         "description": "This endpoint stops the music for the given stream id.",
         "body": "{'id': '1234'}",
-        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
+        "method": "POST"
     },
   
     {
         "endpoint": "/api/load",
-        "description": "This endpoint sends a load message to clients for preloadiing. Play command is waited to start the music.",
+        "description": "This endpoint sends a load message to clients for preloading. Play command is waited to start the music. This is used for syncing the clients.",
         "body": "{'id': '1234'}",
-        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
+        "method": "POST"
     },
 ];
 

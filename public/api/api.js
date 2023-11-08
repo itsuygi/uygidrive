@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const apiData = await response.json();
   
     const accordionContainer = document.getElementById("apiEndpoints");
+    accordionContainer.innerHTML = ""
 
     // Klonlama işlemi
     for (let i = 0; i < apiData.length ; i++) {
@@ -13,12 +14,19 @@ document.addEventListener("DOMContentLoaded", async function () {
           <div class="card-header" id="endpoint${i}">
             <h2 class="mb-0">
               <button class="btn btn-link endpoint-title" onclick="$('.collapse').collapse('hide'); $('#collapse${i}').collapse('toggle');" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
-                ${apiData[i].endpoint} - GET
+                ${apiData[i].endpoint} - ${apiData[i].method}
               </button>
             </h2>
           </div>
 
           <div id="collapse${i}" class="collapse" aria-labelledby="endpoint${i}" data-parent="#apiEndpoints">
+            <div class="card-header">
+              Endpoint
+            </div>
+            <div class="card-body">
+              <p class="endpoint-description">${window.location.host}${apiData[i].endpoint}</p>
+            </div>
+            
             <div class="card-header">
               Description
             </div>
