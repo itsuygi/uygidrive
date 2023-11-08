@@ -23,25 +23,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const accordionContainer = document.getElementById("apiEndpoints");
 
     // Klonlama işlemi
-    for (let i = 0; i < apiData.length; i++) {
+    for (let i = 0; i < apiData.length ; i++) {
         const accordionTemplate = document.createElement("div");
-        accordionTemplate.className = "accordion-item";
+        accordionTemplate.className = "card";
 
         accordionTemplate.innerHTML = `
-            <h2 class="accordion-header" id="heading${i}">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
-                    ${apiData[i].endpoint} - GET
-                </button>
+          <div class="card-header" id="endpoint${i}">
+            <h2 class="mb-0">
+              <button class="btn btn-link endpoint-title" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                ${apiData[i].endpoint} - GET
+              </button>
             </h2>
-            <div id="collapse${i}" class="accordion-collapse collapse" aria-labelledby="heading${i}" data-bs-parent="#apiEndpoints">
-                <div class="accordion-body">
-                    <p class="endpoint-description">${apiData[i].description}</p>
-                    <p class="request-body">Request Body: ${apiData[i].body}</p>
-                    <p class="response">Expected Response: ${apiData[i].response}</p>
-                </div>
+          </div>
+
+          <div id="collapse${i}" class="collapse show" aria-labelledby="endpoint${i}" data-parent="#apiEndpoints">
+            <div class="card-body">
+              <p class="endpoint-description">${apiData[i].description}</p>
+              <div class="request-body">${apiData[i].body}</div>
+              <div class="response">${apiData[i].response}</div>
             </div>
+          </div>
         `;
 
-        accordionContainer.appendChild(accordionTemplate);
+      accordionContainer.appendChild(accordionTemplate);
     }
 });
