@@ -1,25 +1,7 @@
-const apiData = [
-    {
-        "endpoint": "/api/play",
-        "description": "This endpoint plays music for sent stream id.",
-        "body": "{'id': '1234', 'url': '/music/test_music.mp3'}",
-        "response": "ok"
-    },
-    {
-        "endpoint": "/api/pause",
-        "description": "This endpoint pauses the music for the given stream id.",
-        "body": "{'id': '1234'}",
-        "response": "paused"
-    },
-    {
-        "endpoint": "/api/stop",
-        "description": "This endpoint stops the music for the given stream id.",
-        "body": "{'id': '1234'}",
-        "response": "stopped"
-    }
-];
-
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+    const response = await fetch("/api/list");
+    const apiData = await response.json();
+  
     const accordionContainer = document.getElementById("apiEndpoints");
 
     // Klonlama işlemi
@@ -30,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         accordionTemplate.innerHTML = `
           <div class="card-header" id="endpoint${i}">
             <h2 class="mb-0">
-              <button class="btn btn-link endpoint-title" onclick="$('#collapse${i}').collapse('toggle');" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+              <button class="btn btn-link endpoint-title" onclick="$('.collapse').collapse('hide'); $('#collapse${i}').collapse('toggle');" type="button" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
                 ${apiData[i].endpoint} - GET
               </button>
             </h2>

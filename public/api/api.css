@@ -1,7 +1,5 @@
 body {
       background-color: #2d2e2d;
-      
-  
       font-family: 'Courier New', monospace;
     }
     .endpoint-title {
@@ -17,4 +15,7 @@ body {
     }
     .response {
       color: #ffae42;
+    }
+    .text {
+      color: #cfcfcf;
     }

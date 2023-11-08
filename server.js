@@ -336,7 +336,14 @@ const APIList = [
         "description": "This endpoint stops the music for the given stream id.",
         "body": "{'id': '1234'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
-    }
+    },
+  
+    {
+        "endpoint": "/api/load",
+        "description": "This endpoint sends a load message to clients for preloadiing. Play command is waited to start the music.",
+        "body": "{'id': '1234'}",
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+    },
 ];
 
 
