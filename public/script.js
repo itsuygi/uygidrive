@@ -56,6 +56,16 @@ function setup() {
   };
   
   openSocket(serverURL);
+  
+  var url = new URL(window.location.href);
+  var id = url.searchParams.get("id");
+  
+  if (id) {
+    console.log("Found id in params, auto connecting:", id)
+    outgoingText.value = id
+    
+    sendMessage("subscribe", id);
+  }
 }
 
 function openSocket(url) {
@@ -197,12 +207,27 @@ async function readIncomingMessage(event) {
 }
 
 function sendMessage(type, message) {
-  //if the socket's open, send a message:
   let sendJson = { type: type, message: message };
+  
+  waitForSocketConnection(socket, function(){
+      console.log("Waited for connection.");
+      socket.send(JSON.stringify(sendJson));
+  });
+}
 
-  if (socket.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify(sendJson));
-  }
+function waitForSocketConnection(socket, callback){
+    setTimeout(
+        function () {
+            if (socket.readyState === 1) {
+                console.log("Connection is made")
+                if (callback != null){
+                    callback();
+                }
+            } else {
+                waitForSocketConnection(socket, callback);
+            }
+
+        }, 2000); // wait 5 milisecond for the connection
 }
 
 function handleVolume() {
