@@ -1,6 +1,7 @@
 body {
       background-color: #2d2e2d;
-      color: #00ff00;
+      
+  
       font-family: 'Courier New', monospace;
     }
     .endpoint-title {
@@ -9,6 +10,7 @@ body {
     }
     .endpoint-description {
       font-size: 16px;
+      color: blue;
     }
     .request-body {
       color: #ff00ff;

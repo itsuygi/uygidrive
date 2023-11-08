@@ -317,6 +317,29 @@ app.get("/stream", (req, res) => {
 
 //API
 
+const APIList = [
+    {
+        "endpoint": "/api/getAccessToken",
+        "description": "Creates a access token which is linked to your stream id in order to access the api.",
+        "body": "{'id': '1234'}",
+        "response": "{'token': 'ey125436...'}"
+    },
+    {
+        "endpoint": "/api/play",
+        "description": "This endpoint plays music for sent stream id.",
+        "body": "{'id': '1234', 'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+    },
+    
+    {
+        "endpoint": "/api/stop",
+        "description": "This endpoint stops the music for the given stream id.",
+        "body": "{'id': '1234'}",
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}"
+    }
+];
+
+
 function createMessageJson(type, message) {
   let newMessage = {}
   
@@ -448,8 +471,8 @@ router.get("/registerStreamId", (req, res) => {
   res.json({'id': id, 'accessToken': accessToken});
 });
 
-app.get("/list", (req, res) => {
-  res.json(topicClients);
+router.get("/list", (req, res) => {
+  res.json(APIList);
 });
 
 app.use('/api', router)

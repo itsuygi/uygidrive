@@ -37,17 +37,25 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
 
           <div id="collapse${i}" class="collapse" aria-labelledby="endpoint${i}" data-parent="#apiEndpoints">
-            <div class="card-title">
-             test
+            <div class="card-header">
+              Description
             </div>
             <div class="card-body">
               <p class="endpoint-description">${apiData[i].description}</p>
             </div>
+            
+            <div class="card-header">
+              Request Body
+            </div>
             <div class="card-body">
               <div class="request-body">${apiData[i].body}</div>
             </div>
+            
+            <div class="card-header">
+              Response
+            </div>
             <div class="card-body">
-              <div class="response">${apiData[i].response}</div> 
+             <div class="response">${apiData[i].response}</div> 
             </div>
           </div>
         `;
