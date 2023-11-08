@@ -47,4 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
       accordionContainer.appendChild(accordionTemplate);
     }
+  
+    const accordion = new bootstrap.Collapse(document.querySelectorAll('.accordion-button'));
 });
+
+
