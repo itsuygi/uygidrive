@@ -1,3 +1,18 @@
 body {
-  font-family: "Lucida Console", "Courier New", monospace;
-}
+      background-color: #2d2e2d;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+    }
+    .endpoint-title {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .endpoint-description {
+      font-size: 16px;
+    }
+    .request-body {
+      color: #ff00ff;
+    }
+    .response {
+      color: #ffae42;
+    }
