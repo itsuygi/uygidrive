@@ -12,69 +12,11 @@
     </h1>
 
     <div class="accordion" id="apiEndpoints">
-
-      <!-- Endpoint 1 -->
-      <div class="card">
-        <div class="card-header" id="endpoint1">
-          <h2 class="mb-0">
-            <button class="btn btn-link endpoint-title" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
-              Endpoint 1 - GET
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapse1" class="collapse show" aria-labelledby="endpoint1" data-parent="#apiEndpoints">
-          <div class="card-body">
-            <p class="endpoint-description">This endpoint retrieves data from the server.</p>
-            <div class="request-body">Request Body: None</div>
-            <div class="response">Expected Response: {"data": "Sample data"}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Endpoint 2 -->
-      <div class="card">
-        <div class="card-header" id="endpoint2">
-          <h2 class="mb-0">
-            <button class="btn btn-link endpoint-title" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
-              Endpoint 2 - POST
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapse2" class="collapse" aria-labelledby="endpoint2" data-parent="#apiEndpoints">
-          <div class="card-body">
-            <p class="endpoint-description">This endpoint creates a new resource on the server.</p>
-            <div class="request-body">Request Body: {"name": "New Resource"}</div>
-            <div class="response">Expected Response: {"message": "Resource created"}</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Endpoint 3 -->
-      <div class="card">
-        <div class="card-header" id="endpoint3">
-          <h2 class="mb-0">
-            <button class="btn btn-link endpoint-title" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
-              Endpoint 3 - PUT
-            </button>
-          </h2>
-        </div>
-
-        <div id="collapse3" class="collapse" aria-labelledby="endpoint3" data-parent="#apiEndpoints">
-          <div class="card-body">
-            <p class="endpoint-description">This endpoint updates an existing resource on the server.</p>
-            <div class="request-body">Request Body: {"name": "Updated Resource"}</div>
-            <div class="response">Expected Response: {"message": "Resource updated"}</div>
-          </div>
-        </div>
-      </div>
       
     </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="api.js"></script>
 </body>
 </html>
