@@ -24,7 +24,9 @@ document.addEventListener("DOMContentLoaded", async function () {
               Endpoint
             </div>
             <div class="card-body">
-              <p style="color: turquoise" >https://${window.location.host}${apiData[i].endpoint}</p>
+              <a href="https://${window.location.host}${apiData[i].endpoint}" style="color: purple" >https://${window.location.host}${apiData[i].endpoint}</a>
+              <p style="color: blue" >Request Method: ${apiData[i].method}</p>
+
             </div>
             
             <div class="card-header">
