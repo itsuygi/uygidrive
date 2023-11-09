@@ -1,5 +1,5 @@
 body {
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Helvetica', sans-serif, bold;
   margin: 0;
   padding: 0;
   background-color: #f2f2f2;
@@ -49,7 +49,7 @@ input[type="text"] {
 
 button, .button {
   background-color: #0072e3;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 3px;
   padding: 10px 20px;
@@ -57,7 +57,7 @@ button, .button {
   cursor: pointer;
   display: block;
   margin: 10px 0;
-  flex:1;
+  
   text-align: center
 }
 
@@ -119,3 +119,20 @@ input[type="range"] {
   padding: 10px 20px 10px;
 }
 
+.stream-button-group button {
+  
+  padding: 10px 24px; /* Some padding */
+  cursor: pointer; /* Pointer/hand icon */
+  float: left; /* Float the buttons side by side */
+}
+
+.stream-button-group button:not(:last-child) {
+  border-right: none; /* Prevent double borders */
+}
+
+/* Clear floats (clearfix hack) */
+.stream-button-group:after {
+  content: "";
+  clear: both;
+  display: table;
+}
