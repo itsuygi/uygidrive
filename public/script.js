@@ -101,20 +101,6 @@ function closeConnection() {
   connectionStatus.style.color = "red";
 }
 
-function downloadMusic(url) {
-  fetch(url)
-  .then(response => response.arrayBuffer()) // URL'den byte'ları al
-  .then(buffer => {
-    let blobSrc = URL.createObjectURL(new Blob([buffer])); // Blob oluştur ve src olarak ayarla
-    
-    downloaded[url] = blobSrc
-    console.log(downloaded)
-  })
-  .catch(error => {
-    console.error('Müzik yüklenirken hata oluştu:', error);
-  });
-}
-
 function waitFor(conditionFunction, maxRetries) {
     return new Promise(async (resolve, reject) => {
       let retries = 0;
@@ -209,9 +195,17 @@ async function readIncomingMessage(event) {
     audio.load();
     audio.currentTime = timeBetween;
   } else if (dataJson.type == "mute") {
-    audio.muted = true
+    if (dataJson.message == true) {
+      fadeAudio(true)
+    } else {
+      audio.muted = true
+    }
   } else if (dataJson.type == "unmute") {
-    audio.muted = false
+    if (dataJson.message == false) {
+      fadeAudio(false)
+    } else {
+      audio.muted = true
+    }
   }
 }
 
@@ -246,16 +240,34 @@ function handleVolume() {
   audio.volume = sliderValue / 100;
 }
 
-function fadeAudio() {
+function fadeAudio(mode) {
     var fadeAudio = setInterval(function () {
+      if (mode == true) {
         try {
           audio.volume -= 0.07;
         } catch {
-          audio.volume = 0
+          audio.muted = true
+          
+          handleVolume()
+          
           console.log("Fadeout complete.")
+          clearInterval(fadeAudio)
         }
-    }, 300);
+      } else {
+        audio.muted = false
+        
+        try {
+          audio.volume += 0.07;
+        } catch {
+          
+          console.log("Fade complete.")
+          clearInterval(fadeAudio)
+        }
+      }
+        
+    }, 350);
 
+  
 }
 
 function ping() {

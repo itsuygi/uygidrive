@@ -477,11 +477,13 @@ router.post('/mute', authenticateToken, (req, res) => {
   const body = req.body;
   const topic = body.id;
   
+  const fade = body.fade;
+  
   if (topic == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
-  let message = createMessageJson("mute")
+  let message = createMessageJson("mute", fade)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
@@ -491,11 +493,13 @@ router.post('/unmute', authenticateToken, (req, res) => {
   const body = req.body;
   const topic = body.id;
   
+  const fade = body.fade;
+  
   if (topic == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
  
-  let message = createMessageJson("unmute")
+  let message = createMessageJson("unmute", fade)
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
