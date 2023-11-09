@@ -246,6 +246,23 @@ function handleVolume() {
   audio.volume = sliderValue / 100;
 }
 
+function fadeAudio() {
+    // Set the point in playback that fadeout begins. This is for a 2 second fade out.
+    var fadePoint = audio.duration - 2; 
+
+    var fadeAudio = setInterval(function () {
+        // Only fade if past the fade out point or not at zero already
+        if ((audio.currentTime >= fadePoint) && (audio.volume != 0.0)) {
+            audio.volume -= 0.1;
+        }
+        // When volume at zero stop all the intervalling
+        if (audio.volume === 0.0) {
+            clearInterval(fadeAudio);
+        }
+    }, 200);
+
+}
+
 function ping() {
   sendMessage("keepAlive", "ping");
 }
