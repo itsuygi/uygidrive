@@ -275,7 +275,7 @@ app.get("/music/:filename", async (req, res) => {
       console.log("File downloaded: ", filename)
       console.log("Memory usage: %", memoryUsage)
       
-      if (memoryUsage < 90) {
+      if (memoryUsage <= 80) {
         const fileData = fileContent[0];
         memoryStorage[filename] = fileData;
         
