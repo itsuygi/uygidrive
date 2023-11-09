@@ -484,7 +484,7 @@ router.post('/mute', authenticateToken, (req, res) => {
   res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
-router.post('/umute', authenticateToken, (req, res) => { 
+router.post('/unmute', authenticateToken, (req, res) => { 
   const body = req.body;
   const topic = body.id;
   

@@ -12,12 +12,15 @@ let streamURLButton;
 let stopStreamButton;
 let audio;
 let status;
+let muteButton
 
 let accessToken
 
 let topic
 let hasLoaded = false
 let hasDownloaded = false
+
+let isMuted = false
 
 function setup() {
   outgoingText = document.getElementById('url');
@@ -28,6 +31,7 @@ function setup() {
   stopStreamButton = document.getElementById('stopStreamButton');
   audio = document.getElementById('audio');
   status = document.getElementById('status');
+  muteButton = document.getElementById('muteButton');
   
   function waitFor(conditionFunction, maxRetries) {
     return new Promise(async (resolve, reject) => {
@@ -95,6 +99,19 @@ function setup() {
     console.log("Audio ended")
     hasLoaded = false
   };
+
+  muteButton.addEventListener('click', () => {
+    isMuted = !isMuted
+    
+    if (isMuted) {
+      muteButton.classList.add('muted');
+      sendMessage("POST", "/mute", {"id": topic})
+    } else {
+      muteButton.classList.remove('muted');
+      sendMessage("POST", "/unmute", {"id": topic})
+    }
+  });
+
   
   openSocket();
 }
