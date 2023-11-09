@@ -201,10 +201,11 @@ async function readIncomingMessage(event) {
       audio.muted = true
     }
   } else if (dataJson.type == "unmute") {
-    if (dataJson.message == false) {
+    audio.muted = false
+    if (dataJson.message == true) {
       fadeAudio(false)
     } else {
-      audio.muted = true
+      handleVolume()
     }
   }
 }
@@ -248,18 +249,15 @@ function fadeAudio(mode) {
         } catch {
           audio.muted = true
           
-          handleVolume()
-          
           console.log("Fadeout complete.")
           clearInterval(fadeAudio)
         }
+        
       } else {
-        audio.muted = false
         
         try {
           audio.volume += 0.07;
         } catch {
-          
           console.log("Fade complete.")
           clearInterval(fadeAudio)
         }

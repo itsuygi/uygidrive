@@ -135,8 +135,6 @@ function readIncomingMessage(event) {
     audio.src = dataJson.message
     hasLoaded = true
   } else if (dataJson.type == "play") {
-    let encodedURI = encodeURI(dataJson.message)
-    
     audio.muted = false
     
     if (hasLoaded == true) {
@@ -159,9 +157,18 @@ function readIncomingMessage(event) {
     hasLoaded = false
     hasDownloaded = false
   } else if (dataJson.type == "mute") {
-    audio.muted = true
+    if (dataJson.message == true) {
+      fadeAudio(true)
+    } else {
+      audio.muted = true
+    }
   } else if (dataJson.type == "unmute") {
     audio.muted = false
+    if (dataJson.message == true) {
+      fadeAudio(false)
+    } else {
+      audio.volume = 100
+    }
   }
 }
 
@@ -230,6 +237,31 @@ async function sendMessage(method, url, message) {
   });
   
   return await messagePromise;
+}
+
+function fadeAudio(mode) {
+    var fadeAudio = setInterval(function () {
+      if (mode == true) {
+        try {
+          audio.volume -= 0.07;
+        } catch {
+          audio.muted = true
+          
+          console.log("Fadeout complete.")
+          clearInterval(fadeAudio)
+        }
+        
+      } else {
+        
+        try {
+          audio.volume += 0.07;
+        } catch {
+          console.log("Fade complete.")
+          clearInterval(fadeAudio)
+        }
+      }
+        
+    }, 350);
 }
 
 function ping() {
