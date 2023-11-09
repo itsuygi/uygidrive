@@ -20,6 +20,8 @@ let downloaded = {}
 let hasLoaded = false
 let hasDownloaded = false
 
+let maxRetries = 5
+
 function setup() {
   // get all the DOM elements that need listeners:
   incomingSpan = document.getElementById("incoming");
@@ -101,7 +103,7 @@ function closeConnection() {
   connectionStatus.style.color = "red";
 }
 
-function waitFor(conditionFunction, maxRetries) {
+function waitFor(conditionFunction) {
     return new Promise(async (resolve, reject) => {
       let retries = 0;
 
@@ -115,7 +117,7 @@ function waitFor(conditionFunction, maxRetries) {
             
             audio.load()
             
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -145,10 +147,10 @@ async function readIncomingMessage(event) {
       console.log("Resetted time")
       
       setTimeout(function () {
-            if (audio.paused == false) {
-                console.log("Starting manually, didn't load on time.")
-                audio.load()
-            }
+          if (audio.paused == false) {
+              console.log("Starting manually, didn't load on time.")
+              audio.load()
+          }
         }, 900)
       
     } else {
@@ -170,9 +172,8 @@ async function readIncomingMessage(event) {
     audio.muted = true
     audio.src = dataJson.message;
     
-    const maxRetries = 3; 
     try {
-      await waitFor(_ => hasDownloaded === true, maxRetries);
+      await waitFor(_ => hasDownloaded === true);
     } catch (error) {
       console.error("Exceeded maximum retries.");
     }

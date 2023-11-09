@@ -22,6 +22,8 @@ let hasDownloaded = false
 
 let isMuted = false
 
+let maxRetries = 5
+
 function setup() {
   outgoingText = document.getElementById('url');
   streamWidget = document.getElementById('streamWidget')
@@ -33,7 +35,7 @@ function setup() {
   status = document.getElementById('status');
   muteButton = document.getElementById('muteButton');
   
-  function waitFor(conditionFunction, maxRetries) {
+  function waitFor(conditionFunction) {
     return new Promise(async (resolve, reject) => {
       let retries = 0;
 
@@ -45,7 +47,7 @@ function setup() {
           if (retries <= maxRetries) {
             console.log("[Music Load]: Trying to load. Tries: ", retries)
             audio.load()
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await new Promise(resolve => setTimeout(resolve, 4000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -61,9 +63,8 @@ function setup() {
     handleStatus("Waiting for every listener to sync...", "")
     sendMessage("POST", "/load", {"id": topic, "url": outgoingText.value})
     
-    const maxRetries = 3; 
     try {
-      await waitFor(_ => hasDownloaded === true, maxRetries);
+      await waitFor(_ => hasDownloaded === true);
       
       sendMessage("POST", "/play", {"id": topic, "url": outgoingText.value});
       handleStatus("Started to play.", "");
