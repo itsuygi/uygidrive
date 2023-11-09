@@ -205,8 +205,9 @@ async function readIncomingMessage(event) {
     audio.currentTime = timeBetween;
   } else if (dataJson.type == "mute") {
     audio.muted = true
-    
-}
+  } else if (dataJson.type == "unmute") {
+    audio.muted = false
+  }
 
 function sendMessage(type, message) {
   let sendJson = { type: type, message: message };

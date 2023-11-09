@@ -29,49 +29,51 @@
       <div class="card">
         <div class="card-header" id="example1">
           <h2 class="mb-0">
-            <button class="btn btn-link endpoint-title" type="button" data-toggle="collapse" data-target="#code1" aria-expanded="true" aria-controls="code1">
+            <button class="btn btn-link endpoint-title" onclick="$('#code1').collapse('toggle')" type="button" data-toggle="collapse" data-target="#code1" aria-expanded="true" aria-controls="code1">
               Roblox - Lua
             </button>
           </h2>
         </div>
 
-        <div id="code1" class="collapse show" aria-labelledby="example1" data-parent="#exampleCodes">
+        <div id="code1" class="collapse hide" aria-labelledby="example1" data-parent="#exampleCodes">
           <div class="card-body">
             <p class="endpoint-description">This example shows how to create a stream and play on Roblox.</p>
             <code>
-            local HttpService = game:GetService("HttpService")
-            local BaseURL = "https://songroom.glitch.me"
+              <pre>
+local HttpService = game:GetService("HttpService")
+local BaseURL = "https://songroom.glitch.me"
 
-            local accessToken
-            local streamId
+local accessToken
+local streamId
 
-            local function sendRequest(command, url)
-              local message = {id = streamId} -- Id is sent everytime.
+local function sendRequest(command, url)
+  local message = {id = streamId} -- Id is sent everytime.
 
-              if url then --If there is a url, add it to post body.
-                message.url = url
-              end
+  if url then --If there is a url, add it to post body.
+    message.url = url
+  end
 
-              local data = HttpService:JSONEncode(message)
-              local response = HttpService:PostAsync(BaseURL.."/api/"..command, data, Enum.HttpContentType.ApplicationJson, false, {Authorization = accessToken})
-              print(response)
-            end
+  local data = HttpService:JSONEncode(message)
+  local response = HttpService:PostAsync(BaseURL.."/api/"..command, data, Enum.HttpContentType.ApplicationJson, false, {Authorization = accessToken})
+  print(response)
+end
 
-            local function createStream()
-              local newStream = HttpService:GetAsync(BaseURL.."/api/createStream")
-              local streamData = HttpService:JSONDecode(newStream)
+local function createStream()
+  local newStream = HttpService:GetAsync(BaseURL.."/api/createStream")
+  local streamData = HttpService:JSONDecode(newStream)
 
-              return streamData
-            end
+  return streamData
+end
 
-            local newStream = createStream()
-            accessToken = newStream.accessToken
-            streamId = newStream.id
+local newStream = createStream()
+accessToken = newStream.accessToken
+streamId = newStream.id
 
-            print("New stream created. Stream id: ", streamId)
+print("New stream created. Stream id: ", streamId)
 
-            sendRequest("play", BaseURL.."/music/test_music.mp3")
-            sendRequest("stop")
+sendRequest("play", BaseURL.."/music/test_music.mp3")
+sendRequest("stop")
+              </pre>
             </code>
             
           </div>
@@ -79,6 +81,8 @@
       </div>
     </div>
   </div>
+  
+  <br>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="api.js"></script>

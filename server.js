@@ -355,6 +355,20 @@ const APIList = [
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
+    {
+        "endpoint": "/api/mute",
+        "description": "This endpoint mutes the music for given stream id.",
+        "body": "{'id': '1234'}",
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
+        "method": "POST"
+    },
+    {
+        "endpoint": "/api/unmute",
+        "description": "This endpoint unmutes the music for given stream id.",
+        "body": "{'id': '1234'}",
+        "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
+        "method": "POST"
+    },
 ];
 
 

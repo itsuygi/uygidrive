@@ -141,6 +141,10 @@ function readIncomingMessage(event) {
     audio.src = "";
     hasLoaded = false
     hasDownloaded = false
+  } else if (dataJson.type == "mute") {
+    audio.muted = true
+  } else if (dataJson.type == "unmute") {
+    audio.muted = false
   }
 }
 
