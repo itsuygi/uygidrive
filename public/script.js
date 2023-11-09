@@ -129,7 +129,7 @@ function waitFor(conditionFunction, maxRetries) {
             
             audio.load()
             
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 3000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -165,8 +165,12 @@ async function readIncomingMessage(event) {
     } else {
       console.log("Playing without sync")
       
-      audio.src = dataJson.message;
-      audio.load()
+      const maxRetries = 3; 
+      try {
+        await waitFor(_ => hasDownloaded === true, maxRetries);
+      } catch (error) {
+        console.error("Exceeded maximum retries.");
+      }
     }
   } else if (dataJson.type == "stop") {
     audio.src = "";
