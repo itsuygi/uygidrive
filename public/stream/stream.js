@@ -45,7 +45,7 @@ function setup() {
           if (retries <= maxRetries) {
             console.log("[Music Load]: Trying to load. Tries: ", retries)
             audio.load()
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));

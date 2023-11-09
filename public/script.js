@@ -115,7 +115,7 @@ function waitFor(conditionFunction, maxRetries) {
             
             audio.load()
             
-            await new Promise(resolve => setTimeout(resolve, 3000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -144,8 +144,17 @@ async function readIncomingMessage(event) {
       audio.currentTime = 0
       console.log("Resetted time")
       
+      setTimeout(function () {
+            if (audio.paused == false) {
+                console.log("Starting manually, didn't load on time.")
+                audio.load()
+            } else {
+                waitForSocketConnection(socket, callback);
+            }
+
+        }, 900)
       if (audio.paused) {
-        
+        audio.load()
       }
       
     } else {
