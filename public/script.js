@@ -208,6 +208,7 @@ async function readIncomingMessage(event) {
   } else if (dataJson.type == "unmute") {
     audio.muted = false
   }
+}
 
 function sendMessage(type, message) {
   let sendJson = { type: type, message: message };
@@ -244,6 +245,5 @@ function ping() {
   sendMessage("keepAlive", "ping");
 }
 setInterval(ping, 30000);
-
 
 window.addEventListener("load", setup);
