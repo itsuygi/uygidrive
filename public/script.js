@@ -203,7 +203,9 @@ async function readIncomingMessage(event) {
     audio.src = dataJson.message.url;
     audio.load();
     audio.currentTime = timeBetween;
-  }
+  } else if (dataJson.type == "mute") {
+    audio.muted = true
+    
 }
 
 function sendMessage(type, message) {

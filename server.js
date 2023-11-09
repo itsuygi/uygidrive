@@ -456,6 +456,34 @@ router.post('/stop', authenticateToken, (req, res) => {
   res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
+router.post('/mute', authenticateToken, (req, res) => { 
+  const body = req.body;
+  const topic = body.id;
+  
+  if (topic == undefined)  {
+    return res.json({'result': "error", 'message': "Missing parameters"})
+  }
+ 
+  let message = createMessageJson("mute")
+  sendToTopicClients(topic, message)
+
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+})
+
+router.post('/umute', authenticateToken, (req, res) => { 
+  const body = req.body;
+  const topic = body.id;
+  
+  if (topic == undefined)  {
+    return res.json({'result': "error", 'message': "Missing parameters"})
+  }
+ 
+  let message = createMessageJson("unmute")
+  sendToTopicClients(topic, message)
+
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+})
+
 router.get('/getAccessToken', (req, res) => { 
   const topic = req.body.id;
   if (topic == undefined) {
