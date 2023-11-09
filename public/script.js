@@ -148,14 +148,8 @@ async function readIncomingMessage(event) {
             if (audio.paused == false) {
                 console.log("Starting manually, didn't load on time.")
                 audio.load()
-            } else {
-                waitForSocketConnection(socket, callback);
             }
-
         }, 900)
-      if (audio.paused) {
-        audio.load()
-      }
       
     } else {
       console.log("Playing without sync")
