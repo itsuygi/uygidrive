@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="stream.js"></script>
   <script src="/common/color-mode.js"></script>
@@ -30,14 +29,15 @@
       <input type="text" id="url">
     </div>
     
-    <div class="btn-group" role="group">
-      <button id="streamURLButton">Stream</button>
-      <button id="stopStreamButton">Stop</button>
+    <div class="button-group">
+      <button id="streamURLButton" style="background-color: green">Play</button>
+      <button id="stopStreamButton" style="background-color: red">Stop</button>
     </div>
     
-    <div class="audio-button-group">
-      <button id="muteButton">Mute</button>
-      <button id="unmuteButton">Unmute</button>
+    <div class="button-group">
+      <button class="mute-button" id="muteButton">
+        <span id="muteIcon">&#128266;</span>
+      </button>
     </div>
     
     <li id="status" style="display: none"></li>

@@ -119,20 +119,24 @@ input[type="range"] {
   padding: 10px 20px 10px;
 }
 
-.stream-button-group button {
-  
-  padding: 10px 24px; /* Some padding */
+.button-group button {
+  padding: 30, 30, 30;
+  margin-left: 10px;
   cursor: pointer; /* Pointer/hand icon */
   float: left; /* Float the buttons side by side */
 }
 
-.stream-button-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
+.mute-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
 }
 
-/* Clear floats (clearfix hack) */
-.stream-button-group:after {
-  content: "";
-  clear: both;
-  display: table;
+#muteIcon::before {
+  content: '\1F507'; /* Unicode character for speaker */
+}
+
+.muted #muteIcon::before {
+  content: '\1F50A'; /* Unicode character for muted speaker */
 }
