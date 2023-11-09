@@ -260,12 +260,20 @@ app.get("/music/:filename", async (req, res) => {
     const filename = req.params.filename;
     
     if (memoryStorage[filename]) {
-      console.log("Found file in memory: ", filename)
-      res.set('Content-Type', 'audio/mpeg');
-      console.log(memoryStorage[filename])
-      res.send(memoryStorage[filename]);
+      if (memoryStorage[filename] !== "DOWNLOADING") {
+        console.log("Found file in memory: ", filename)
+        res.set('Content-Type', 'audio/mpeg');
+        console.log(memoryStorage[filename])
+        res.send(memoryStorage[filename]);
+      } else {
+        console.log("Already downloading, rejecting.")
+        res.status(403)
+      }
+      
     } else {
       console.log("File didn't found on memory, downloading: ", filename)
+      memoryStorage[filename] = "DOWNLOADING"
+      
       const file = bucket.file(filename);
       const fileContent = await file.download();
       
@@ -578,13 +586,4 @@ wss.on("connection", handleClient);
   });
 }); */
 
-/*file.getSignedUrl({ action: "read", expires: "03-09-2491" })
-    .then((urls) => {
-      const url = urls[0];
-      res.redirect(url);
-    })
-    .catch((error) => {
-      console.error("Dosya alınırken hata oluştu:", error);
-      res.status(500).send("Hata");
-    });*/
 

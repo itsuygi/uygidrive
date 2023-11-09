@@ -20,7 +20,7 @@ let downloaded = {}
 let hasLoaded = false
 let hasDownloaded = false
 
-let maxRetries = 6
+let maxRetries = 10
 
 function setup() {
   // get all the DOM elements that need listeners:
@@ -117,7 +117,7 @@ function waitFor(conditionFunction) {
             
             audio.load()
             
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 4000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));

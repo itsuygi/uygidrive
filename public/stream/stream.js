@@ -22,7 +22,7 @@ let hasDownloaded = false
 
 let isMuted = false
 
-let maxRetries = 5
+let maxRetries = 10
 
 function setup() {
   outgoingText = document.getElementById('url');
@@ -47,7 +47,7 @@ function setup() {
           if (retries <= maxRetries) {
             console.log("[Music Load]: Trying to load. Tries: ", retries)
             audio.load()
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
