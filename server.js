@@ -436,6 +436,8 @@ router.post('/play', authenticateToken, (req, res) => {
   }
  
   let message = createMessageJson("play", url)
+  
+  lastData[topic] = { url: message.message, timestamp: Date.now() };
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
@@ -465,6 +467,7 @@ router.post('/stop', authenticateToken, (req, res) => {
   }
  
   let message = createMessageJson("stop")
+  lastData[topic] = null;
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})

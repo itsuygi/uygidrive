@@ -164,6 +164,7 @@ async function readIncomingMessage(event) {
       
     } else {
       console.log("Playing without sync")
+      audio.src = dataJson.message
       
       const maxRetries = 3; 
       try {
