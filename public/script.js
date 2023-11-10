@@ -155,12 +155,14 @@ async function readIncomingMessage(event) {
       audio.currentTime = 0
       console.log("Resetted time")
       
-      /*setTimeout(function () {
-          if (audio.paused == false) {
-              console.log("Starting manually, didn't load on time.")
-              audio.load()
-          }
-        }, 1100)*/
+       if (audio.paused) {
+        try {
+          audio.load()
+          console.log("Started manually")
+        } catch(error) {
+          console.log("Error while manually play", error)
+        }
+      }
       
     } else {
       console.log("Playing without sync")

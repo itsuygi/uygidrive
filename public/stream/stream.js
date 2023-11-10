@@ -47,7 +47,7 @@ function setup() {
           if (retries <= maxRetries) {
             console.log("[Music Load]: Checking if loaded. Tries: ", retries)
             
-            await new Promise(resolve => setTimeout(resolve, 4000));
+            await new Promise(resolve => setTimeout(resolve, 4500));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -60,7 +60,7 @@ function setup() {
   }
   
   streamURLButton.addEventListener('click', async function(){
-    handleStatus("Waiting for every listener to sync...", "")
+    handleStatus("Loading audio..", "")
     sendMessage("POST", "/load", {"id": topic, "url": outgoingText.value})
     
     try {
