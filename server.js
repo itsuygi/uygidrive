@@ -360,7 +360,7 @@ const APIList = [
     },
     {
         "endpoint": "/api/play",
-        "description": "This endpoint plays music for sent stream id. <b>Access token required. Add it to Authorization header. </b>",
+        "description": "This endpoint plays music for sent stream id. <b>Access token required. Add to Authorization header.</b>",
         "body": "{'id': '1234', 'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
@@ -368,7 +368,7 @@ const APIList = [
     
     {
         "endpoint": "/api/stop",
-        "description": "This endpoint stops the music for the given stream id.",
+        "description": "This endpoint stops the music for the given stream id. <b>Access token required. Add to Authorization header.</b>",
         "body": "{'id': '1234'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
@@ -376,21 +376,21 @@ const APIList = [
   
     {
         "endpoint": "/api/load",
-        "description": "This endpoint sends a load message to clients for preloading. Play command is waited to start the music. This is used for syncing the clients.",
+        "description": "This endpoint sends a load message to clients for preloading. Play command is waited to start the music. This is used for syncing the clients. <b>Access token required. Add to Authorization header.</b>",
         "body": "{'id': '1234'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
     {
         "endpoint": "/api/mute",
-        "description": "This endpoint mutes the music for given stream id.",
+        "description": "This endpoint mutes the music for given stream id. <b>Access token required. Add to Authorization header.</b>",
         "body": "{'id': '1234'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
     {
         "endpoint": "/api/unmute",
-        "description": "This endpoint unmutes the music for given stream id.",
+        "description": "This endpoint unmutes the music for given stream id. <b>Access token required. Add to Authorization header.</b>", 
         "body": "{'id': '1234'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
