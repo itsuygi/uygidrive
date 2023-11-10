@@ -360,7 +360,7 @@ const APIList = [
     },
     {
         "endpoint": "/api/play",
-        "description": "This endpoint plays music for sent stream id.",
+        "description": "This endpoint plays music for sent stream id. <b>Access token required. Add it to Authorization header. </b>",
         "body": "{'id': '1234', 'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
