@@ -134,7 +134,6 @@ function readIncomingMessage(event) {
     hasDownloaded = false
     audio.muted = true
     audio.src = dataJson.message
-    audio.load()
     
     hasLoaded = true
   } else if (dataJson.type == "play") {

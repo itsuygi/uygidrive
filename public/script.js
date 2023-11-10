@@ -170,7 +170,6 @@ async function readIncomingMessage(event) {
     hasDownloaded = false
     audio.muted = true
     audio.src = dataJson.message;
-    audio.load()
     
     try {
       await waitFor(_ => hasDownloaded === true);
