@@ -6,6 +6,8 @@ const router = express.Router();
 
 const { createServer } = require("http");
 const { WebSocketServer } = require("ws");
+const { format } = require('util');
+const { getAudioDurationInSeconds } = require('get-audio-duration')
 
 const fs = require("fs");
 const path = require("path");
@@ -255,7 +257,23 @@ app.get("/localUpload/:filename", (req, res) => {
   res.sendFile(__dirname + "/uploads/" + filename);
 });
 
+app.get("/music/link/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const publicUrl = format(
+      `https://storage.googleapis.com/${bucket.name}/${filename}`
+  );
+  
+  res.redirect(publicUrl)
+});
+
 app.get("/music/:filename", async (req, res) => {
+  const filename = req.params.filename;
+  const publicUrl = format(
+      `https://storage.googleapis.com/${bucket.name}/${filename}`
+  );
+  
+  res.redirect(publicUrl)
+  /*
   try {
     const filename = req.params.filename;
     
@@ -296,7 +314,7 @@ app.get("/music/:filename", async (req, res) => {
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
-  }
+  }*/
 });
 
 
