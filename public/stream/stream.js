@@ -142,6 +142,8 @@ function readIncomingMessage(event) {
     hasDownloaded = false
     audio.muted = false
     
+    handleStatus("Music started.", "")
+    
     if (hasLoaded == true) {
       audio.currentTime = 0
       console.log("Resetted time.")

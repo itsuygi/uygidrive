@@ -383,9 +383,9 @@ const APIList = [
     },
   
     {
-        "endpoint": "/api/load",
-        "description": "This endpoint sends a load message to clients for preloading. Play command is waited to start the music. This is used for syncing the clients. <b>Access token required. Add to Authorization header.</b>",
-        "body": "{'id': '1234'}",
+        "endpoint": "/api/playWithLoad",
+        "description": "This endpoint sends a load message first, waits for until every client loads the audio. Then plays it for extra sync. <b>Access token required. Add to Authorization header.</b>",
+        "body": "{'id': '1234', 'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
@@ -544,12 +544,12 @@ router.post('/playWithLoad', authenticateToken, async (req, res) => {
   const url = body.url;
   
   if (topic == undefined || url == undefined)  {
-    return res.json({'result': "error", 'message': "Missing parameters"})
+    return res.status(400).json({'result': "error", 'message': "Missing parameters"})
   }
   
   const clients = topicClients.get(topic)
   if (clients == undefined) {
-    return res.json({'result': "error", 'message': "No clients"})
+    return res.status(400).json({'result': "error", 'message': "No clients"})
   }
   clients.forEach((client, topic) => {
       client.hasLoaded = false
@@ -589,7 +589,7 @@ router.post('/stop', authenticateToken, (req, res) => {
   const topic = body.id;
   
   if (topic == undefined)  {
-    return res.json({'result': "error", 'message': "Missing parameters"})
+    return res.status(400).json({'result': "error", 'message': "Missing parameters"})
   }
  
   let message = createMessageJson("stop")
@@ -606,7 +606,7 @@ router.post('/mute', authenticateToken, (req, res) => {
   const fade = body.fade;
   
   if (topic == undefined)  {
-    return res.json({'result': "error", 'message': "Missing parameters"})
+    return res.status(400).json({'result': "error", 'message': "Missing parameters"})
   }
  
   let message = createMessageJson("mute", fade)
@@ -622,7 +622,7 @@ router.post('/unmute', authenticateToken, (req, res) => {
   const fade = body.fade;
   
   if (topic == undefined)  {
-    return res.json({'result': "error", 'message': "Missing parameters"})
+    return res.status(400).json({'result': "error", 'message': "Missing parameters"})
   }
  
   let message = createMessageJson("unmute", fade)
@@ -634,7 +634,7 @@ router.post('/unmute', authenticateToken, (req, res) => {
 router.get('/getAccessToken', (req, res) => { 
   const topic = req.body.id;
   if (topic == undefined) {
-    return res.json({'result': "error", 'message': "Missing parameters"}) 
+    return res.status(400).json({'result': "error", 'message': "Missing parameters"}) 
   }
   const token = generateAccessToken({'id': topic})
 
@@ -667,7 +667,7 @@ router.get("/registerStreamId", (req, res) => {
 router.get("/getSongDuration", (req, res) => {
   const song = req.body.url
   if (song == undefined) {
-    return res.status(500).send({'result': "error", 'message': "Missing parameters"})
+    return res.status(400).send({'result': "error", 'message': "Missing parameters"})
   }
   getAudioDurationInSeconds(song).then((duration) => {
     res.json({'result': "successful" ,'message': duration})
