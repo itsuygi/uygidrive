@@ -77,6 +77,8 @@ var topicClients = new Map();
 var lastData = {};
 var streamerIPs = {};
 
+const maxRetries = 10
+
 function serverStart() {
   var port = this.address().port;
   console.log("Server listening on port " + port);
@@ -459,6 +461,38 @@ function authenticateToken(req, res, next) {
   });
 }
 
+function waitForLoad(topic) {
+    return new Promise(async (resolve, reject) => {
+      let retries = 0;
+      
+      console.log("[Load Check]: Checking if loaded. Tries: ", retries)
+
+      async function poll() {
+        var foundNonLoaded = false
+        topicClients.get(topic).forEach((client, topic) => {
+          if (client.hasLoaded == false) {
+            foundNonLoaded = true
+          }
+        });
+
+        if (foundNonLoaded == false) {
+          resolve();
+        } else {
+          retries++;
+          if (retries <= maxRetries) {
+            
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            poll();
+          } else {
+            reject(new Error("Exceeded maximum retries"));
+          }
+        }
+      }
+
+      poll();
+    });
+  }
+
 
 router.get('/', (req, res) => {
   res.sendFile("api.html", { root: __dirname + "/public/api" });
@@ -502,7 +536,7 @@ router.post('/load', authenticateToken, (req, res) => {
   res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
-router.post('/playWithLoad', authenticateToken, (req, res) => { 
+router.post('/playWithLoad', authenticateToken, async (req, res) => { 
   const body = req.body;
   const topic = body.id;
   const url = body.url;
@@ -519,7 +553,17 @@ router.post('/playWithLoad', authenticateToken, (req, res) => {
   let message = createMessageJson("load", url)
   sendToTopicClients(topic, message)
   
-  var checkInterval = setInterval(function() {
+  try {
+    await waitForLoad(topic);
+    console.log("All loaded.")
+  } catch(error) {
+    console.log("Exceeded tries, playing.")
+  }
+  
+  let playMessage = createMessageJson("play", url)
+  sendToTopicClients(topic, playMessage)
+  
+  /*var checkInterval = setInterval(function() {
     var foundNonLoaded = false
     topicClients.get(topic).forEach((client, topic) => {
       if (client.hasLoaded == false) {
@@ -530,7 +574,7 @@ router.post('/playWithLoad', authenticateToken, (req, res) => {
     if (foundNonLoaded == true) {
       
     };
-  }, 900);
+  }, 900);*/
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
 });
