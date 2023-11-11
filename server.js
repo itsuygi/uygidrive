@@ -502,6 +502,39 @@ router.post('/load', authenticateToken, (req, res) => {
   res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
+router.post('/playWithLoad', authenticateToken, (req, res) => { 
+  const body = req.body;
+  const topic = body.id;
+  const url = body.url;
+  
+  if (topic == undefined || url == undefined)  {
+    return res.json({'result': "error", 'message': "Missing parameters"})
+  }
+  
+  const clients = topicClients.get(topic)
+  clients.forEach((client, topic) => {
+      client.hasLoaded = false
+  });
+ 
+  let message = createMessageJson("load", url)
+  sendToTopicClients(topic, message)
+  
+  var checkInterval = setInterval(function() {
+    var foundNonLoaded = false
+    topicClients.get(topic).forEach((client, topic) => {
+      if (client.hasLoaded == false) {
+        foundNonLoaded = true
+      }
+    });
+    
+    if (foundNonLoaded == true) {
+      
+    };
+  }, 900);
+
+  res.json({'result': "successful", 'message': "Message sent to clients."})
+});
+
 router.post('/stop', authenticateToken, (req, res) => { 
   const body = req.body;
   const topic = body.id;
