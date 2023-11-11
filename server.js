@@ -474,6 +474,8 @@ function waitForLoad(topic) {
             foundNonLoaded = true
           }
         });
+        
+        console.log("Found non-loaded client: ", foundNonLoaded)
 
         if (foundNonLoaded == false) {
           resolve();
@@ -481,7 +483,7 @@ function waitForLoad(topic) {
           retries++;
           if (retries <= maxRetries) {
             
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 1500));
             poll();
           } else {
             reject(new Error("Exceeded maximum retries"));
@@ -546,6 +548,9 @@ router.post('/playWithLoad', authenticateToken, async (req, res) => {
   }
   
   const clients = topicClients.get(topic)
+  if (clients == undefined) {
+    return res.json({'result': "error", 'message': "No clients"})
+  }
   clients.forEach((client, topic) => {
       client.hasLoaded = false
   });

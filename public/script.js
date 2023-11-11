@@ -49,6 +49,11 @@ function setup() {
   audio.addEventListener('canplaythrough', function() { 
     console.log("Audio loaded.")
     hasDownloaded = true
+    
+    setTimeout(function() {
+      sendMessage("loaded", audio.src)
+      console.log("Sent loaded message to server.")
+    }, 1000)
   });
   
   /*audio.onerror = function() {

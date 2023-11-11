@@ -61,16 +61,16 @@ function setup() {
   
   streamURLButton.addEventListener('click', async function(){
     handleStatus("Loading audio..", "")
-    sendMessage("POST", "/load", {"id": topic, "url": outgoingText.value})
+    sendMessage("POST", "/playWithLoad", {"id": topic, "url": outgoingText.value})
     
-    try {
+    /*try {
       await waitFor(_ => hasDownloaded === true);
       
       sendMessage("POST", "/play", {"id": topic, "url": outgoingText.value});
       handleStatus("Started to play.", "");
     } catch (error) {
       console.error("Exceeded maximum retries.");
-    }
+    }*/
     
   });
   
@@ -94,6 +94,8 @@ function setup() {
   audio.addEventListener('canplaythrough', function() { 
     console.log("Audio loaded.")
     hasDownloaded = true
+    
+    sendSocketMessage("loaded", audio.src)
   }, false);
   
   audio.onended = function() {
