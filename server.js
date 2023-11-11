@@ -87,6 +87,8 @@ function serverStart() {
 function handleClient(thisClient, request) {
   console.log("New Connection handled");
   // add this client to the clients array
+  
+  thisClient.hasLoaded = false
 
   function endClient() {
     // when a client closes its connection
@@ -111,40 +113,44 @@ function handleClient(thisClient, request) {
     }
 
     console.log(data);
+    
+    switch (data.type) {
+      case "subscribe" :
+        const topic = data.message;
+        console.log(topic);
 
-    if (data.type === "subscribe") {
-      const topic = data.message;
-      console.log(topic);
+        let found = false;
 
-      let found = false;
+        topicClients.forEach((clients, topic) => {
+          const index = clients.indexOf(thisClient);
+          if (index !== -1) {
+            found = true;
+          }
+        });
 
-      topicClients.forEach((clients, topic) => {
-        const index = clients.indexOf(thisClient);
-        if (index !== -1) {
-          found = true;
+        if (found == false) {
+          // İstemciyi konuya ekleyin
+          if (!topicClients.has(topic)) {
+            topicClients.set(topic, []);
+          }
+
+          topicClients.get(topic).push(thisClient);
+
+          if (lastData[topic]) {
+            thisClient.send(
+              JSON.stringify({ type: "resumePlay", message: lastData[topic] })
+            );
+          } else {
+            thisClient.send(
+              JSON.stringify({ type: "connection", message: "successfull" })
+            );
+          }
         }
-      });
-
-      if (found == false) {
-        // İstemciyi konuya ekleyin
-        if (!topicClients.has(topic)) {
-          topicClients.set(topic, []);
-        }
-
-        topicClients.get(topic).push(thisClient);
-
-        if (lastData[topic]) {
-          thisClient.send(
-            JSON.stringify({ type: "resumePlay", message: lastData[topic] })
-          );
-        } else {
-          thisClient.send(
-            JSON.stringify({ type: "connection", message: "successfull" })
-          );
-        }
-      }
+        console.log(topicClients);
+      
+      case "loaded":
+        thisClient.hasLoaded = true
     }
-    console.log(topicClients);
   }
 
   // set up client event listeners:
@@ -484,6 +490,17 @@ router.post('/load', authenticateToken, (req, res) => {
   if (topic == undefined || url == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
+  
+  const clients = topicClients.get(topic)
+  topicClients.forEach((clients, topic) => {
+      const index = clients.indexOf(thisClient);
+      if (index !== -1) {
+        clients.splice(index, 1);
+        if (clients.length === 0) {
+          topicClients.delete(topic);
+        }
+      }
+    });
  
   let message = createMessageJson("load", url)
   sendToTopicClients(topic, message)
