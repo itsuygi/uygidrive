@@ -492,15 +492,9 @@ router.post('/load', authenticateToken, (req, res) => {
   }
   
   const clients = topicClients.get(topic)
-  topicClients.forEach((clients, topic) => {
-      const index = clients.indexOf(thisClient);
-      if (index !== -1) {
-        clients.splice(index, 1);
-        if (clients.length === 0) {
-          topicClients.delete(topic);
-        }
-      }
-    });
+  clients.forEach((client, topic) => {
+      client.hasLoaded = false
+  });
  
   let message = createMessageJson("load", url)
   sendToTopicClients(topic, message)
