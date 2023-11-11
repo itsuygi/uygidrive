@@ -25,7 +25,9 @@
     
     <br>
     <h5 class="text">Examples:</h5>
+    
     <div class="accordion" id="exampleCodes">
+      
       <div class="card">
         <div class="card-header" id="example1">
           <h2 class="mb-0">
@@ -73,6 +75,61 @@ print("New stream created. Stream id: ", streamId)
 
 sendRequest("play", BaseURL.."/music/test_music.mp3")
 sendRequest("stop")
+              </pre>
+            </code>
+            
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-header" id="example2">
+          <h2 class="mb-0">
+            <button class="btn btn-link endpoint-title" onclick="$('#code2').collapse('toggle')" type="button" data-toggle="collapse" data-target="#code1" aria-expanded="true" aria-controls="code1">
+              Python
+            </button>
+          </h2>
+        </div>
+
+        <div id="code2" class="collapse hide" aria-labelledby="example1" data-parent="#exampleCodes">
+          <div class="card-body">
+            <p class="endpoint-description">This example shows how to create a stream and play on Python.</p>
+            <code>
+              <pre>
+import requests
+import json
+
+base_url = "https://songroom.glitch.me"
+access_token = None
+stream_id = None
+
+def send_request(command, url=None):
+    message = {"id": stream_id}
+
+    if url:
+        message["url"] = url
+
+    data = json.dumps(message)
+    headers = {"Authorization": access_token, "Content-Type": "application/json"}
+    response = requests.post(f"{base_url}/api/{command}", data=data, headers=headers)
+
+    print(response.text)
+
+def create_stream():
+    response = requests.get(f"{base_url}/api/createStream")
+    stream_data = response.json()
+
+    return stream_data
+
+new_stream = create_stream()
+access_token = new_stream["accessToken"]
+stream_id = new_stream["id"]
+
+print(f"New stream created. Stream id: {stream_id}")
+
+send_request("play", f"{base_url}/music/test_music.mp3")
+send_request("stop")
+
               </pre>
             </code>
             

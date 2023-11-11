@@ -29,3 +29,7 @@
   background-color: #343634; /* Arka plan rengi */
   border: 1px solid #454745;
 }
+
+.dark-theme a {
+  color: white
+}
