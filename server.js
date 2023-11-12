@@ -261,7 +261,7 @@ app.get("/localUpload/:filename", (req, res) => {
  const filename = req.params.filename;
   console.log("Sending file: " + filename);
   
-  res.set("Content-Type", "audio/mpeg")
+  //res.set("Content-Type", "audio/mpeg")
   res.sendFile(__dirname + "/uploads/" + filename);
 });
 
@@ -670,13 +670,14 @@ router.get("/getSongDuration", (req, res) => {
     return res.status(400).send({'result': "error", 'message': "Missing parameters"})
   }
   try {
-    
-  }catch {
-    
+    console.log(song)
+    getAudioDurationInSeconds(song).then((duration) => {
+      res.json({'result': "successful" ,'message': duration})
+    });
+  } catch(error) {
+    res.json({'result': "error" ,'message': error.message})
   }
-  getAudioDurationInSeconds(song).then((duration) => {
-    res.json({'result': "successful" ,'message': duration})
-  });
+  
 });
 
 router.get("/list", (req, res) => {
