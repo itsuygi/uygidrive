@@ -78,14 +78,14 @@ window.addEventListener('load', function() {
   // Örnek olarak, ses konumunu her 5 saniyede bir güncelleyebilirsiniz
   setInterval(function() {
     // Yeni konum değerlerini belirleyin
-    var newX = Math.random() * 10 - 10; // -1 ile 1 arasında rastgele bir x değeri
-    var newY = Math.random() * 10 - 10; // -1 ile 1 arasında rastgele bir y değeri
+    var newX = Math.random() * 5 - 6; // -1 ile 1 arasında rastgele bir x değeri
+    var newY = Math.random() * 5 - 6; // -1 ile 1 arasında rastgele bir y değeri
     var newZ = 5; // -1 ile 1 arasında rastgele bir z değeri
 
     // Ses konumunu güncelleyin
     updateSoundPosition(newX, newY, newZ);
     console.log(newX,newY)
-  }, 900); // Her 5 saniyede bir güncelle
+  }, 800); // Her 5 saniyede bir güncelle
 
 });
 })
