@@ -391,15 +391,15 @@ const APIList = [
     },
     {
         "endpoint": "/api/mute",
-        "description": "This endpoint mutes the music for given stream id. <b>Access token required. Add to Authorization header.</b>",
-        "body": "{'id': '1234'}",
+        "description": "This endpoint mutes the music for given stream id. Set fade to true if you want to mute with fade. <b>Access token required. Add to Authorization header.</b>",
+        "body": "{'id': '1234', 'fade': true/false}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
     {
         "endpoint": "/api/unmute",
-        "description": "This endpoint unmutes the music for given stream id. <b>Access token required. Add to Authorization header.</b>", 
-        "body": "{'id': '1234'}",
+        "description": "This endpoint unmutes the music for given stream id. Set fade to true if you want to mute with fade. <b>Access token required. Add to Authorization header.</b>", 
+        "body": "{'id': '1234', 'fade': true/false}",
         "response": "{'result': 'successful', 'message': 'Message sent to clients.'}",
         "method": "POST"
     },
