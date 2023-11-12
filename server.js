@@ -353,13 +353,6 @@ app.get("/stream", (req, res) => {
 
 const APIList = [
     {
-        "endpoint": "/api/getAccessToken",
-        "description": "Creates a access token which is linked to your stream id in order to access the api.",
-        "body": "{'id': '1234'}",
-        "response": "{'token': 'ey125436...'}",
-        "method": "GET"
-    },
-    {
         "endpoint": "/api/createStream",
         "description": "This endpoint generates stream id and access token for it.",
         "body": "No body",
