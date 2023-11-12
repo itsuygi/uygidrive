@@ -8,7 +8,7 @@ window.addEventListener('load', function() {
     
     audioElement.crossOrigin = "anonymous";
     
-    audioElement.src = "https://songroom.glitch.me/music/cool-music.mp3"
+    audioElement.src = "https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/break-my-heart.mp3?v=1699817356279"
     
     audioElement.play();
     
@@ -17,7 +17,8 @@ window.addEventListener('load', function() {
 
     // Ses düğümünü oluşturun
     var panner = audioContext.createPanner();
-    panner.setPosition(1, 0, 0); // Sesin konumunu belirleyin (örnekte x: 1, y: 0, z: 0)
+    panner.panningModel = "equalpower";
+    panner.setPosition(0, 3, 20); // Sesin konumunu belirleyin (örnekte x: 1, y: 0, z: 0)
     console.log("2")
 
     // Ses düğümünü bağlayın
@@ -42,6 +43,6 @@ window.addEventListener('load', function() {
 
       // Ses konumunu güncelleyin
       updateSoundPosition(newX, newY, newZ);
-    }, 5000); // Her 5 saniyede bir güncelle
+    }, 1000000); // Her 5 saniyede bir güncelle
   });
 });
