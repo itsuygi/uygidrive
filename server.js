@@ -404,9 +404,9 @@ const APIList = [
         "method": "POST"
     },
     {
-        "endpoint": "/api/getSongDuration",
-        "description": "This endpoint returns the duration/length of the music file in seconds. Can be used for waiting until song ends. ",
-        "body": "{'url': 'https://songroom.glitch.me/music/test_music.mp3'}",
+        "endpoint": "/api/getSongDuration?url=SONG_URL",
+        "description": "This endpoint returns the duration/length of the music file in seconds. Can be used for waiting until song ends. Send the url as url params.",
+        "body": "No body, send the url as url param.",
         "response": "{'result': 'successful', 'message': 94.003}",
         "method": "GET"
     },
@@ -665,9 +665,14 @@ router.get("/registerStreamId", (req, res) => {
 });
 
 router.get("/getSongDuration", (req, res) => {
-  const song = req.body.url
+  const song = req.query.url
   if (song == undefined) {
     return res.status(400).send({'result': "error", 'message': "Missing parameters"})
+  }
+  try {
+    
+  }catch {
+    
   }
   getAudioDurationInSeconds(song).then((duration) => {
     res.json({'result': "successful" ,'message': duration})
