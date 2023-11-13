@@ -250,7 +250,7 @@ function waitForSocketConnection(socket, callback){
                 waitForSocketConnection(socket, callback);
             }
 
-        }, 2000); // wait 5 milisecond for the connection
+        }, 50); // wait 5 milisecond for the connection
 }
 
 function handleVolume() {
