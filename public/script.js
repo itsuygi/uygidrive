@@ -8,7 +8,7 @@ let outgoingText;
 let connectWidget;
 let connectionSpan;
 let connectButton;
-let connectUsernameButton;
+let connectStreamIDButton;
 let connectionStatus;
 let musicStatusDiv;
 let musicInfo;
@@ -28,7 +28,7 @@ function setup() {
   outgoingText = document.getElementById("username");
   connectWidget = document.getElementById("connectWidget");
   connectionSpan = document.getElementById("connection");
-  connectUsernameButton = document.getElementById("connectStreamIDButton");
+  connectStreamIDButton = document.getElementById("connectStreamIDButton");
   connectionStatus = document.getElementById("status");
   musicStatusDiv = document.getElementById("musicStatus");
   musicInfo = document.getElementById("musicInfo");
@@ -38,8 +38,16 @@ function setup() {
   
 
   // set the listeners:
-  connectUsernameButton.addEventListener("click", function () {
-    sendMessage("subscribe", outgoingText.value);
+  connectStreamIDButton.addEventListener("click", function () {
+    if(getConnectionState() == true) {
+      sendMessage("subscribe", outgoingText.value);
+    } else {
+      $.notify("Lost connection to server! Reloading.", "error");
+      
+      setTimeout(function() {
+        location.reload()
+      }, 2000)
+    }
   });
 
   volumeSlider.oninput = function () {
@@ -91,12 +99,12 @@ function openSocket(url) {
   socket.addEventListener("message", readIncomingMessage);
 }
 
-function changeConnection(event) {
+function getConnectionState(event) {
   // open the connection if it's closed, or close it if open:
   if (socket.readyState === WebSocket.CLOSED) {
-    openSocket(serverURL);
+    return false;
   } else {
-    socket.close();
+    return true;
   }
 }
 
