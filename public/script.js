@@ -62,6 +62,8 @@ function setup() {
       sendMessage("loaded", audio.src)
       console.log("Sent loaded message to server.")
     }, 1000)
+    
+     $.notify("Audio loaded");
   });
   
   /*audio.onerror = function() {
@@ -116,11 +118,13 @@ function openConnection() {
 
 function closeConnection() {
   // display the change of state:
-  connectionSpan.innerHTML = "Not server connection";
+  connectionSpan.innerHTML = "No server connection";
   connectionSpan.style.color = "red";
 
   connectionStatus.innerHTML = "Not connected to stream";
   connectionStatus.style.color = "red";
+  
+  socket.close()
 }
 
 function waitFor(conditionFunction) {
