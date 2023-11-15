@@ -167,6 +167,7 @@ async function readIncomingMessage(event) {
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
   } else if (dataJson.type == "play") {
+     $.notify("Playing audio");
     if (hasLoaded == true) {
       audio.muted = false
       audio.currentTime = 0
