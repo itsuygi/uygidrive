@@ -698,13 +698,20 @@ async function getRandomMusicUrl() {
 
 // Fonksiyon: Belirtilen süre boyunca bekleyerek döngüyü başlat
 async function startBackgroundLoop() {
+  const token = generateAccessToken({'id': 69})
+  const config = {
+    headers: {
+      'Authorization': 
+    }
+  };
+  
   while (true) {
     // Rastgele bir müzik URL seç
     const musicUrl = await getRandomMusicUrl();
 
     if (musicUrl) {
       // Müziği oynatmak için /api/play endpoint'ine istek gönder
-      await axios.post('${hostUrl}/api/play', { url: musicUrl });
+      await axios.post(`${hostUrl}/api/play`, { url: musicUrl }, config);
 
       // Müziğin süresini al
       const response = await axios.get(`${hostUrl}/api/getSongDuration?url=${encodeURIComponent(musicUrl)}`);
