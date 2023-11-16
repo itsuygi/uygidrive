@@ -63,7 +63,7 @@ function setup() {
       console.log("Sent loaded message to server.")
     }, 1000)
     
-     $.notify("Audio loaded");
+     $.notify("Audio loaded", "success");
   });
   
   /*audio.onerror = function() {
@@ -103,6 +103,7 @@ function openSocket(url) {
 
 function getConnectionState(event) {
   // open the connection if it's closed, or close it if open:
+  
   if (socket.readyState === WebSocket.CLOSED) {
     return false;
   } else {

@@ -217,8 +217,11 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
-function generateAccessToken(data) {
-  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: '10h' });
+function generateAccessToken(data, time) {
+  if (time == undefined) {
+    time = "10h"
+  }
+  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: time });
 }
 
 
@@ -438,6 +441,7 @@ function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
 
   if (!token) {
+    console.log("No token found in headers.")
     return res.status(401).send('Unauthorized');
   }
 
@@ -696,30 +700,24 @@ async function getRandomMusicUrl() {
   }
 }
 
-// Fonksiyon: Belirtilen süre boyunca bekleyerek döngüyü başlat
+const defaultStreamId = "69"
+
 async function startBackgroundLoop() {
-  const token = generateAccessToken({'id': 69})
-  const config = {
-    headers: {
-      'Authorization': 
-    }
-  };
+  const token = generateAccessToken({'id': defaultStreamId}, "24d")
+  
+  axios.defaults.headers.common['Authorization'] = token
   
   while (true) {
-    // Rastgele bir müzik URL seç
     const musicUrl = await getRandomMusicUrl();
 
     if (musicUrl) {
-      // Müziği oynatmak için /api/play endpoint'ine istek gönder
-      await axios.post(`${hostUrl}/api/play`, { url: musicUrl }, config);
+      await axios.post(`${hostUrl}/api/play`, { url: musicUrl, id: defaultStreamId });
 
-      // Müziğin süresini al
       const response = await axios.get(`${hostUrl}/api/getSongDuration?url=${encodeURIComponent(musicUrl)}`);
       const songDuration = response.data.message;
 
-      console.log(`"${musicUrl}" adlı müzik başlatıldı. Bekleme süresi: ${songDuration} saniye.`);
+      console.log(`"${musicUrl}" started playing. Waiting for: ${songDuration} seconds.`);
 
-      // Belirtilen süre boyunca bekleyerek döngüyü başlat
       await new Promise(resolve => setTimeout(resolve, songDuration * 1000));
     }
   }
@@ -734,7 +732,7 @@ function serverStart() {
   console.log("Project domain: " + hostUrl)
   console.log("Server listening on port: " + port);
   
-  //startBackgroundLoop()
+  startBackgroundLoop()
 }
 
 // start the server:
