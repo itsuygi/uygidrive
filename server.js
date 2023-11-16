@@ -641,7 +641,7 @@ router.get('/getAccessToken', (req, res) => {
 
   res.json({ token });*/
   
-  res.json({'result': "error", 'message': "This endpoint is deprecated, use /createStream instead."});
+  res.json({'result': "error", 'message': "This endpoint is deprecated, use /api/createStream instead."});
 })
 
 router.get("/createStream", (req, res) => {
