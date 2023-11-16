@@ -295,6 +295,7 @@ app.get("/music/:filename", async (req, res) => {
         const totalLength = cached.length;
   
         res.set('Content-Type', 'audio/mpeg');
+        res.set('Accept-Ranges', "bytes");
         // Parse the range header
         if (rangeHeader) {
           const parts = rangeHeader.replace(/bytes=/, "").split("-");
@@ -307,7 +308,6 @@ app.get("/music/:filename", async (req, res) => {
 
           // Set headers for partial content
           
-          res.set('Accept-Ranges', "bytes");
           res.set('Content-Length', chunkSize);
           res.set('Content-Range', contentRange);
           res.status(206);
