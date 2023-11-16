@@ -633,13 +633,15 @@ router.post('/unmute', authenticateToken, (req, res) => {
 })
 
 router.get('/getAccessToken', (req, res) => { 
-  const topic = req.body.id;
+  /*const topic = req.body.id;
   if (topic == undefined) {
     return res.status(400).json({'result': "error", 'message': "Missing parameters"}) 
   }
   const token = generateAccessToken({'id': topic})
 
-  res.json({ token });
+  res.json({ token });*/
+  
+  res.json({'result': "error", 'message': "This endpoint is deprecated, use /createStream instead."});
 })
 
 router.get("/createStream", (req, res) => {
@@ -648,6 +650,7 @@ router.get("/createStream", (req, res) => {
   while (topicClients.has(id) == true);
   
   console.log(id);
+  activeStreams.push(id)
   
   const accessToken = generateAccessToken({'id': id})
 
@@ -657,12 +660,17 @@ router.get("/createStream", (req, res) => {
 router.get("/registerStreamId", (req, res) => {
   const id = req.query.streamId
   id = id.toString()
-  
-  const accessToken = generateAccessToken({'id': id})
-  
-  console.log(accessToken);
 
-  res.json({'id': id, 'accessToken': accessToken});
+  if (activeStreams.includes(id) == true) {
+    res.status(500).json({'result': "error", 'message': "This stream id is already registered."})
+  } else {
+    const accessToken = generateAccessToken({'id': id})
+    console.log(accessToken);
+    
+    activeStreams.push(id)
+
+    res.json({'id': id, 'accessToken': accessToken});
+  }
 });
 
 router.get("/getSongDuration", (req, res) => {
