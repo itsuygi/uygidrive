@@ -701,7 +701,6 @@ async function getRandomMusicUrl() {
 }
 
 const defaultStreamId = "69"
-let currentTimeout;
 let skip = false
 
 async function startBackgroundLoop() {
@@ -710,11 +709,6 @@ async function startBackgroundLoop() {
   axios.defaults.headers.common['Authorization'] = token
   
   while (true) {
-    if (skip) {
-      console.log('Song skipped.');
-      skip = false;
-      continue;
-    }
     const musicUrl = await getRandomMusicUrl();
 
     if (musicUrl) {
@@ -725,19 +719,12 @@ async function startBackgroundLoop() {
 
       console.log(`"${musicUrl}" started playing. Waiting for: ${songDuration} seconds.`);
 
-      currentTimeout = setTimeout(() => {
-        console.log(`"${musicUrl}" ended.`);
-      }, songDuration * 1000);
-      
-      await new Promise(resolve => currentTimeout);
+      await new Promise(resolve => setTimeout(resolve, songDuration * 1000));
     }
   }
 }
 
-app.use('/skip', (req, res) => {
-  console.log("skip")
-  clearTimeout(currentTimeout);
-});
+
 
 // Server handling
 
