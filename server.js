@@ -273,6 +273,14 @@ app.get("/music/link/:filename", (req, res) => {
   res.redirect(publicUrl)
 });
 
+function getPublicUrl(filename) {
+  const publicUrl = format(
+    `https://storage.googleapis.com/${bucket.name}/${filename}`
+  );
+  
+  return publicUrl
+}
+
 app.get("/music/:filename", async (req, res) => {
   /*const filename = req.params.filename;
   const publicUrl = format(
@@ -318,19 +326,18 @@ app.get("/music/:filename", async (req, res) => {
           res.send(cached)
         }
       } else {
-        console.log("Already downloading, rejecting.")
-        res.status(403).send("Already downloading, please try again in few seconds.")
+        console.log("Already downloading, redirecting.")
+        
+        const publicUrl = getPublicUrl(filename)
+        res.redirect(publicUrl)
       }
       
     } else {
       // Redirect to public link for faster response
-      const publicUrl = format(
-          `https://storage.googleapis.com/${bucket.name}/${filename}`
-      );
+      const publicUrl = getPublicUrl(filename)
 
       //res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
       res.set("Content-Type", "audio/mpeg")
-      console.log("a")
       res.redirect(publicUrl)
       
       console.log("Public url sent, caching.")
