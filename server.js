@@ -700,7 +700,7 @@ router.get("/createStream", (req, res) => {
   while (topicClients.has(id) == true);
   
   console.log(id);
-  activeStreams.push(id)
+  //activeStreams.push(id)
   
   const accessToken = generateAccessToken({'id': id})
 
@@ -717,7 +717,7 @@ router.get("/registerStreamId", (req, res) => {
     const accessToken = generateAccessToken({'id': id})
     console.log(accessToken);
     
-    activeStreams.push(id)
+    //activeStreams.push(id)
 
     res.json({'id': id, 'accessToken': accessToken});
   }
