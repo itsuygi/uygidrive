@@ -13,6 +13,7 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
+const cache = require('memory-cache');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -281,26 +282,28 @@ app.get("/music/:filename", async (req, res) => {
   res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
   
   res.redirect(publicUrl)
-  /*
+  
   try {
     const filename = req.params.filename;
     
-    if (memoryStorage[filename]) {
-      if (memoryStorage[filename] !== "DOWNLOADING") {
+    var cached = cache.get(filename)
+    
+    if (cached) {
+      if (cached !== "DOWNLOADING") {
         console.log("Found file in memory: ", filename)
         res.set('Content-Type', 'audio/mpeg');
-        console.log(memoryStorage[filename])
-        res.send(memoryStorage[filename]);
+        console.log(cached)
+        res.send(cached);
       } else {
         console.log("Already downloading, rejecting.")
         res.status(403)
       }
       
     } else {
-      console.log("File didn't found on memory, downloading: ", filename)
-      memoryStorage[filename] = "DOWNLOADING"
-      
       const file = bucket.file(filename);
+      console.log("File didn't found on memory, downloading: ", filename)
+      cache.set(filename, "DOWNLOADING")
+      
       const fileContent = await file.download();
       
       let memory = getMemoryUsage()
@@ -311,9 +314,12 @@ app.get("/music/:filename", async (req, res) => {
       
       if (memoryUsage <= 80) {
         const fileData = fileContent[0];
-        memoryStorage[filename] = fileData;
+        cache.set(filename, fileData);
         
         console.log("File saved to memory, enough space: ", filename)
+      } else {
+        console.log("Not enough space to cache, cancelling.")
+        cache.del(filename)
       }
       
       res.set("Content-Type", "audio/mpeg")
@@ -322,7 +328,7 @@ app.get("/music/:filename", async (req, res) => {
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
-  }*/
+  }
 });
 
 
