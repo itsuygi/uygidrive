@@ -274,14 +274,14 @@ app.get("/music/link/:filename", (req, res) => {
 });
 
 app.get("/music/:filename", async (req, res) => {
-  const filename = req.params.filename;
+  /*const filename = req.params.filename;
   const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${filename}`
   );
   
   res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
   
-  res.redirect(publicUrl)
+  res.redirect(publicUrl)*/
   
   try {
     const filename = req.params.filename;
@@ -292,17 +292,28 @@ app.get("/music/:filename", async (req, res) => {
       if (cached !== "DOWNLOADING") {
         console.log("Found file in memory: ", filename)
         res.set('Content-Type', 'audio/mpeg');
-        console.log(cached)
+        res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
+        
         res.send(cached);
       } else {
         console.log("Already downloading, rejecting.")
-        res.status(403)
+        res.status(403).send("Already downloading, please try again in few seconds.")
       }
       
     } else {
+      // Redirect to public link for faster response
+      const publicUrl = format(
+          `https://storage.googleapis.com/${bucket.name}/${filename}`
+      );
+
+      res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
+      res.set("Content-Type", "audio/mpeg")
+      res.redirect(publicUrl)
+      
+      // Download and cache
       const file = bucket.file(filename);
       console.log("File didn't found on memory, downloading: ", filename)
-      cache.set(filename, "DOWNLOADING")
+      cache.put(filename, "DOWNLOADING")
       
       const fileContent = await file.download();
       
@@ -314,7 +325,7 @@ app.get("/music/:filename", async (req, res) => {
       
       if (memoryUsage <= 80) {
         const fileData = fileContent[0];
-        cache.set(filename, fileData);
+        cache.put(filename, fileData);
         
         console.log("File saved to memory, enough space: ", filename)
       } else {
@@ -322,8 +333,7 @@ app.get("/music/:filename", async (req, res) => {
         cache.del(filename)
       }
       
-      res.set("Content-Type", "audio/mpeg")
-      res.send(fileContent)
+      //res.send(fileContent[0])
     }
   } catch (error) {
     console.log("Error getting file: ", error)
@@ -755,7 +765,7 @@ function serverStart() {
   console.log("Project domain: " + hostUrl)
   console.log("Server listening on port: " + port);
   
-  startBackgroundLoop()
+  //startBackgroundLoop()
 }
 
 // start the server:
