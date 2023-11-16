@@ -278,6 +278,8 @@ app.get("/music/:filename", async (req, res) => {
       `https://storage.googleapis.com/${bucket.name}/${filename}`
   );
   
+  res.set('Cache-Control', 'public, max-age=2000, s-maxage=3000');
+  
   res.redirect(publicUrl)
   /*
   try {
