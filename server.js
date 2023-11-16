@@ -342,10 +342,12 @@ app.get("/upload/list", (req, res) => {
 });
 
 app.get("/streamList", (req, res) => {
-  let streams = Array.from(topicClients, ([name, value]) => ({ name, value }));
-  allStreamIds.forEach((file) => {
-      
+  let streams = {};
+  topicClients.forEach((value, key) => {
+    streams[key] = value.length;
   });
+  
+  res.send(JSON.stringify(streams))
 });
 
 // Streaming
