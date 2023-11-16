@@ -9,8 +9,6 @@ const { WebSocketServer } = require("ws");
 const { format } = require('util');
 const { getAudioDurationInSeconds } = require('get-audio-duration')
 const axios = require('axios');
-
-
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
@@ -26,7 +24,6 @@ app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
 const bodyParser = require("body-parser");
 app.use(express.json());
-
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -45,7 +42,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "gs://uygi-online-music.appspot.com"
 });
-
 const bucket = admin.storage().bucket();
 
 const multerStorage = multer.diskStorage({
@@ -78,6 +74,7 @@ let memoryStorage = {}
 var topicClients = new Map();
 var lastData = {};
 var streamerIPs = {};
+var activeStreams = {};
 
 const maxRetries = 10
 
@@ -342,6 +339,13 @@ app.get("/upload/list", (req, res) => {
       console.error("Error while listing the files:", error);
       res.status(500).send(error.message);
     });
+});
+
+app.get("/streamList", (req, res) => {
+  let streams = Array.from(topicClients, ([name, value]) => ({ name, value }));
+  allStreamIds.forEach((file) => {
+      
+  });
 });
 
 // Streaming
