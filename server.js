@@ -285,16 +285,38 @@ app.get("/music/:filename", async (req, res) => {
   
   try {
     const filename = req.params.filename;
+    const rangeHeader = req.headers.range;
     
     var cached = cache.get(filename)
     
     if (cached) {
       if (cached !== "DOWNLOADING") {
         console.log("Found file in memory: ", filename)
+        const totalLength = cached.length;
+  
         res.set('Content-Type', 'audio/mpeg');
-        res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
-        
-        res.send(cached);
+        // Parse the range header
+        if (rangeHeader) {
+          const parts = rangeHeader.replace(/bytes=/, "").split("-");
+          const start = parseInt(parts[0], 10);
+          const end = parts[1] ? parseInt(parts[1], 10) : totalLength - 1;
+
+          // Calculate content length and content range
+          const chunkSize = end - start + 1;
+          const contentRange = `bytes ${start}-${end}/${totalLength}`;
+
+          // Set headers for partial content
+          
+          res.set('Accept-Ranges', "bytes");
+          res.set('Content-Length', chunkSize);
+          res.set('Content-Range', contentRange);
+          res.status(206);
+
+          // Send the partial content
+          res.send(cached.slice(start, end + 1));
+        } else {
+          res.send(cached)
+        }
       } else {
         console.log("Already downloading, rejecting.")
         res.status(403).send("Already downloading, please try again in few seconds.")
@@ -306,9 +328,12 @@ app.get("/music/:filename", async (req, res) => {
           `https://storage.googleapis.com/${bucket.name}/${filename}`
       );
 
-      res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
+      //res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
       res.set("Content-Type", "audio/mpeg")
+      console.log("a")
       res.redirect(publicUrl)
+      
+      console.log("Public url sent, caching.")
       
       // Download and cache
       const file = bucket.file(filename);
@@ -765,7 +790,7 @@ function serverStart() {
   console.log("Project domain: " + hostUrl)
   console.log("Server listening on port: " + port);
   
-  //startBackgroundLoop()
+  startBackgroundLoop()
 }
 
 // start the server:
