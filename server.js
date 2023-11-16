@@ -8,6 +8,8 @@ const { createServer } = require("http");
 const { WebSocketServer } = require("ws");
 const { format } = require('util');
 const { getAudioDurationInSeconds } = require('get-audio-duration')
+const axios = require('axios');
+
 
 const fs = require("fs");
 const path = require("path");
@@ -79,11 +81,7 @@ var streamerIPs = {};
 
 const maxRetries = 10
 
-function serverStart() {
-  var port = this.address().port;
-  console.log("Server listening on port " + port);
-}
-
+const hostUrl = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
 
 // Socket
 function handleClient(thisClient, request) {
@@ -680,7 +678,57 @@ router.get("/list", (req, res) => {
 app.use('/api', router)
 
 
+async function getRandomMusicUrl() {
+  try {
+    const response = await axios.get(`${hostUrl}/upload/list`);
+    const musicList = response.data;
+
+    if (musicList.length === 0) {
+      console.log('Müzik listesi boş.');
+      return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * musicList.length);
+    return musicList[randomIndex];
+  } catch (error) {
+    console.error('Müzik listesini alma hatası:', error.message);
+    return null;
+  }
+}
+
+// Fonksiyon: Belirtilen süre boyunca bekleyerek döngüyü başlat
+async function startBackgroundLoop() {
+  while (true) {
+    // Rastgele bir müzik URL seç
+    const musicUrl = await getRandomMusicUrl();
+
+    if (musicUrl) {
+      // Müziği oynatmak için /api/play endpoint'ine istek gönder
+      await axios.post('${hostUrl}/api/play', { url: musicUrl });
+
+      // Müziğin süresini al
+      const response = await axios.get(`${hostUrl}/api/getSongDuration?url=${encodeURIComponent(musicUrl)}`);
+      const songDuration = response.data.message;
+
+      console.log(`"${musicUrl}" adlı müzik başlatıldı. Bekleme süresi: ${songDuration} saniye.`);
+
+      // Belirtilen süre boyunca bekleyerek döngüyü başlat
+      await new Promise(resolve => setTimeout(resolve, songDuration * 1000));
+    }
+  }
+}
+
+
+
 // Server handling
+
+function serverStart() {
+  var port = this.address().port;
+  console.log("Project domain: " + hostUrl)
+  console.log("Server listening on port: " + port);
+  
+  //startBackgroundLoop()
+}
 
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
