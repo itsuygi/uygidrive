@@ -783,7 +783,7 @@ async function getYTUrl(url) {
             let convertedUrl = convertResponse.data.d_url
 
             console.log(convertedUrl)
-           return convertedUrl
+           resolve()
           }
         })
       }
