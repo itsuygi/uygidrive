@@ -790,6 +790,29 @@ router.get("/searchYT", async (req, res) => {
   }
 });
 
+router.get("/getYTUrl", async (req, res) => {
+  const url = req.query.url
+  
+  axios({
+    url: "https://x2mate.app/wp-json/aio-dl/video-data/",
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    data: "url=" + url,
+    method: "POST"
+  })
+  .then(function(response) {
+    const medias = response.data.medias;
+    console.log(medias)
+    
+    
+  
+    res.json(medias)
+  })
+  .catch(function(error) {
+    console.log(error)
+    res.send(error)
+  })
+});
+
 app.use('/api', router)
 
 
