@@ -14,6 +14,7 @@ const path = require("path");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
+const yt = require("yt-converter");
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -741,6 +742,12 @@ router.get("/getSongDuration", (req, res) => {
 
 router.get("/list", (req, res) => {
   res.json(APIList);
+});
+
+router.get("/downloadFromYT", (req, res) => {
+  router.get("/list", (req, res) => {
+  res.json(APIList);
+});
 });
 
 app.use('/api', router)
