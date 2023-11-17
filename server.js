@@ -15,6 +15,7 @@ const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
 const yt = require("yt-converter");
+const ytsearch = require("yt-search");
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -745,9 +746,27 @@ router.get("/list", (req, res) => {
 });
 
 router.get("/downloadFromYT", (req, res) => {
-  router.get("/list", (req, res) => {
-  res.json(APIList);
+  const url = req.query.url
+  yt.convertAudio({
+    url: url,
+    itag: 140,
+    directoryDownload: __dirname + "/uploads",
+    title: "Your title here"
+  },onData => {
+    
+  },onClose => (x){
+    res.send("done")
+  })
+  
 });
+
+router.get("/searchYT", async (req, res) => {
+  const search = req.query.search
+  const searchResults = await ytsearch(search)
+  
+  if (searchResults) {
+    res.json(searchResults.videos)
+  }
 });
 
 app.use('/api', router)
