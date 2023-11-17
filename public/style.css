@@ -86,9 +86,9 @@ input[type="range"] {
   padding: 1rem;
   background-color: #efefef;
 
-  white-space: nowrap; /* Metni yatayda taşınmasını önler */
-  overflow: auto; /* Metni kesip gizler */
-  text-overflow: ellipsis; /* Metni kesip üç nokta ile gösterir */
+  white-space: nowrap; 
+  overflow: auto; 
+  text-overflow: ellipsis;
 }
 
 .volume-control {
@@ -97,11 +97,11 @@ input[type="range"] {
 }
 
 .volume-label {
-  flex: 1; /* Metin kutusu ve slider'ı yatayda eşit bir şekilde dağıt */
+  flex: 1; 
 }
 
 .slider {
-  flex: 2; /* Metin kutusu ve slider'ı yatayda eşit bir şekilde dağıt */
+  flex: 2; 
   width: 100%;
 }
 
@@ -127,11 +127,15 @@ input[type="range"] {
 
 .connect-widget,
 .active-streams-widget {
-  width: 48%; /* İki widget'ın toplam genişliği 100%'den küçük olmalıdır */
-  box-sizing: border-box; /* Kenarlıklar ve dolgu dahil genişliği hesaplamak için */
-  margin-bottom: 10px; /* İki widget arasında boşluk bırakmak için */
+  width: 48%; 
+  box-sizing: border-box;
+  margin-bottom: 10px; 
 }
 
+.active-streams-widget {
+  max-height: 175px; 
+  overflow-y: auto;
+}
 
 /*.active-streams-widget {
   flex: 1;
@@ -166,6 +170,8 @@ input[type="range"] {
   align-items: center;
   margin: 10px 0;
   position: relative;
+  
+ 
 }
 
 #activeStreamsList li button {
@@ -193,4 +199,18 @@ input[type="range"] {
   width: 100%;
   height: 1px;
   background-color: #ddd;
+}
+
+.active-streams-widget::-webkit-scrollbar {
+  width: 9px;
+}
+
+/* Kaydırma çubuğu arka planı */
+.active-streams-widget::-webkit-scrollbar-track {
+  background-color: #808080;
+}
+
+/* Kaydırma çubuğu rengi */
+.active-streams-widget::-webkit-scrollbar-thumb {
+  background-color: #fff;
 }

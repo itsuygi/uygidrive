@@ -91,16 +91,7 @@ function setup() {
     sendMessage("subscribe", id);
   }
   
-  const sampleActiveStreams = [
-    { streamId: '1234' },
-    { streamId: '5678' },
-    { streamId: '5678' },
-    
-    // ... Diğer stream bilgileri
-  ];
-
-  // Sayfa yüklendiğinde aktif stream listesini güncelle
-  updateActiveStreams(sampleActiveStreams);
+  updateActiveStreams();
 }
 
 function openSocket(url) {
@@ -310,19 +301,29 @@ function fadeAudio(mode) {
     }, 350);  
 }
 
-function updateActiveStreams(streams) {
-  const activeStreamsList = document.getElementById('activeStreamsList');
-  activeStreamsList.innerHTML = ''; // Listeyi temizle
+function updateActiveStreams() {
+  const listXhr = new XMLHttpRequest();
+  listXhr.open('GET', '/streamList', true);
 
-  streams.forEach(stream => {
-    const listItem = document.createElement('li');
-    listItem.innerHTML = `<span>${stream.streamId}</span> <button onclick="joinStream('${stream.streamId}')">Join</button>`;
-    activeStreamsList.appendChild(listItem);
+
+  listXhr.onload = function () {
+    const streams = JSON.parse(listXhr.responseText);
     
-    const line = document.createElement('div');
-    line.classList.add('line');
-    activeStreamsList.appendChild(line);
-  });
+    if (listXhr.status === 200) {
+      const activeStreamsList = document.getElementById('activeStreamsList');
+      activeStreamsList.innerHTML = '';
+
+      streams.forEach(stream => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `<span>${stream.streamId}</span> <button onclick="joinStream('${stream}')">Join</button>`;
+        activeStreamsList.appendChild(listItem);
+
+        const line = document.createElement('div');
+        line.classList.add('line');
+        activeStreamsList.appendChild(line);
+      });
+    }
+  }
 }
 
 
