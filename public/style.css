@@ -190,7 +190,7 @@ input[type="range"] {
 .widgets-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* Eğer alan dar ise alt satıra geçmesi için */
+  flex-wrap: wrap;
 }
 
 .line {
@@ -211,4 +211,13 @@ input[type="range"] {
 /* Kaydırma çubuğu rengi */
 .active-streams-widget::-webkit-scrollbar-thumb {
   background-color: #fff;
+}
+
+@media (max-width: 600px) {
+  .connect-widget,
+  .active-streams-widget {
+    width: 100%; 
+    box-sizing: border-box;
+    margin-bottom: 10px; 
+  }
 }

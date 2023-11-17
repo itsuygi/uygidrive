@@ -306,6 +306,9 @@ function fadeAudio(mode) {
 
 function updateActiveStreams() {
   console.log("Refreshing active streams.")
+  const activeStreamsList = document.getElementById('activeStreamsList');
+  
+  activeStreamsList.innerHTML = '<br> Loading...';
   
   const listXhr = new XMLHttpRequest();
   listXhr.open('GET', '/streamList');
@@ -314,10 +317,10 @@ function updateActiveStreams() {
     if (listXhr.status === 200) {
       const streams = JSON.parse(listXhr.responseText);
       console.log(streams)
-    
-      const activeStreamsList = document.getElementById('activeStreamsList');
       
       activeStreamsList.innerHTML = '';
+      
+      activeStreamsList.innerHTML = '<br> <div class=line>';
 
       streams.forEach(stream => {
         const listItem = document.createElement('li');
