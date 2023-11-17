@@ -766,9 +766,18 @@ router.get("/downloadFromYT", async (req, res) => {
   },onData => {
     console.log("Data recieved")
   },onClose =>{
+    const path = __dirname + "/uploads/" + video.title + ".mp3"
     console.log("Done downloading")
     res.set('Content-Type', 'audio/mpeg');
-    res.sendFile(__dirname + "/uploads/" + video.title + ".mp3")
+    res.send(path)
+    
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log('File deleted successfully');
+    });
   })
 });
 
