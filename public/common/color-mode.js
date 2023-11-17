@@ -1,8 +1,7 @@
 window.addEventListener("load", function(){
   const themeToggle = document.getElementById("theme-toggle");
   const themeIcon = document.getElementById("theme-icon");
-
-
+  
   const isDarkMode = localStorage.getItem("darkMode") === "true";
 
 

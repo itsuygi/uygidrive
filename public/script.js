@@ -24,6 +24,8 @@ let hasDownloaded = false
 let maxRetries = 10
 
 function setup() {
+  console.log("DOM loaded. Starting setup.")
+  
   // get all the DOM elements that need listeners:
   incomingSpan = document.getElementById("incoming");
   outgoingText = document.getElementById("username");
