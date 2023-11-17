@@ -776,7 +776,7 @@ async function getYTUrl(url) {
     }
     
     await axios({
-      url: "https://y2dl.app/api/get-mp3",
+      url: "https://y2dl.com/api/get-mp3",
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: "q=" + url,
       method: "POST"
@@ -787,7 +787,7 @@ async function getYTUrl(url) {
 
       while (done == false) {
         await axios({
-          url: "https://y2dl.app/api/conver-to-mp3",
+          url: "https://y2dl.com/api/conver-to-mp3",
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
           method: "POST"
