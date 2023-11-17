@@ -15,6 +15,7 @@ let musicInfo;
 let audio;
 let volumeSlider;
 let volumeValue;
+let activeStreams;
 
 let downloaded = {}
 let hasLoaded = false
@@ -35,6 +36,7 @@ function setup() {
   audio = document.getElementById("audio");
   volumeSlider = document.getElementById("volumeSlider");
   volumeValue = document.getElementById("volumeValue");
+  activeStreams = document.getElementById('activeStreamsWidget');
   
 
   // set the listeners:
@@ -169,6 +171,7 @@ async function readIncomingMessage(event) {
     connectionStatus.innerHTML = "Listening to stream: " + outgoingText.value;
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
+    activeStreams.style.display = "none";
   } else if (dataJson.type == "play") {
      $.notify("Playing audio", "success");
     if (hasLoaded == true) {
@@ -302,30 +305,41 @@ function fadeAudio(mode) {
 }
 
 function updateActiveStreams() {
+  console.log("Refreshing active streams.")
+  
   const listXhr = new XMLHttpRequest();
-  listXhr.open('GET', '/streamList', true);
-
+  listXhr.open('GET', '/streamList');
 
   listXhr.onload = function () {
-    const streams = JSON.parse(listXhr.responseText);
-    
     if (listXhr.status === 200) {
+      const streams = JSON.parse(listXhr.responseText);
+      console.log(streams)
+    
       const activeStreamsList = document.getElementById('activeStreamsList');
+      
       activeStreamsList.innerHTML = '';
 
       streams.forEach(stream => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `<span>${stream.streamId}</span> <button onclick="joinStream('${stream}')">Join</button>`;
+        listItem.innerHTML = `<b>Stream ${stream.streamId}</b> &nbsp; <a>${stream.listeners} listening</a> <button onclick="joinStream('${stream.streamId}')">Join</button>`;
         activeStreamsList.appendChild(listItem);
 
         const line = document.createElement('div');
         line.classList.add('line');
         activeStreamsList.appendChild(line);
       });
+    } else {
+      console.log("Error getting stream list:", listXhr.status)
     }
   }
+  
+  listXhr.send()
 }
 
+function joinStream(streamId) {
+  outgoingText.value = streamId
+  sendMessage("subscribe", streamId)
+}
 
 function ping() {
   sendMessage("keepAlive", "ping");

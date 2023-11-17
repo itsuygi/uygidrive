@@ -392,9 +392,9 @@ app.get("/upload/list", (req, res) => {
 });
 
 app.get("/streamList", (req, res) => {
-  let streams = {};
+  let streams = new Array()
   topicClients.forEach((value, key) => {
-    streams[key] = value.length;
+    streams.push({listeners: value.length, streamId: key});
   });
   
   res.send(JSON.stringify(streams))
