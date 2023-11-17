@@ -321,7 +321,12 @@ function updateActiveStreams() {
 
       streams.forEach(stream => {
         const listItem = document.createElement('li');
-        listItem.innerHTML = `<b>Stream ${stream.streamId}</b> &nbsp; <a>${stream.listeners} listening</a> <button onclick="joinStream('${stream.streamId}')">Join</button>`;
+        listItem.innerHTML = `
+  <h4>Stream ${stream.streamId}</h4>
+  &nbsp;
+  <a>${stream.listeners} listening</a>
+  <button onclick="joinStream('${stream.streamId}')">Join</button>
+`;
         activeStreamsList.appendChild(listItem);
 
         const line = document.createElement('div');
@@ -345,5 +350,7 @@ function ping() {
   sendMessage("keepAlive", "ping");
 }
 setInterval(ping, 30000);
+
+setInterval(updateActiveStreams, 10000);
 
 window.addEventListener("load", setup);
