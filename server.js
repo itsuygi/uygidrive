@@ -820,17 +820,22 @@ async function startBackgroundLoop() {
   axios.defaults.headers.common['Authorization'] = token
   
   while (true) {
-    const musicUrl = await getRandomMusicUrl();
+    if (topicClients.has(defaultStreamId)) {
+      const musicUrl = await getRandomMusicUrl();
 
-    if (musicUrl) {
-      await axios.post(`${hostUrl}/api/play`, { url: musicUrl, id: defaultStreamId });
+      if (musicUrl) {
+        await axios.post(`${hostUrl}/api/play`, { url: musicUrl, id: defaultStreamId });
 
-      const response = await axios.get(`${hostUrl}/api/getSongDuration?url=${encodeURIComponent(musicUrl)}`);
-      const songDuration = response.data.message;
+        const response = await axios.get(`${hostUrl}/api/getSongDuration?url=${encodeURIComponent(musicUrl)}`);
+        const songDuration = response.data.message;
 
-      console.log(`"${musicUrl}" started playing. Waiting for: ${songDuration} seconds.`);
+        console.log(`"${musicUrl}" started playing. Waiting for: ${songDuration} seconds.`);
 
-      await new Promise(resolve => setTimeout(resolve, songDuration * 1000));
+        await new Promise(resolve => setTimeout(resolve, songDuration * 1000));
+      }
+    } else {
+      console.log("No listeners for default")
+      await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }
 }
