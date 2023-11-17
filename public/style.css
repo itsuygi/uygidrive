@@ -124,3 +124,59 @@ input[type="range"] {
 .upload-site {
   padding: 10px 20px 10px;
 }
+
+.active-streams-widget {
+  flex: 1; /* Bağlantı bilgilerini ve aktif stream listesini yatayda eşit bir şekilde dağıt */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center; /* Dikeyde ortala */
+  flex-direction: column;
+}
+
+.active-streams-widget h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#activeStreamsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#activeStreamsList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#activeStreamsList li button {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#activeStreamsList li button:hover {
+  background-color: #005bbf;
+}
+
+.widgets-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* Eğer alan dar ise alt satıra geçmesi için */
+}
+
+.active-streams-widget {
+  
+}
