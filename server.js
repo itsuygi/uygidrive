@@ -745,9 +745,20 @@ router.get("/list", (req, res) => {
   res.json(APIList);
 });
 
-router.get("/downloadFromYT", (req, res) => {
+function url_parse(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
+
+router.get("/downloadFromYT", async (req, res) => {
   const url = req.query.url
-  yt.convertAudio({
+  
+  const videoId = url_parse(url)
+  console.log(videoId)
+  const video = await ytsearch( { videoId: videoId } )
+  
+  let title = yt.convertAudio({
     url: url,
     itag: 140,
     directoryDownload: __dirname + "/uploads",
@@ -755,9 +766,10 @@ router.get("/downloadFromYT", (req, res) => {
   },onData => {
     console.log("Data recieved")
   },onClose =>{
-    res.send("done")
+    console.log("Done downloading")
+    res.set('Content-Type', 'audio/mpeg');
+    res.sendFile(__dirname + "/uploads/" + video.title + ".mp3")
   })
-  
 });
 
 router.get("/searchYT", async (req, res) => {
