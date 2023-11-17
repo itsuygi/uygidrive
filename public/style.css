@@ -125,8 +125,16 @@ input[type="range"] {
   padding: 10px 20px 10px;
 }
 
+.connect-widget,
 .active-streams-widget {
-  flex: 1; /* Bağlantı bilgilerini ve aktif stream listesini yatayda eşit bir şekilde dağıt */
+  width: 48%; /* İki widget'ın toplam genişliği 100%'den küçük olmalıdır */
+  box-sizing: border-box; /* Kenarlıklar ve dolgu dahil genişliği hesaplamak için */
+  margin-bottom: 10px; /* İki widget arasında boşluk bırakmak için */
+}
+
+
+/*.active-streams-widget {
+  flex: 1;
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -135,13 +143,15 @@ input[type="range"] {
 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  align-items: center; /* Dikeyde ortala */
+  align-items: center;
   flex-direction: column;
-}
+  flex: 0 1 48%; 
+}*/
 
 .active-streams-widget h2 {
   text-align: center;
   margin-bottom: 10px;
+  
 }
 
 #activeStreamsList {
@@ -154,7 +164,8 @@ input[type="range"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin: 10px 0;
+  position: relative;
 }
 
 #activeStreamsList li button {
@@ -165,6 +176,7 @@ input[type="range"] {
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
+  margin: 10px;
 }
 
 #activeStreamsList li button:hover {
@@ -177,6 +189,8 @@ input[type="range"] {
   flex-wrap: wrap; /* Eğer alan dar ise alt satıra geçmesi için */
 }
 
-.active-streams-widget {
-  
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
 }

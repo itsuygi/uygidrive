@@ -23,23 +23,24 @@
   
   <hr>
   <br>
-  
-  <div id="connectWidget" class="widget connect-widget">
-    <div class="connect-input">
-      <b>Enter Stream ID:</b>
-      
-      <input type="text" id="username">
-    </div>
-    <button id="connectStreamIDButton">Connect</button>
-  </div>
-  
-  <div id="activeStreamsWidget" class="widget active-streams-widget">
-    <h2>Active Streams</h2>
-    <ul id="activeStreamsList">
-      <!-- Bu liste dinamik olarak JS tarafında doldurulacak -->
-    </ul>
-  </div>
+   <div class="widgets-container">
+    <div id="connectWidget" class="widget connect-widget">
+      <div class="connect-input">
+        <b>Enter Stream ID:</b>
 
+        <input type="text" id="username">
+      </div>
+      <button id="connectStreamIDButton">Connect</button>
+    </div>
+
+    <div id="activeStreamsWidget" class="widget active-streams-widget">
+      <b>Active Streams</b>
+      <ul id="activeStreamsList">
+        <!-- Bu liste dinamik olarak JS tarafında doldurulacak -->
+      </ul>
+    </div>
+
+  </div>
 
   <div id="connectStatus" class="widget connect-status">
     <div class="connection-info">

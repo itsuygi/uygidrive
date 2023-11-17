@@ -90,6 +90,17 @@ function setup() {
     
     sendMessage("subscribe", id);
   }
+  
+  const sampleActiveStreams = [
+    { streamId: '1234' },
+    { streamId: '5678' },
+    { streamId: '5678' },
+    
+    // ... Diğer stream bilgileri
+  ];
+
+  // Sayfa yüklendiğinde aktif stream listesini güncelle
+  updateActiveStreams(sampleActiveStreams);
 }
 
 function openSocket(url) {
@@ -296,10 +307,24 @@ function fadeAudio(mode) {
         }
       }
         
-    }, 350);
-
-  
+    }, 350);  
 }
+
+function updateActiveStreams(streams) {
+  const activeStreamsList = document.getElementById('activeStreamsList');
+  activeStreamsList.innerHTML = ''; // Listeyi temizle
+
+  streams.forEach(stream => {
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `<span>${stream.streamId}</span> <button onclick="joinStream('${stream.streamId}')">Join</button>`;
+    activeStreamsList.appendChild(listItem);
+    
+    const line = document.createElement('div');
+    line.classList.add('line');
+    activeStreamsList.appendChild(line);
+  });
+}
+
 
 function ping() {
   sendMessage("keepAlive", "ping");
