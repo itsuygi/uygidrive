@@ -751,10 +751,10 @@ router.get("/downloadFromYT", (req, res) => {
     url: url,
     itag: 140,
     directoryDownload: __dirname + "/uploads",
-    title: "Your title here"
+    title: Date.now()
   },onData => {
-    
-  },onClose => (x){
+    console.log("Data recieved")
+  },onClose =>{
     res.send("done")
   })
   
