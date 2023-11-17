@@ -800,16 +800,16 @@ router.get("/getYTUrl", async (req, res) => {
     method: "POST"
   })
   .then(function(response) {
-    const medias = response.data.medias;
-    console.log(medias)
+    const medias = response.data.medias
     
-    
-  
-    res.json(medias)
+    medias.forEach((value) => {
+      if (value.extension == "m4a") {
+        res.json({result: "successful", message: value.url})
+      }
+    });
   })
   .catch(function(error) {
-    console.log(error)
-    res.send(error)
+    console.error(error)
   })
 });
 
