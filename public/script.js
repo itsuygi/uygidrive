@@ -220,6 +220,7 @@ async function readIncomingMessage(event) {
     connectionStatus.innerHTML = "Connected to stream and synced";
     connectionStatus.style.color = "green";
     connectWidget.style.display = "none";
+    activeStreams.style.display = "none";
 
     var timestamp = new Date(dataJson.message.timestamp);
     var currentTime = Date.now();
@@ -316,11 +317,14 @@ function updateActiveStreams() {
   listXhr.onload = function () {
     if (listXhr.status === 200) {
       const streams = JSON.parse(listXhr.responseText);
-      console.log(streams)
       
       activeStreamsList.innerHTML = '';
       
-      activeStreamsList.innerHTML = '<br> <div class=line>';
+      const defaultListItem = document.createElement('li');
+      defaultListItem.innerHTML = '<button onclick="joinStream(69)">Join default stream</button>'
+      activeStreamsList.appendChild(defaultListItem);
+      
+      activeStreamsList.innerHTML = activeStreamsList.innerHTML + ' <div class=line>';
 
       streams.forEach(stream => {
         const listItem = document.createElement('li');
