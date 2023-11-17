@@ -323,7 +323,7 @@ function updateActiveStreams() {
       activeStreamsList.innerHTML = '';
       
       const defaultListItem = document.createElement('li');
-      defaultListItem.innerHTML = '<button onclick="joinStream(69)">Join default stream</button>'
+      defaultListItem.innerHTML = `<button onclick="joinStream('69')">Join default stream</button>`
       activeStreamsList.appendChild(defaultListItem);
       
       activeStreamsList.innerHTML = activeStreamsList.innerHTML + ' <div class=line>';

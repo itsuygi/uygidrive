@@ -820,7 +820,8 @@ async function startBackgroundLoop() {
   axios.defaults.headers.common['Authorization'] = token
   
   while (true) {
-    if (topicClients.has(defaultStreamId)) {
+    console.log(topicClients.has("69"))
+    if (topicClients.has("69") == true) {
       const musicUrl = await getRandomMusicUrl();
 
       if (musicUrl) {
