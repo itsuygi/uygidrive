@@ -577,7 +577,7 @@ router.post('/play', authenticateToken, async (req, res) => {
 router.post('/load', authenticateToken, async(req, res) => { 
   const body = req.body;
   const topic = body.id;
-  const url = body.url;
+  var url = body.url;
   
   if (topic == undefined || url == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
@@ -767,6 +767,14 @@ function url_parse(url){
 
 async function getYTUrl(url) {
   let messagePromise = new Promise(async function(resolve) {
+    var urlCache = cache.get(url)
+    
+    if (urlCache) {
+      console.log("Found url in cache, sending.")
+      resolve(urlCache)
+      return
+    }
+    
     await axios({
       url: "https://y2dl.app/api/get-mp3",
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -787,12 +795,12 @@ async function getYTUrl(url) {
         .then(function(convertResponse) {
           console.log(convertResponse.data)
           if (convertResponse.data.d_url !== "") {
-            console.log("Converted!")
-
+            console.log("Converted and cached!")
             done = true
 
             let convertedUrl = convertResponse.data.d_url
 
+            cache.put(url, convertedUrl)
             console.log(convertedUrl)
             resolve(convertedUrl)
           }
