@@ -751,6 +751,48 @@ function url_parse(url){
     return (match&&match[7].length==11)? match[7] : false;
 }
 
+async function getYTUrl(url) {
+  const host = window.location.host
+  let xmlUrl = "https://" + host + "/api" + url
+  
+  let messagePromise = new Promise(function(resolve) {
+    axios({
+      url: "https://y2dl.app/api/get-mp3",
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: "q=" + url,
+      method: "POST"
+    })
+    .then(function(response) {
+      console.log(response.data)
+      let done = false;
+
+      while (done == false) {
+        axios({
+          url: "https://y2dl.app/api/conver-to-mp3",
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
+          method: "POST"
+        })
+        .then(function(convertResponse) {
+          console.log(convertResponse.data)
+          if (convertResponse.data.d_url !== "") {
+            console.log("Converted!")
+
+            done = true
+
+            let convertedUrl = convertResponse.data.d_url
+
+            console.log(convertedUrl)
+           return convertedUrl
+          }
+        })
+      }
+    })
+  });
+  
+  return await messagePromise;
+}
+
 router.get("/downloadFromYT", async (req, res) => {
   const url = req.query.url
   
@@ -793,38 +835,7 @@ router.get("/searchYT", async (req, res) => {
 router.get("/getYTUrl", async (req, res) => {
   const url = req.query.url
   
-  axios({
-    url: "https://y2dl.app/api/get-mp3",
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    data: "q=" + url,
-    method: "POST"
-  })
-  .then(function(response) {
-    console.log(response.data)
-    let done = false;
-    
-    while (done == false) {
-      axios({
-        url: "https://y2dl.app/api/conver-to-mp3",
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
-        method: "POST"
-      })
-      .then(function(convertResponse) {
-        console.log(convertResponse.data)
-        if (convertResponse.data.d_url !== "") {
-          console.log("Converted!")
-          
-          done = true
-          
-          let convertedUrl = convertResponse.data.d_url
-
-          console.log(convertedUrl)
-          res.send(convertedUrl)
-        }
-      })
-    }
-  })
+  
 });
 
 app.use('/api', router)
