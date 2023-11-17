@@ -553,14 +553,17 @@ router.get('/', (req, res) => {
   res.sendFile("api.html", { root: __dirname + "/public/api" });
 })
 
-router.post('/play', authenticateToken, (req, res) => { 
+router.post('/play', authenticateToken, async (req, res) => { 
   const body = req.body;
   const topic = body.id;
   const url = body.url;
   
   if (topic == undefined || url == undefined)  {
     return res.json({'result': "error", 'message': "Missing parameters"})
-    
+  }
+  
+  if (isYouTubeUrl(url)) {
+    url = await getYTUrl(url)
   }
  
   let message = createMessageJson("play", url)
@@ -571,7 +574,7 @@ router.post('/play', authenticateToken, (req, res) => {
   res.json({'result': "successful", 'message': "Message sent to clients."})
 })
 
-router.post('/load', authenticateToken, (req, res) => { 
+router.post('/load', authenticateToken, async(req, res) => { 
   const body = req.body;
   const topic = body.id;
   const url = body.url;
@@ -580,12 +583,18 @@ router.post('/load', authenticateToken, (req, res) => {
     return res.json({'result': "error", 'message': "Missing parameters"})
   }
   
+  if (isYouTubeUrl(url)) {
+    url = await getYTUrl(url)
+  }
+  
   const clients = topicClients.get(topic)
   clients.forEach((client, topic) => {
       client.hasLoaded = false
   });
  
   let message = createMessageJson("load", url)
+  
+  lastData[topic] = { url: message.message, timestamp: Date.now() };
   sendToTopicClients(topic, message)
 
   res.json({'result': "successful", 'message': "Message sent to clients."})
@@ -594,7 +603,7 @@ router.post('/load', authenticateToken, (req, res) => {
 router.post('/playWithLoad', authenticateToken, async (req, res) => { 
   const body = req.body;
   const topic = body.id;
-  const url = body.url;
+  var url = body.url;
   
   if (topic == undefined || url == undefined)  {
     return res.status(400).json({'result': "error", 'message': "Missing parameters"})
@@ -604,6 +613,11 @@ router.post('/playWithLoad', authenticateToken, async (req, res) => {
   if (clients == undefined) {
     return res.status(400).json({'result': "error", 'message': "No clients"})
   }
+  
+  if (isYouTubeUrl(url)) {
+    url = await getYTUrl(url)
+  }
+  
   clients.forEach((client, topic) => {
       client.hasLoaded = false
   });
@@ -752,22 +766,19 @@ function url_parse(url){
 }
 
 async function getYTUrl(url) {
-  const host = window.location.host
-  let xmlUrl = "https://" + host + "/api" + url
-  
-  let messagePromise = new Promise(function(resolve) {
-    axios({
+  let messagePromise = new Promise(async function(resolve) {
+    await axios({
       url: "https://y2dl.app/api/get-mp3",
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: "q=" + url,
       method: "POST"
     })
-    .then(function(response) {
+    .then(async function(response) {
       console.log(response.data)
       let done = false;
 
       while (done == false) {
-        axios({
+        await axios({
           url: "https://y2dl.app/api/conver-to-mp3",
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
@@ -783,7 +794,7 @@ async function getYTUrl(url) {
             let convertedUrl = convertResponse.data.d_url
 
             console.log(convertedUrl)
-           resolve()
+            resolve(convertedUrl)
           }
         })
       }
@@ -791,6 +802,18 @@ async function getYTUrl(url) {
   });
   
   return await messagePromise;
+}
+
+function isYouTubeUrl(url) {
+    const youtubeDomains = ["youtube.com", "youtu.be"];
+
+    for (const domain of youtubeDomains) {
+        if (url.includes(domain)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 router.get("/downloadFromYT", async (req, res) => {
@@ -835,7 +858,9 @@ router.get("/searchYT", async (req, res) => {
 router.get("/getYTUrl", async (req, res) => {
   const url = req.query.url
   
+  var ytUrl = await getYTUrl(url)
   
+  res.send(ytUrl)
 });
 
 app.use('/api', router)
