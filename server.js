@@ -801,26 +801,29 @@ router.get("/getYTUrl", async (req, res) => {
   })
   .then(function(response) {
     console.log(response.data)
-    let convertedUrl;
+    let done = false;
     
-    do axios({
-      url: "https://y2dl.app/api/conver-to-mp3",
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
-      method: "POST"
-    })
-    .then(function(convertResponse) {
-      console.log(convertResponse.data)
-      if (convertResponse.data.d_url !== "") {
-        console.log("Converted!")
-        
-        convertedUrl = convertResponse.data.d_url
-      }
-    })
-    while (convertedUrl !== undefined);
-    
-    res.send(convertedUrl)
-    
+    while (done == false) {
+      axios({
+        url: "https://y2dl.app/api/conver-to-mp3",
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: "f=128&vid=" + url_parse(url) + "&token=" + response.data.token,
+        method: "POST"
+      })
+      .then(function(convertResponse) {
+        console.log(convertResponse.data)
+        if (convertResponse.data.d_url !== "") {
+          console.log("Converted!")
+          
+          done = true
+          
+          let convertedUrl = convertResponse.data.d_url
+
+          console.log(convertedUrl)
+          res.send(convertedUrl)
+        }
+      })
+    }
   })
 });
 
