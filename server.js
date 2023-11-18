@@ -251,7 +251,7 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
     await bucket.file(filename).makePublic()
 
     const fileUrl = getFileUrl(filename, req)
-    res.send(fileUrl);
+    res.send();
   } catch (error) {
     console.error('File uploading error:', error);
     res.status(500).send(error.message);
@@ -930,6 +930,8 @@ function serverStart() {
   var port = this.address().port;
   console.log("Project domain: " + hostUrl)
   console.log("Server listening on port: " + port);
+  console.log(cache.memsize())
+  cache.clear()
   
   startBackgroundLoop()
 }
