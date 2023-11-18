@@ -813,7 +813,7 @@ async function getYTUrl(url) {
 }
 
 function isYouTubeUrl(url) {
-    const youtubeDomains = ["youtube.com", "youtu.be"];
+    const youtubeDomains = ["youtube.com", "youtu.be", "m.youtube"];
 
     for (const domain of youtubeDomains) {
         if (url.includes(domain)) {
