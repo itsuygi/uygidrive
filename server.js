@@ -31,27 +31,17 @@ app.use(cookie())
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
-function authenticateToken(req, res, next) {
-  let sessionCookie
-  
+async function authenticateToken(req, res, next) {
+  console.log(res)
+  let sessionCookie = req.cookies.session || '';
+
   try {
-    sessionCookie = req.cookies.session
-  } catch(error) {
-    sessionCookie = ''
-  }
-  
-  try {
-    admin.auth()
-    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
-    .then((decodedClaims) => {
-      next()
-    })
-    .catch((error) => {
-      return res.redirect('/login');
-    });
+    const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
+    console.log(decodedClaims)
+    next();
+    console.log("Middleware ended")
   } catch (error) {
-    console.log(error)
-    return res.redirect('/login');
+    res.send('login/login.html');
   }
 }
 
