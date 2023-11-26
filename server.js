@@ -142,91 +142,24 @@ function getPublicUrl(filename) {
   return publicUrl
 }
 
-app.get("/file/:filename", async (req, res) => {
-  /*const filename = req.params.filename;
-  const publicUrl = format(
-      `https://storage.googleapis.com/${bucket.name}/${filename}`
-  );
-  
-  res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
-  
-  res.redirect(publicUrl)*/
-  
+app.get("/file/:filename", authenticateToken, async (req, res) => {
   try {
+    const user = req.user
     const filename = req.params.filename;
     const rangeHeader = req.headers.range;
     
-    var cached = cache.get(filename)
+    const filePath = `${user.uid}/${filename}`;
     
-    if (cached) {
-      if (cached !== "DOWNLOADING") {
-        console.log("Found file in memory: ", filename)
-        const totalLength = cached.length;
-  
-        res.set('Accept-Ranges', "bytes");
-        // Parse the range header
-        if (rangeHeader) {
-          const parts = rangeHeader.replace(/bytes=/, "").split("-");
-          const start = parseInt(parts[0], 10);
-          const end = parts[1] ? parseInt(parts[1], 10) : totalLength - 1;
+    const file = bucket.file(filePath);
+    const fileContent = await file.download();
 
-          // Calculate content length and content range
-          const chunkSize = end - start + 1;
-          const contentRange = `bytes ${start}-${end}/${totalLength}`;
+    let memory = getMemoryUsage()
+    let memoryUsage = Math.round((memory * 100)/ 512 )
 
-          // Set headers for partial content
-          
-          res.set('Content-Length', chunkSize);
-          res.set('Content-Range', contentRange);
-          res.status(206);
+    console.log("File downloaded: ", filePath)
+    console.log("Memory usage: %", memoryUsage)
 
-          // Send the partial content
-          res.send(cached.slice(start, end + 1));
-        } else {
-          res.send(cached)
-        }
-      } else {
-        console.log("Already downloading, redirecting.")
-        
-        const publicUrl = getPublicUrl(filename)
-        res.redirect(publicUrl)
-      }
-      
-    } else {
-      // Redirect to public link for faster response
-      const publicUrl = getPublicUrl(filename)
-
-      //res.set('Cache-Control', 'public, max-age=3000, s-maxage=3600');
-      res.set("Content-Type", "audio/mpeg")
-      res.redirect(publicUrl)
-      
-      console.log("Public url sent, caching.")
-      
-      // Download and cache
-      const file = bucket.file(filename);
-      console.log("File didn't found on memory, downloading: ", filename)
-      cache.put(filename, "DOWNLOADING")
-      
-      const fileContent = await file.download();
-      
-      let memory = getMemoryUsage()
-      let memoryUsage = Math.round((memory * 100)/ 512 )
-      
-      console.log("File downloaded: ", filename)
-      console.log("Memory usage: %", memoryUsage)
-      
-      if (memoryUsage <= 80) {
-        const fileData = fileContent[0];
-        cache.put(filename, fileData);
-        
-        console.log("File saved to memory, enough space: ", filename)
-      } else {
-        console.log("Not enough space to cache, cancelling.")
-        cache.del(filename)
-      }
-      
-      //res.send(fileContent[0])
-    }
+    res.send(fileContent)
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
@@ -242,13 +175,16 @@ app.get("/list", authenticateToken, async (req, res) => {
     const sort = req.query.sort;
     const pageSize = 10;
 
-    const userFolder = user.uid + "/";
+    // Kullanıcının dosyalarını almak için özel klasörü belirtin
+    const userFolder = `${user.uid}/`;
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
-    console.log(files)
     const fileUrls = [];
 
-    for (const file of files) {
+    // Sadece dosyaları listele, klasörü dahil etme
+    const filesOnly = files.filter((file) => !file.name.endsWith('/'));
+
+    for (const file of filesOnly) {
       const fileUrl = getFileUrl(file.name, req);
       const fileMetadata = await file.getMetadata();
       const fileDate = fileMetadata[0].timeCreated;
@@ -293,7 +229,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     // Sonuçları gönder
     const response = {
       files: fileUrls,
-      next: files.length > endIndex,
+      next: filesOnly.length > endIndex,
     };
 
     res.json(response);
