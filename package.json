@@ -6,7 +6,7 @@
     "firebase-admin": "^11.11.0",
     "get-audio-duration": "^4.0.1",
     "axios": "^1.6.2",
-    "memory-cache": "^0.2.0",
+    "memory-cache": "^0.2.0"
   },
   "scripts": {
     "start": "node server.js"

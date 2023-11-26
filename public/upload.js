@@ -1,3 +1,6 @@
+let currentPage = 1;
+let sort = ""
+
 function setup() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -11,6 +14,15 @@ function setup() {
   const musicList = document.getElementById('musicList');
   const errorBox = document.getElementById('errorBox');
   const errorMessage = document.getElementById('errorMessage');
+  const ytForm = document.getElementById('ytForm');
+  const ytUpload = document.getElementById('ytUpload');
+  const nextPage = document.getElementById('nextPage');
+  const prePage = document.getElementById('previousPage');
+  const pageNumber = document.getElementById('pageNumber');
+  const searchForm = document.getElementById('search');
+  const searchBox = document.getElementById('searchBox');
+  const audio = document.getElementById('audio');
+  const sortSelect = document.getElementById('sortSelect');
 
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -21,6 +33,7 @@ function setup() {
     
     progressDiv.style.display = "block"
     uploadForm.style.display = "none"
+    ytUpload.style.display = 'none';
 
     xhr.upload.onprogress = function (e) {
       if (e.lengthComputable) {
@@ -35,7 +48,7 @@ function setup() {
         var url = xhr.responseText;
         progressDiv.style.display = 'none';
         successBox.style.display = 'block';
-        fileURL.textContent = url;
+        fileURL.innerHTML = url;
         fileURL.href = url;
 
         copyURLButton.addEventListener('click', function () {
@@ -50,6 +63,7 @@ function setup() {
 
         loadMusicList();
       } else {
+        progressDiv.style.display = 'none';
         errorMessage.innerHTML = xhr.responseText;
         errorBox.style.display = "block";
       }
@@ -66,20 +80,52 @@ function setup() {
     uploadButton.style.display = 'block';
   });
   
+  
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    
+    loadMusicList()
+  });
+  
   loadMusicList();
   
   function loadMusicList() {
     musicList.innerHTML = 'Loading...';
     
+    const search = searchBox.value
+    
     const listXhr = new XMLHttpRequest();
-    listXhr.open('GET', '/upload/list', true);
+    let url = '/upload/list?page=' + currentPage
+    
+    console.log(search)
+    if (search) {
+      url = url + '&search=' + search
+    }
+    
+    if (sort) {
+      url = url + '&sort=' + sort
+    }
+    
+    listXhr.open('GET', url, true);
+    
+    pageNumber.innerHTML = currentPage
 
     listXhr.onload = function () {
       if (listXhr.status === 200) {
-        const list = JSON.parse(listXhr.responseText);
+        const {files, next} = JSON.parse(listXhr.responseText);
+        
+        if (next == false) {
+          nextPage.style.display = "none"
+        } else {
+          nextPage.style.display = "inline"
+        }
+        
         musicList.innerHTML = '';
 
-        list.forEach(url => {
+        files.forEach(url => {
+          if (url.url) {
+            url = url.url
+          }
           const musicItem = document.createElement('div');
           musicItem.classList.add('music-item');
           
@@ -101,8 +147,27 @@ function setup() {
             
             copyLinkButton.textContent = "Copied!"
           });
-          
           musicItem.appendChild(copyLinkButton);
+          
+          const playButton = document.createElement('button');
+          playButton.textContent = '▶️';
+          playButton.classList.add('play-button');
+          
+          let playing = false
+          
+          playButton.addEventListener('click', function () {
+            if (playing == false) {
+              audio.src = url
+              playButton.textContent = '⏹️';
+              playing = true
+            } else {
+              audio.src = ""
+              playButton.textContent = '▶️';
+              playing = false
+            }
+          });
+          
+          musicItem.appendChild(playButton);
           
           const line = document.createElement('div');
           line.classList.add('line');
@@ -111,6 +176,7 @@ function setup() {
           
           musicList.appendChild(line);
         });
+        document.documentElement.scrollTop = document.body.scrollTop = 420;
       } else {
          musicList.innerHTML = 'Error while loading!';
       }
@@ -118,6 +184,31 @@ function setup() {
     
     listXhr.send()
   };
+  
+   sortSelect.addEventListener('change', function () {
+     const selectedValue = sortSelect.value;
+     
+     sort = selectedValue
+     currentPage = 1
+     loadMusicList()
+   });
+  
+   nextPage.addEventListener('click', function () {
+     currentPage++
+     loadMusicList()
+     console.log("Loading next page")
+   });
+  
+   prePage.addEventListener('click', function () {
+     
+     if (currentPage - 1 >= 1) {
+       currentPage--
+       loadMusicList()
+       console.log("Loading previous page")
+     }
+   });
 }
+
+
   
 window.addEventListener('load', setup);

@@ -29,8 +29,6 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 
-// Memory function
-
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
   return Math.round( Number(total_rss) / 1e6 ) - 60;
@@ -66,18 +64,7 @@ function isValidMimeType(mimeType) {
 }
 
 const upload = multer({ storage: multer.memoryStorage() });
-
-let memoryStorage = {}
-
-
-// Local variables
-var topicClients = new Map();
-var lastData = {};
-var streamerIPs = {};
-var activeStreams = {};
-
 const maxRetries = 10
-
 const hostUrl = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
 
 
@@ -89,11 +76,8 @@ function getFileUrl(fileName, req) {
 
 // Uploading
 
-app.get("/upload", (req, res) => {
-  res.sendFile("upload.html", { root: __dirname + "/public/upload" });
-});
 
-app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
+app.post("/uploadFile", upload.single("file"), async (req,res) => {
   try {
     if (!req.file) {
       return res.status(400).send('No file or non-accepted file type.');
@@ -120,21 +104,12 @@ app.post("/uploadFile", upload.single("musicFile"), async (req,res) => {
   }
 });
 
-app.get("/localUpload/:filename", (req, res) => {
+app.get("/local/:filename", (req, res) => {
  const filename = req.params.filename;
   console.log("Sending file: " + filename);
   
   //res.set("Content-Type", "audio/mpeg")
   res.sendFile(__dirname + "/uploads/" + filename);
-});
-
-app.get("/music/link/:filename", (req, res) => {
-  const filename = req.params.filename;
-  const publicUrl = format(
-      `https://storage.googleapis.com/${bucket.name}/${filename}`
-  );
-  
-  res.redirect(publicUrl)
 });
 
 function getPublicUrl(filename) {
@@ -145,7 +120,7 @@ function getPublicUrl(filename) {
   return publicUrl
 }
 
-app.get("/music/:filename", async (req, res) => {
+app.get("/file/:filename", async (req, res) => {
   /*const filename = req.params.filename;
   const publicUrl = format(
       `https://storage.googleapis.com/${bucket.name}/${filename}`
@@ -239,15 +214,79 @@ app.get("/music/:filename", async (req, res) => {
 
 
 app.get("/upload/list", (req, res) => {
+  let page = req.query.page; 
+  let search = req.query.search;
+  let sort = req.query.sort;
+  const pageSize = 10;
+  
   bucket.getFiles()
     .then((results) => {
       const files = results[0];
+      const fileLength = files.length
+      
+      let startIndex = (page - 1) * pageSize;
+      let endIndex = page * pageSize;
 
-      const fileUrls = files.map((file) => {
-        return getFileUrl(file.name, req)
-      });
-
-      res.json(fileUrls);
+      let fileUrls;
+    
+      if (sort) {
+        fileUrls = files.map((file) => {
+          return {url: getFileUrl(file.name, req), date: file.metadata.timeCreated}
+        });
+    
+      } else {
+        fileUrls = files.map((file) => {
+          return getFileUrl(file.name, req)
+        });
+      }
+      if (search) {
+        let searchResults;
+        searchResults = fileUrls.filter(function(file) {
+          try {
+            return file.url.toLowerCase().includes(search)
+          } catch {
+            return file.toLowerCase().includes(search)
+          }
+        });
+        
+        fileUrls = searchResults
+      }
+    
+      if (sort) {
+        switch (sort) {
+          case "date:old-first":
+            fileUrls.sort(function(a,b){
+               return compareAsc(new Date(b.date), new Date(a.date));
+            });
+          case "date:new-first":
+            fileUrls.sort(function(a,b){
+               return compareDesc(new Date(a.date), new Date(b.date));
+            });
+        }
+      }
+      
+      if (page) {
+        fileUrls = fileUrls.slice(startIndex, endIndex)
+      }
+      
+      
+      if (page == undefined){
+        return res.json(fileUrls)
+      }
+      
+      let next = true
+      page++
+    
+      if (files.slice((page - 1) * pageSize, page * pageSize).length == 0) {
+        next = false
+      }
+    
+      const response = {
+        files: fileUrls,
+        next: next
+      }
+      
+      res.json(response);
     })
     .catch((error) => {
       console.error("Error while listing the files:", error);
