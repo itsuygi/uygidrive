@@ -29,11 +29,15 @@ app.use(express.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
-function generateAccessToken(data, time) {
-  if (time == undefined) {
-    time = "10h"
-  }
-  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: time });
+function generateAccessToken(userId) {
+  getAuth()
+    .createCustomToken(userId)
+    .then((customToken) => {
+      return customToken
+    })
+    .catch((error) => {
+      console.log('Error creating custom token:', error);
+    });
 }
 
 function authenticateToken(req, res, next) {
@@ -53,7 +57,37 @@ function authenticateToken(req, res, next) {
 
     next();
   });
-}
+}*/
+
+app.post('/signup', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const userRecord = await admin.auth().createUser({
+      email,
+      password,
+    });
+
+    res.status(200).json({ uid: userRecord.uid });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error.message);
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
+    const user = userCredential.user;
+
+    res.status(200).json({ uid: user.uid });
+  } catch (error) {
+    console.error(error);
+    res.status(401).send('Authentication Failed');
+  }
+});
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
@@ -237,7 +271,7 @@ app.get("/file/:filename", async (req, res) => {
 });
 
 
-app.get("/list", authenticateToken, (req, res) => {
+app.get("/list", (req, res) => {
   let page = req.query.page; 
   let search = req.query.search;
   let sort = req.query.sort;
