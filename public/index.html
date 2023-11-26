@@ -18,11 +18,13 @@
     <hr>
     
     <form name="uploadForm" id="uploadForm" class="upload-form">
-      <input type="file" name="musicFile" id="fileInput" class="file-input" accept="audio/mp3,audio/ogg" style="display: none">
+      <input type="file" name="file" id="fileInput" class="file-input" style="display: none">
       <label for="fileInput" class="custom-file-input">Choose a file</label>
       <span id="selectedFileName" class="file-name">No file selected</span>
       <input type="submit" value="Upload" id="uploadButton" class="upload-button" style="display: none">
     </form>
+    
+    
     
     <div class="progress-container" id="progressContainer">
       <progress id="progressBar" class="file-progress" value="0" max="100"></progress>
@@ -39,8 +41,8 @@
     
     <div id="errorBox" class="result-box" style>
       <p class="error-text">Unable to upload file</p>
-      <p>A error occured while uploading the file. There may be not enough space to upload. </p>
-      <p id="errorMessage"></p>
+      <i id="errorDesc">A error occured while uploading the file:</i>
+      <p id="errorMessage" style="color:red"></p>
       
       <button class="reload-button" onclick="location.reload()">Try again</button>
     </div>
@@ -48,9 +50,31 @@
   
   <div class="widget container">
     <h1>User Uploaded</h1>
+    
+    <form id="search" class="button-group">
+      <input type="text" id="searchBox" placeholder="Search...">
+    </form>
+    
+    <br>
+    
+    <div class="sorting-menu">
+      <label for="sortSelect">Sort by:</label>
+      <select id="sortSelect">
+        <option value="">Alphabetical</option>
+        <option value="date:new-first">Newest First</option>
+      </select>
+    </div>
+    
     <hr>
+    
     <div id="musicList" class="music-list">
       
+    </div>
+    
+    <div id="page" class="button-group">
+      <button id="previousPage">Previous</button>
+      <b id="pageNumber">1</b>
+      <button id="nextPage">Next</button>
     </div>
   </div>
   
@@ -59,6 +83,8 @@
       <i class="fas fa-moon"></i>
     </span>
   </div>
+  
+  <audio id="audio" src autoplay></audio>
 
 </body>
 </html>

@@ -14,8 +14,6 @@ function setup() {
   const musicList = document.getElementById('musicList');
   const errorBox = document.getElementById('errorBox');
   const errorMessage = document.getElementById('errorMessage');
-  const ytForm = document.getElementById('ytForm');
-  const ytUpload = document.getElementById('ytUpload');
   const nextPage = document.getElementById('nextPage');
   const prePage = document.getElementById('previousPage');
   const pageNumber = document.getElementById('pageNumber');
@@ -33,7 +31,6 @@ function setup() {
     
     progressDiv.style.display = "block"
     uploadForm.style.display = "none"
-    ytUpload.style.display = 'none';
 
     xhr.upload.onprogress = function (e) {
       if (e.lengthComputable) {
@@ -61,7 +58,7 @@ function setup() {
           copyURLButton.textContent = 'URL Copied!';
         });
 
-        loadMusicList();
+        loadList();
       } else {
         progressDiv.style.display = 'none';
         errorMessage.innerHTML = xhr.responseText;
@@ -80,16 +77,15 @@ function setup() {
     uploadButton.style.display = 'block';
   });
   
-  
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
-    loadMusicList()
+    loadList()
   });
   
-  loadMusicList();
+  loadList();
   
-  function loadMusicList() {
+  function loadList() {
     musicList.innerHTML = 'Loading...';
     
     const search = searchBox.value
@@ -149,25 +145,6 @@ function setup() {
           });
           musicItem.appendChild(copyLinkButton);
           
-          const playButton = document.createElement('button');
-          playButton.textContent = '▶️';
-          playButton.classList.add('play-button');
-          
-          let playing = false
-          
-          playButton.addEventListener('click', function () {
-            if (playing == false) {
-              audio.src = url
-              playButton.textContent = '⏹️';
-              playing = true
-            } else {
-              audio.src = ""
-              playButton.textContent = '▶️';
-              playing = false
-            }
-          });
-          
-          musicItem.appendChild(playButton);
           
           const line = document.createElement('div');
           line.classList.add('line');
@@ -190,12 +167,12 @@ function setup() {
      
      sort = selectedValue
      currentPage = 1
-     loadMusicList()
+     loadList()
    });
   
    nextPage.addEventListener('click', function () {
      currentPage++
-     loadMusicList()
+     loadList()
      console.log("Loading next page")
    });
   
@@ -203,7 +180,7 @@ function setup() {
      
      if (currentPage - 1 >= 1) {
        currentPage--
-       loadMusicList()
+       loadList()
        console.log("Loading previous page")
      }
    });
