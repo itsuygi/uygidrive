@@ -95,12 +95,6 @@ function getFileUrl(fileName, req) {
 app.post('/sessionLogin', (req, res) => {
   // Get the ID token passed and the CSRF token.
   const idToken = req.body.idToken.toString();
-  const csrfToken = req.body.csrfToken.toString();
-  // Guard against CSRF attacks.
-  if (csrfToken !== req.cookies.csrfToken) {
-    res.status(401).send('UNAUTHORIZED REQUEST!');
-    return;
-  }
   const expiresIn = 60 * 60 * 24 * 5 * 1000;
   
   admin.auth()
