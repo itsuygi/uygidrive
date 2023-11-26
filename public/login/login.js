@@ -36,10 +36,10 @@ window.onload = function() {
     const password = document.getElementById('password').value;
     
     firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(user => {
+      .then(({user}) => {
         return user.getIdToken().then(idToken => {
           sessionLogin(idToken)
-          window.location.replace("/");
+          //window.location.replace("/");
         });
       })
       .catch(function(error) {

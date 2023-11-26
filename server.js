@@ -32,7 +32,7 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
-  console.log(res)
+  console.log(req)
   let sessionCookie = req.cookies.session || '';
 
   try {
@@ -41,13 +41,9 @@ async function authenticateToken(req, res, next) {
     next();
     console.log("Middleware ended")
   } catch (error) {
-    res.send('login/login.html');
+    res.redirect('/login');
   }
 }
-
-app.use(authenticateToken)
-
-
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
@@ -109,9 +105,9 @@ app.post('/sessionLogin', (req, res) => {
     );
 });
 
-/*app.get('/', authenticateToken, (req,res) => {
-  res.send("index.html")
-});*/
+app.get("/", (req, res) => {
+  res.sendFile("upload.html", { root: __dirname + "/public/upload" });
+});
 
 // Uploading
 
