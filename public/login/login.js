@@ -23,26 +23,27 @@ window.onload = function() {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    
     firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(function(error) {
-        console.log(error)
-        if (error.code === 'auth/internal-error') {
-          messageElement.innerHTML = 'Invalid password';
-        } else {
-          messageElement.innerHTML = 'An error occurred';
-        }
-      }
       .then(user => {
         return user.getIdToken().then(idToken => {
           const xhr = new XMLHttpRequest();
 
           xhr.open('POST', '/sessionLogin', true);
-          xhr.send({idToken: idToken})
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.send(JSON.stringify({ idToken: idToken }));
         });
-    })
-             
+      })
+      .catch(function(error) {
+        console.log(error);
+        if (error.code === 'auth/internal-error') {
+          messageElement.innerHTML = 'Invalid password';
+        } else {
+          messageElement.innerHTML = 'An error occurred';
+        }
+      });
+  });
 
-  
   // Check if user is logged in
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
@@ -55,4 +56,4 @@ window.onload = function() {
       console.log('User is logged out');
     }
   });
-    
+};
