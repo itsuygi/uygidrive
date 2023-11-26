@@ -13,6 +13,7 @@ const path = require("path");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
+const cookie = require('cookie-parser');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -25,29 +26,36 @@ app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
 const bodyParser = require("body-parser");
 app.use(express.json());
+app.use(cookie())
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 function authenticateToken(req, res, next) {
-  const token = req.header('Authorization');
-
-  if (!token) {
-    console.log("No token found in headers.")
-    return res.status(401).send('Unauthorized');
-  }
-
-  admin.auth().verifyIdToken(token).then((decodedToken) => {
-    const uid = decodedToken.uid;
+  let sessionCookie
   
-    req.user = { uid: decodedToken.uid, email: decodedToken.email };
-    next();
-  })
-  .catch((error) => {
-    console.error(error.message)
-    return res.status(401).send("Unauthorized")
-  });
+  try {
+    sessionCookie = req.cookies.session
+  } catch(error) {
+    sessionCookie = ''
+  }
+  
+  try {
+    admin.auth()
+    .verifySessionCookie(sessionCookie, true /** checkRevoked */)
+    .then((decodedClaims) => {
+      next()
+    })
+    .catch((error) => {
+      res.redirect('/login');
+    });
+  } catch (error) {
+    console.log(error)
+    res.redirect('/login');
+  }
 }
+
+app.use(authenticateToken)
 
 
 
@@ -110,6 +118,10 @@ app.post('/sessionLogin', (req, res) => {
       }
     );
 });
+
+/*app.get('/', authenticateToken, (req,res) => {
+  res.send("index.html")
+});*/
 
 // Uploading
 
