@@ -1,28 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="login.js"></script>
-  <script src="/common/color-mode.js"></script>
-  
-  <link rel="stylesheet" href="upload.css">
-  <link rel="stylesheet" href="/common/style-dark.css">
-  <script src="https://kit.fontawesome.com/6135f8c6a5.js" crossorigin="anonymous"></script>
-  <title>Upload Music</title>
-</head>
-<body>
-  <div class="widget container">
-    <h1>Login</h1>
-    <hr>
-    
-    <form name="loginForm" id="loginForm" class="login-form">
-      <input type="email" name="email" id="email" class="login-input">
-      <input type="password" name="password" id="password" class="login-input">
-      <span id="selectedFileName" class="file-name">No file selected</span>
-      <input type="submit" value="Upload" id="uploadButton" class="upload-button" style="display: none">
-    </form>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firebase Server Auth</title>
+    <link rel="stylesheet" href="./mvp.css" />
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer ></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer ></script>
+  </head>
+  <body>
+    <main>
+      <section>
+        <form id="login">
+          <label>Login</label>
+          <input type="text" name="login" />
+          <label>Password</label>
+          <input type="password" name="password" />
+          <button>Log in</button>
+        </form>
+      </section>
+
+      <script>
+        window.addEventListener("DOMContentLoaded", () => {
+          const firebaseConfig = {
+            apiKey: "AIzaSyCILjXwpyNilznxbFTWC9J2Ys2JdJTX0vg",
+            authDomain: "uygidrive.firebaseapp.com",
+            projectId: "uygidrive",
+            storageBucket: "uygidrive.appspot.com",
+            messagingSenderId: "210147915736",
+            appId: "1:210147915736:web:9e3548e815091d7512a4ad",
+            measurementId: "G-GB12PYXWF7"
+          };
+
+          firebase.initializeApp(firebaseConfig);
+
+          firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
+
+          document
+            .getElementById("login")
+            .addEventListener("submit", (event) => {
+              event.preventDefault();
+              const login = event.target.login.value;
+              const password = event.target.password.value;
+
+            try{
+               firebase.auth().signInWithEmailAndPassword(login, password)
+                .then(({ user }) => {
+                  return user.getIdToken().then((idToken) => {
+                    return fetch("/sessionLogin", {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                        "CSRF-Token": Cookies.get("XSRF-TOKEN"),
+                      },
+                      body: JSON.stringify({ idToken }),
+                    });
+                  });
+                })
+            } catch(error){
+              alert(error.message)
+            }
+              
+              return false;
+            });
+        });
+      </script>
+    </main>
+  </body>
 </html>
