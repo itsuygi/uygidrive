@@ -37,7 +37,8 @@ async function authenticateToken(req, res, next) {
 
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
-    console.log(decodedClaims)
+    
+    req.user = decodedClaims
     next();
     console.log("Middleware ended")
   } catch (error) {
@@ -106,7 +107,7 @@ app.post('/sessionLogin', (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile("upload.html", { root: __dirname + "/public/upload" });
+  res.sendFile("upload.html", { root: __dirname + "/public/" });
 });
 
 // Uploading
@@ -174,7 +175,7 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     console.log("File downloaded: ", filePath)
     console.log("Memory usage: %", memoryUsage)
 
-    res.send(fileContent)
+    res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
@@ -194,13 +195,14 @@ app.get("/list", authenticateToken, async (req, res) => {
     const userFolder = `${user.uid}/`;
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
-    const fileUrls = [];
+    let fileUrls = [];
 
     // Sadece dosyaları listele, klasörü dahil etme
     const filesOnly = files.filter((file) => !file.name.endsWith('/'));
 
     for (const file of filesOnly) {
-      const fileUrl = getFileUrl(file.name, req);
+      let fileNameSplit = file.name.split("/")
+      const fileUrl = getFileUrl(fileNameSplit[fileNameSplit.length - 1], req);
       const fileMetadata = await file.getMetadata();
       const fileDate = fileMetadata[0].timeCreated;
 
