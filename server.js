@@ -22,6 +22,7 @@ const app = express();
 app.use(express.static("public"));
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
+
 const bodyParser = require("body-parser");
 app.use(express.json());
 
@@ -54,7 +55,6 @@ function authenticateToken(req, res, next) {
   });
 }
 
-
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
   return Math.round( Number(total_rss) / 1e6 ) - 60;
@@ -84,10 +84,6 @@ const multerStorage = multer.diskStorage({
   },*/
 });
 
-function isValidMimeType(mimeType) {
-  const validMimeTypes = ["audio/mpeg", "audio/wav", "audio/ogg"];
-  return validMimeTypes.includes(mimeType);
-}
 
 const upload = multer({ storage: multer.memoryStorage() });
 const maxRetries = 10
@@ -100,8 +96,11 @@ function getFileUrl(fileName, req) {
   return fileUrl;
 }
 
-// Uploading
+/*app.get("/login", async (req,res) => {
+  res.sendFile("login.html", { root: __dirname + "/public/login" });
+});*/
 
+// Uploading
 
 app.post("/uploadFile", upload.single("file"), async (req,res) => {
   try {
