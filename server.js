@@ -106,7 +106,7 @@ app.post('/sessionLogin', (req, res) => {
     );
 });
 
-app.get("/", (req, res) => {
+app.get("/", authenticateToken, (req, res) => {
   res.sendFile("upload.html", { root: __dirname + "/public/" });
 });
 
