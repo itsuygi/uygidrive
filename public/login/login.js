@@ -53,6 +53,7 @@ window.onload = function() {
     if (user) {
       messageElement.innerHTML = 'Logged in';
       console.log('User is logged in');
+      window.location.replace("/");
     } else {
       // User is logged out
       messageElement.innerHTML = 'Not logged in';

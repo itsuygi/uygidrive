@@ -16,7 +16,7 @@ window.onload = function() {
   const messageElement = document.getElementById('message');
 
   // Sign up with email and password
-  const signupForm = document.getElementById('signupForm');
+  const signupForm = document.getElementById('signUp');
   signupForm.addEventListener('submit', e => {
     e.preventDefault();
     const email = this.email.value;
@@ -29,6 +29,8 @@ window.onload = function() {
       } else {
         messageElement.innerHTML = 'An error occurred';
       }
+    }).then((value) => {
+      window.location.replace("/login");
     });
   });
 
