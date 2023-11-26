@@ -47,11 +47,11 @@ function authenticateToken(req, res, next) {
       next()
     })
     .catch((error) => {
-      res.redirect('/login');
+      return res.redirect('/login');
     });
   } catch (error) {
     console.log(error)
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 }
 
