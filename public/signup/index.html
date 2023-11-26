@@ -4,31 +4,31 @@
   <meta charset="UTF-8">
   <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="login.js"></script>
+  <script src="signup.js"></script>
   <script src="/common/color-mode.js"></script>
   
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="signup.css">
   <link rel="stylesheet" href="/common/style-dark.css">
   <script src="https://kit.fontawesome.com/6135f8c6a5.js" crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
-  <title>Login</title>
+  <title>Sign up</title>
 </head>
 <body>
   <div class="widget container">
-    <h1>Login</h1>
+    <h1>Sign Up</h1>
     <hr>
     
-    <form name="loginForm" id="login" class="login-form">
+    <form name="signUpForm" id="signUp" class="signup-form">
       <input type="email" name="email" id="email" class="login-input" placeholder="E-mail">
       <input type="password" name="password" id="password" class="login-input" placeholder="Password">
       <br>
-      <input type="submit" value="Login" id="loginButton" class="login-button">
+      <input type="submit" value="Sign Up" id="signUpButton" class="signup-button">
     </form>
   </div>
   
-  <b>Don't have a account?</b> <a href="/signup">Sign up</a>
+  <b>Already have a account?</b> <a href="/login">Login</a>
   <br>
 
   <div id="message"></div>

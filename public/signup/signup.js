@@ -14,29 +14,13 @@ window.onload = function() {
   firebase.initializeApp(firebaseConfig);
   
   const messageElement = document.getElementById('message');
-  // Log in with email and password
-  const loginForm = document.getElementById('login');
-  
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-      console.log(error)
-      if (error.code === 'auth/internal-error') {
-        messageElement.innerHTML = 'Invalid password';
-      } else {
-        messageElement.innerHTML = 'An error occurred';
-      }
-    });
-  });
 
   // Sign up with email and password
-  /*const signupForm = document.getElementById('signupForm');
+  const signupForm = document.getElementById('signupForm');
   signupForm.addEventListener('submit', e => {
     e.preventDefault();
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
+    const email = this.email.value;
+    const password = this.password.value;
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       if (error.code === 'auth/weak-password') {
         messageElement.innerHTML = 'The password is too weak';
@@ -46,7 +30,7 @@ window.onload = function() {
         messageElement.innerHTML = 'An error occurred';
       }
     });
-  });*/
+  });
 
   // Check if user is logged in
   firebase.auth().onAuthStateChanged(function(user) {
