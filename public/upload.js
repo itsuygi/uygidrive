@@ -91,7 +91,7 @@ function setup() {
     const search = searchBox.value
     
     const listXhr = new XMLHttpRequest();
-    let url = '/upload/list?page=' + currentPage
+    let url = '/list?page=' + currentPage
     
     console.log(search)
     if (search) {
@@ -130,20 +130,13 @@ function setup() {
           musicName.textContent = splitUrl[splitUrl.length - 1];
           musicItem.appendChild(musicName);
 
-          const copyLinkButton = document.createElement('button');
-          copyLinkButton.textContent = 'Copy URL';
-          copyLinkButton.classList.add('copy-link-button');
-          copyLinkButton.addEventListener('click', function () {
-            const textArea = document.createElement('textarea');
-            textArea.value = url;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            
-            copyLinkButton.textContent = "Copied!"
+          const downloadButton = document.createElement('button');
+          downloadButton.textContent = 'Download';
+          downloadButton.classList.add('copy-link-button');
+          downloadButton.addEventListener('click', function () {
+            document.getElementById('download_iframe').src = url; 
           });
-          musicItem.appendChild(copyLinkButton);
+          musicItem.appendChild(downloadButton);
           
           
           const line = document.createElement('div');

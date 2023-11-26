@@ -28,6 +28,32 @@ app.use(express.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
+function generateAccessToken(data, time) {
+  if (time == undefined) {
+    time = "10h"
+  }
+  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: time });
+}
+
+function authenticateToken(req, res, next) {
+  const token = req.header('Authorization');
+
+  if (!token) {
+    console.log("No token found in headers.")
+    return res.status(401).send('Unauthorized');
+  }
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, token_data) => {
+    if (err) {
+      return res.status(403).send(err);
+    } else if (token_data.id !== req.body.id) {
+      return res.status(401).send('Unauthorized');
+    }
+
+    next();
+  });
+}
+
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
@@ -49,13 +75,13 @@ const multerStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
-  fileFilter: function (req, file, cb) {
+  /*fileFilter: function (req, file, cb) {
     console.log(isValidMimeType(file.mimetype))
     if (!isValidMimeType(file.mimetype)) {
-      return cb(new Error("Only music files accepted."), false);
+      return cb(new Error("Not valid file type"), false);
     }
     cb(null, true);
-  },
+  },*/
 });
 
 function isValidMimeType(mimeType) {
@@ -69,7 +95,7 @@ const hostUrl = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
 
 
 function getFileUrl(fileName, req) {
-  var fileUrl = "https://" + req.get("host") + "/music/" + fileName;
+  var fileUrl = "https://" + req.get("host") + "/file/" + fileName;
 
   return fileUrl;
 }
@@ -141,7 +167,6 @@ app.get("/file/:filename", async (req, res) => {
         console.log("Found file in memory: ", filename)
         const totalLength = cached.length;
   
-        res.set('Content-Type', 'audio/mpeg');
         res.set('Accept-Ranges', "bytes");
         // Parse the range header
         if (rangeHeader) {
@@ -213,7 +238,7 @@ app.get("/file/:filename", async (req, res) => {
 });
 
 
-app.get("/upload/list", (req, res) => {
+app.get("/list", authenticateToken, (req, res) => {
   let page = req.query.page; 
   let search = req.query.search;
   let sort = req.query.sort;

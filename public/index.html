@@ -14,7 +14,7 @@
 </head>
 <body>
   <div class="widget container">
-    <h1>Upload Music</h1>
+    <h1>Upload File</h1>
     <hr>
     
     <form name="uploadForm" id="uploadForm" class="upload-form">
@@ -23,8 +23,6 @@
       <span id="selectedFileName" class="file-name">No file selected</span>
       <input type="submit" value="Upload" id="uploadButton" class="upload-button" style="display: none">
     </form>
-    
-    
     
     <div class="progress-container" id="progressContainer">
       <progress id="progressBar" class="file-progress" value="0" max="100"></progress>
@@ -49,7 +47,7 @@
   </div>
   
   <div class="widget container">
-    <h1>User Uploaded</h1>
+    <h1>Uploaded Files</h1>
     
     <form id="search" class="button-group">
       <input type="text" id="searchBox" placeholder="Search...">
@@ -85,6 +83,7 @@
   </div>
   
   <audio id="audio" src autoplay></audio>
+  <iframe id="download_iframe" style="display:none;"></iframe>
 
 </body>
 </html>
