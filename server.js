@@ -40,8 +40,8 @@ function authenticateToken(req, res, next) {
   admin.auth().verifyIdToken(token).then((decodedToken) => {
     const uid = decodedToken.uid;
   
-    console.log(decodedToken)
-    next()
+    req.user = { uid: decodedToken.uid, email: decodedToken.email };
+    next();
   })
   .catch((error) => {
     console.error(error.message)
@@ -96,12 +96,13 @@ function getFileUrl(fileName, req) {
 
 // Uploading
 
-app.post("/uploadFile", upload.single("file"), async (req,res) => {
+app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res) => {
   try {
     if (!req.file) {
       return res.status(400).send('No file or non-accepted file type.');
     }
 
+    const user = req.user
     const file = req.file;
     const filename = file.originalname;
     const fileBuffer = file.buffer;
@@ -111,11 +112,13 @@ app.post("/uploadFile", upload.single("file"), async (req,res) => {
         contentType: file.mimetype
       }
     };
+    
+    const filePath = path.join(user.uid, filename)
 
-    await bucket.file(filename).save(fileBuffer, fileOptions);
-    await bucket.file(filename).makePublic()
+    await bucket.file(filePath).save(fileBuffer, fileOptions);
+    await bucket.file(filePath).makePublic()
 
-    const fileUrl = getFileUrl(filename, req)
+    const fileUrl = getFileUrl(filePath, req)
     res.send();
   } catch (error) {
     console.error('File uploading error:', error);
