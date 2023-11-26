@@ -15,6 +15,17 @@ window.onload = function() {
   
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE);
   
+  function sessionLogin(idToken) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/sessionLogin', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+    }
+    xhr.send(JSON.stringify({ idToken: idToken }));
+  }
+  
   const messageElement = document.getElementById('message');
   // Log in with email and password
   const loginForm = document.getElementById('login');
@@ -27,11 +38,8 @@ window.onload = function() {
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => {
         return user.getIdToken().then(idToken => {
-          const xhr = new XMLHttpRequest();
-
-          xhr.open('POST', '/sessionLogin', true);
-          xhr.setRequestHeader('Content-Type', 'application/json');
-          xhr.send(JSON.stringify({ idToken: idToken }));
+          sessionLogin(idToken)
+          window.location.replace("/");
         });
       })
       .catch(function(error) {
@@ -49,7 +57,6 @@ window.onload = function() {
     if (user) {
       messageElement.innerHTML = 'Logged in';
       console.log('User is logged in');
-      window.location.replace("/");
     } else {
       // User is logged out
       messageElement.innerHTML = 'Not logged in';
