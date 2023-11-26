@@ -21,7 +21,12 @@ window.onload = function() {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(email, password).then(user => {
+    // Get the user's ID token as it is needed to exchange for a session cookie.
+    return user.getIdToken().then(idToken => {
+      return postIdTokenToSessionLogin('/sessionLogin', idToken);
+    })
+    .catch(function(error) {
       console.log(error)
       if (error.code === 'auth/internal-error') {
         messageElement.innerHTML = 'Invalid password';

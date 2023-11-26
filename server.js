@@ -49,6 +49,8 @@ function authenticateToken(req, res, next) {
   });
 }
 
+
+
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
   return Math.round( Number(total_rss) / 1e6 ) - 60;
@@ -90,9 +92,30 @@ function getFileUrl(fileName, req) {
   return fileUrl;
 }
 
-/*app.get("/login", async (req,res) => {
-  res.sendFile("login.html", { root: __dirname + "/public/login" });
-});*/
+app.post('/sessionLogin', (req, res) => {
+  // Get the ID token passed and the CSRF token.
+  const idToken = req.body.idToken.toString();
+  const csrfToken = req.body.csrfToken.toString();
+  // Guard against CSRF attacks.
+  if (csrfToken !== req.cookies.csrfToken) {
+    res.status(401).send('UNAUTHORIZED REQUEST!');
+    return;
+  }
+  const expiresIn = 60 * 60 * 24 * 5 * 1000;
+  
+  admin.auth()
+    .createSessionCookie(idToken, { expiresIn })
+    .then(
+      (sessionCookie) => {
+        const options = { maxAge: expiresIn, httpOnly: true, secure: true };
+        res.cookie('session', sessionCookie, options);
+        res.end(JSON.stringify({ status: 'success' }));
+      },
+      (error) => {
+        res.status(401).send('UNAUTHORIZED REQUEST!');
+      }
+    );
+});
 
 // Uploading
 
