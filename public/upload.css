@@ -166,3 +166,34 @@ h1 {
   height: 1px;
   background-color: #ddd;
 }
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-email {
+  margin-right: 10px;
+}
+
+#logout-btn {
+  background-color: #fff;
+  color: #333;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+#logout-btn:hover {
+  background-color: #ddd;
+}
