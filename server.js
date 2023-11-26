@@ -29,17 +29,6 @@ app.use(express.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
-function generateAccessToken(userId) {
-  getAuth()
-    .createCustomToken(userId)
-    .then((customToken) => {
-      return customToken
-    })
-    .catch((error) => {
-      console.log('Error creating custom token:', error);
-    });
-}
-
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
 
@@ -57,7 +46,7 @@ function authenticateToken(req, res, next) {
 
     next();
   });
-}*/
+}
 
 app.post('/signup', async (req, res) => {
   try {
@@ -81,11 +70,13 @@ app.post('/login', async (req, res) => {
 
     const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
     const user = userCredential.user;
+    
+    const customToken = await admin.auth().createCustomToken(user.uid);
 
-    res.status(200).json({ uid: user.uid });
+    res.status(200).json({ uid: user.uid, token: customToken });
   } catch (error) {
     console.error(error);
-    res.status(401).send('Authentication Failed');
+    res.status(401).send(error.message);
   }
 });
 
