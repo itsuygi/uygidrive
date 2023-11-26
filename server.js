@@ -234,14 +234,17 @@ app.get("/file/:filename", async (req, res) => {
 });
 
 
-app.get("/list", authenticateToken, (req, res) => {
+app.get("/list", authenticateToken, async(req, res) => {
+  let user = req.user
   let page = req.query.page; 
   let search = req.query.search;
   let sort = req.query.sort;
   const pageSize = 10;
   
-  bucket.getFiles()
-    .then((results) => {
+  const userFolder = user.uid + "/";
+
+  const [results] = await bucket.getFiles({ prefix: userFolder });
+  
       const files = results[0];
       const fileLength = files.length
       
@@ -308,12 +311,7 @@ app.get("/list", authenticateToken, (req, res) => {
       }
       
       res.json(response);
-    })
-    .catch((error) => {
-      console.error("Error while listing the files:", error);
-      res.status(500).send(error.message);
     });
-});
 
 // Server handling
 
