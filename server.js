@@ -234,85 +234,74 @@ app.get("/file/:filename", async (req, res) => {
 });
 
 
-app.get("/list", authenticateToken, async(req, res) => {
-  let user = req.user
-  let page = req.query.page; 
-  let search = req.query.search;
-  let sort = req.query.sort;
-  const pageSize = 10;
-  
-  const userFolder = user.uid + "/";
+app.get("/list", authenticateToken, async (req, res) => {
+  try {
+    const user = req.user;
+    const page = req.query.page; 
+    const search = req.query.search;
+    const sort = req.query.sort;
+    const pageSize = 10;
 
-  const [results] = await bucket.getFiles({ prefix: userFolder });
-  
-      const files = results[0];
-      const fileLength = files.length
-      
-      let startIndex = (page - 1) * pageSize;
-      let endIndex = page * pageSize;
+    const userFolder = user.uid + "/";
 
-      let fileUrls;
-    
-      if (sort) {
-        fileUrls = files.map((file) => {
-          return {url: getFileUrl(file.name, req), date: file.metadata.timeCreated}
-        });
-    
-      } else {
-        fileUrls = files.map((file) => {
-          return getFileUrl(file.name, req)
-        });
+    const [files] = await bucket.getFiles({ prefix: userFolder });
+    console.log(files)
+    const fileUrls = [];
+
+    for (const file of files) {
+      const fileUrl = getFileUrl(file.name, req);
+      const fileMetadata = await file.getMetadata();
+      const fileDate = fileMetadata[0].timeCreated;
+
+      fileUrls.push({ url: fileUrl, date: fileDate });
+    }
+
+    // Sıralama
+    if (sort) {
+      switch (sort) {
+        case "date:old-first":
+          fileUrls.sort((a, b) => compareAsc(new Date(b.date), new Date(a.date)));
+          break;
+        case "date:new-first":
+          fileUrls.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
+          break;
+        // Diğer sıralama türleri eklenebilir
       }
-      if (search) {
-        let searchResults;
-        searchResults = fileUrls.filter(function(file) {
-          try {
-            return file.url.toLowerCase().includes(search)
-          } catch {
-            return file.toLowerCase().includes(search)
-          }
-        });
-        
-        fileUrls = searchResults
-      }
-    
-      if (sort) {
-        switch (sort) {
-          case "date:old-first":
-            fileUrls.sort(function(a,b){
-               return compareAsc(new Date(b.date), new Date(a.date));
-            });
-          case "date:new-first":
-            fileUrls.sort(function(a,b){
-               return compareDesc(new Date(a.date), new Date(b.date));
-            });
+    }
+
+    // Arama
+    if (search) {
+      const searchResults = fileUrls.filter((file) => {
+        try {
+          return file.url.toLowerCase().includes(search);
+        } catch {
+          return file.toLowerCase().includes(search);
         }
-      }
-      
-      if (page) {
-        fileUrls = fileUrls.slice(startIndex, endIndex)
-      }
-      
-      
-      if (page == undefined){
-        return res.json(fileUrls)
-      }
-      
-      let next = true
-      page++
-    
-      if (files.slice((page - 1) * pageSize, page * pageSize).length == 0) {
-        next = false
-      }
-    
-      const response = {
-        files: fileUrls,
-        next: next
-      }
-      
-      res.json(response);
-    });
+      });
 
+      fileUrls = searchResults;
+    }
+
+    // Sayfalama
+    let startIndex, endIndex;
+    if (page) {
+      startIndex = (page - 1) * pageSize;
+      endIndex = page * pageSize;
+      fileUrls = fileUrls.slice(startIndex, endIndex);
+    }
+
+    // Sonuçları gönder
+    const response = {
+      files: fileUrls,
+      next: files.length > endIndex,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error while listing the files:", error);
+    res.status(500).send(error.message);
+  }
+});
 // Server handling
 
 function serverStart() {
