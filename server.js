@@ -37,48 +37,17 @@ function authenticateToken(req, res, next) {
     return res.status(401).send('Unauthorized');
   }
 
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, token_data) => {
-    if (err) {
-      return res.status(403).send(err);
-    } else if (token_data.id !== req.body.id) {
-      return res.status(401).send('Unauthorized');
-    }
-
-    next();
+  admin.auth().verifyIdToken(token).then((decodedToken) => {
+    const uid = decodedToken.uid;
+  
+    console.log(decodedToken)
+    next()
+  })
+  .catch((error) => {
+    console.error(error.message)
+    return res.status(401).send("Unauthorized")
   });
 }
-
-app.post('/signup', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const userRecord = await admin.auth().createUser({
-      email,
-      password,
-    });
-
-    res.status(200).json({ uid: userRecord.uid });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(error.message);
-  }
-});
-
-app.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const userCredential = await admin.auth().signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
-    
-    const customToken = await admin.auth().createCustomToken(user.uid);
-
-    res.status(200).json({ uid: user.uid, token: customToken });
-  } catch (error) {
-    console.error(error);
-    res.status(401).send(error.message);
-  }
-});
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
@@ -262,7 +231,7 @@ app.get("/file/:filename", async (req, res) => {
 });
 
 
-app.get("/list", (req, res) => {
+app.get("/list", authenticateToken, (req, res) => {
   let page = req.query.page; 
   let search = req.query.search;
   let sort = req.query.sort;
