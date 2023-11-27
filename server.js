@@ -40,7 +40,6 @@ async function authenticateToken(req, res, next) {
     
     req.user = decodedClaims
     next();
-    console.log("Middleware ended")
   } catch (error) {
     res.redirect('/login');
   }
@@ -104,6 +103,11 @@ app.post('/sessionLogin', (req, res) => {
         res.status(401).send('UNAUTHORIZED REQUEST!');
       }
     );
+});
+
+app.post('/sessionLogout', (req, res) => {
+  res.clearCookie('session');
+  res.redirect('/login');
 });
 
 app.get("/", authenticateToken, (req, res) => {
