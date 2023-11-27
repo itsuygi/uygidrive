@@ -1,18 +1,6 @@
 let currentPage = 1;
 let sort = ""
 
-function request(url, idToken, refresh) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.open('POST', url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function () {
-    console.log(xhr.responseText)
-  }
-  xhr.send(JSON.stringify({ idToken: idToken }));
-}
-
-
 function setup() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -45,6 +33,17 @@ function setup() {
 
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
+  
+  function request(url, idToken, refresh) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+    }
+    xhr.send(JSON.stringify({ idToken: idToken }));
+  }
 
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -98,6 +97,7 @@ function setup() {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
       console.log(xhr.responseText)
+      loadList()
     }
     xhr.send();
   }
@@ -164,7 +164,7 @@ function setup() {
           fileItem.appendChild(downloadButton);
           
           const deleteButton = document.createElement('button');
-          deleteButton.textContent = '';
+          deleteButton.textContent = '❌';
           deleteButton.classList.add('delete-button');
           deleteButton.addEventListener('click', function () {
             deleteFile(splitUrl[splitUrl.length - 1]);
