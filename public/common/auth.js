@@ -17,7 +17,7 @@ window.onload = function() {
   function request(url, idToken) {
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', url, true);
+    xhr.open('POST', '', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
       console.log(xhr.responseText)
