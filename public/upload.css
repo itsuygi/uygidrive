@@ -8,6 +8,7 @@ body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  margin-top: 50px; 
 }
 
 .container {
@@ -174,7 +175,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100%;
+  position: fixed; /* Header'ı sabit bir konuma getir */
+  width: 100%; /* Header'ı sayfanın tam genişliği kadar genişlet */
 }
 
 .user-info {
@@ -197,3 +199,4 @@ header {
 #logout-btn:hover {
   background-color: #ddd;
 }
+
