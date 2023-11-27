@@ -98,15 +98,15 @@ app.post('/sessionLogin', (req, res) => {
       (sessionCookie) => {
         const options = { maxAge: expiresIn, httpOnly: true, secure: true };
         res.cookie('session', sessionCookie, options);
-        res.end(JSON.stringify({ status: 'success' }));
+        res.json({ status: 'success' });
       },
       (error) => {
-        res.status(401).send('UNAUTHORIZED REQUEST!');
+        res.status(401).json({ status: 'fail' });
       }
     );
 });
 
-app.post('/sessionLogout', (req, res) => {
+app.get('/sessionLogout', (req, res) => {
   res.clearCookie('session');
   res.redirect('/login');
 });

@@ -1,10 +1,12 @@
 function request(url, idToken) {
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', '', true);
+    xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
       console.log(xhr.responseText)
+      
+      if (JSON.parse(xhr.responseText).status = "success")
     }
     xhr.send(JSON.stringify({ idToken: idToken }));
   }

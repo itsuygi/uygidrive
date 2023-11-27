@@ -1,6 +1,18 @@
 let currentPage = 1;
 let sort = ""
 
+function request(url, idToken, refresh) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    console.log(xhr.responseText)
+  }
+  xhr.send(JSON.stringify({ idToken: idToken }));
+}
+
+
 function setup() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -195,7 +207,7 @@ function setup() {
 }
 
 function logout() {
-  request()
+  window.location.replace("/sessionLogout");
   /*firebase.auth().signOut().then(function() {
     // Sign-out successful
   }).catch(function(error) {
