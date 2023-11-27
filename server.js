@@ -108,11 +108,22 @@ app.post('/sessionLogin', (req, res) => {
 
 app.get('/sessionLogout', (req, res) => {
   res.clearCookie('session');
-  res.redirect('/login');
+  res.redirect("/login")
 });
 
 app.get("/", authenticateToken, (req, res) => {
   res.render(__dirname + '/public/upload.ejs', { email: req.user.email });
+});
+
+app.get("/login", async (req, res) => {
+  let sessionCookie = req.cookies.session || '';
+  try {
+    const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
+    
+    res.redirect("/")
+  } catch (error) {
+    res.sendFile(__dirname + '/public/login/login.html');
+  }
 });
 
 // Uploading

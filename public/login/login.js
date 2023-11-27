@@ -6,7 +6,9 @@ function request(url, idToken) {
     xhr.onload = function () {
       console.log(xhr.responseText)
       
-      if (JSON.parse(xhr.responseText).status = "success")
+      if (JSON.parse(xhr.responseText).status = "success") {
+        window.location.replace("/");
+      }
     }
     xhr.send(JSON.stringify({ idToken: idToken }));
   }
