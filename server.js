@@ -27,6 +27,7 @@ app.use('/common',express.static(path.join(__dirname, 'public/common')));
 const bodyParser = require("body-parser");
 app.use(express.json());
 app.use(cookie())
+app.set("view engine", "pug");
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -111,7 +112,7 @@ app.post('/sessionLogout', (req, res) => {
 });
 
 app.get("/", authenticateToken, (req, res) => {
-  res.sendFile("upload.html", { root: __dirname + "/public/" });
+  res.render("upload.html", { root: __dirname + "/public/" });
 });
 
 // Uploading
