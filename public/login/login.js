@@ -38,11 +38,12 @@ window.onload = function() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     
+    messageElement.innerHTML = "Logging in..."
+    
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(({user}) => {
         return user.getIdToken().then(idToken => {
           request("/sessionLogin", idToken)
-          //window.location.replace("/");
         });
       })
       .catch(function(error) {
@@ -50,7 +51,7 @@ window.onload = function() {
         if (error.code === 'auth/internal-error') {
           messageElement.innerHTML = 'Invalid password';
         } else {
-          messageElement.innerHTML = 'An error occurred';
+          messageElement.innerHTML = error.message;
         }
       });
   });

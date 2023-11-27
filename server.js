@@ -150,8 +150,8 @@ app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res
     await bucket.file(filePath).save(fileBuffer, fileOptions);
     await bucket.file(filePath).makePublic()
 
-    const fileUrl = getFileUrl(filePath, req)
-    res.send();
+    const fileUrl = getFileUrl(filename, req)
+    res.send(fileUrl);
   } catch (error) {
     console.error('File uploading error:', error);
     res.status(500).send(error.message);
@@ -196,6 +196,15 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     console.log("Error getting file: ", error)
     res.status(500).send(error)
   }
+});
+
+app.delete("/file/:filename", authenticateToken, async (req, res) => {
+  const user = req.user
+    const filename = req.params.filename;
+    const rangeHeader = req.headers.range;
+    
+    const filePath = `${user.uid}/${filename}`
+    
 });
 
 
