@@ -203,3 +203,6 @@ header {
   background-color: #ddd;
 }
 
+.delete-button {
+  background: invisible;
+}

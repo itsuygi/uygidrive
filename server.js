@@ -199,12 +199,18 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
 });
 
 app.delete("/file/:filename", authenticateToken, async (req, res) => {
-  const user = req.user
+  try {
+    const user = req.user
     const filename = req.params.filename;
-    const rangeHeader = req.headers.range;
     
     const filePath = `${user.uid}/${filename}`
     
+    await bucket.file(filePath).delete();
+    
+    res.json({result: "success", message: "File deleted successfully."})
+  } catch (error) {
+    res.status(500).json({result: "error", message: error.message})
+  }
 });
 
 

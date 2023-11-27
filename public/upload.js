@@ -22,8 +22,7 @@ function setup() {
   const progressText = document.getElementById('progressText');
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
-  const copyURLButton = document.getElementById('copyURLButton');
-  const musicList = document.getElementById('musicList');
+  const fileList = document.getElementById('fileList');
   const errorBox = document.getElementById('errorBox');
   const errorMessage = document.getElementById('errorMessage');
   const nextPage = document.getElementById('nextPage');
@@ -73,16 +72,6 @@ function setup() {
         fileURL.innerHTML = url;
         fileURL.href = url;
 
-        copyURLButton.addEventListener('click', function () {
-          const textArea = document.createElement('textarea');
-          textArea.value = url;
-          document.body.appendChild(textArea);
-          textArea.select();
-          document.execCommand('copy');
-          document.body.removeChild(textArea);
-          copyURLButton.textContent = 'URL Copied!';
-        });
-
         loadList();
       } else {
         progressDiv.style.display = 'none';
@@ -102,6 +91,17 @@ function setup() {
     uploadButton.style.display = 'block';
   });
   
+  function deleteFile(filename) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('DELETE', '/file/' + filename, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+    }
+    xhr.send();
+  }
+  
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
@@ -111,7 +111,7 @@ function setup() {
   loadList();
   
   function loadList() {
-    musicList.innerHTML = 'Loading...';
+    fileList.innerHTML = 'Loading...';
     
     const search = searchBox.value
     
@@ -141,19 +141,19 @@ function setup() {
           nextPage.style.display = "inline"
         }
         
-        musicList.innerHTML = '';
+        fileList.innerHTML = '';
 
         files.forEach(url => {
           if (url.url) {
             url = url.url
           }
-          const musicItem = document.createElement('div');
-          musicItem.classList.add('music-item');
+          const fileItem = document.createElement('div');
+          fileItem.classList.add('music-item');
           
-          const musicName = document.createElement('span');
+          const fileName = document.createElement('span');
           var splitUrl = url.split("/")
-          musicName.textContent = splitUrl[splitUrl.length - 1];
-          musicItem.appendChild(musicName);
+          fileName.textContent = splitUrl[splitUrl.length - 1];
+          fileItem.appendChild(fileName);
 
           const downloadButton = document.createElement('button');
           downloadButton.textContent = 'Download';
@@ -161,19 +161,26 @@ function setup() {
           downloadButton.addEventListener('click', function () {
             document.getElementById('download_iframe').src = url; 
           });
-          musicItem.appendChild(downloadButton);
+          fileItem.appendChild(downloadButton);
           
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = '';
+          deleteButton.classList.add('delete-button');
+          deleteButton.addEventListener('click', function () {
+            deleteFile(splitUrl[splitUrl.length - 1]);
+          });
+          fileItem.appendChild(deleteButton);
           
           const line = document.createElement('div');
           line.classList.add('line');
           
-          musicList.appendChild(musicItem);
+          fileList.appendChild(fileItem);
           
-          musicList.appendChild(line);
+          fileList.appendChild(line);
         });
         document.documentElement.scrollTop = document.body.scrollTop = 420;
       } else {
-         musicList.innerHTML = 'Error while loading!';
+         fileList.innerHTML = 'Error while loading!';
       }
     };
     
@@ -208,12 +215,8 @@ function setup() {
 
 function logout() {
   window.location.replace("/sessionLogout");
-  /*firebase.auth().signOut().then(function() {
-    // Sign-out successful
-  }).catch(function(error) {
-    // An error happened
-  });*/
 }
+
 
 
   
