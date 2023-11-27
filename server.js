@@ -27,18 +27,18 @@ app.use('/common',express.static(path.join(__dirname, 'public/common')));
 const bodyParser = require("body-parser");
 app.use(express.json());
 app.use(cookie())
-app.set("view engine", "pug");
+app.set("view engine", "ejs");
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
-  console.log(req)
   let sessionCookie = req.cookies.session || '';
 
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
     
+    console.log(decodedClaims)
     req.user = decodedClaims
     next();
   } catch (error) {
@@ -112,7 +112,7 @@ app.post('/sessionLogout', (req, res) => {
 });
 
 app.get("/", authenticateToken, (req, res) => {
-  res.render("upload.html", { root: __dirname + "/public/" });
+  res.render(__dirname + '/public/upload.ejs', { email: req.user.email });
 });
 
 // Uploading
