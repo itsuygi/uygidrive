@@ -38,7 +38,6 @@ async function authenticateToken(req, res, next) {
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
     
-    console.log(decodedClaims)
     req.user = decodedClaims
     next();
   } catch (error) {
@@ -222,13 +221,13 @@ app.get("/list", authenticateToken, async (req, res) => {
     const sort = req.query.sort;
     const pageSize = 10;
 
-    // Kullanıcının dosyalarını almak için özel klasörü belirtin
     const userFolder = `${user.uid}/`;
+    
+    console.log("Recieved file list request.")
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
     let fileUrls = [];
 
-    // Sadece dosyaları listele, klasörü dahil etme
     const filesOnly = files.filter((file) => !file.name.endsWith('/'));
 
     for (const file of filesOnly) {
@@ -240,7 +239,6 @@ app.get("/list", authenticateToken, async (req, res) => {
       fileUrls.push({ url: fileUrl, date: fileDate });
     }
 
-    // Sıralama
     if (sort) {
       switch (sort) {
         case "date:old-first":
@@ -289,10 +287,11 @@ app.get("/list", authenticateToken, async (req, res) => {
 // Server handling
 
 function serverStart() {
+  console.log("********* UygiDrive Server Started *********")
   var port = this.address().port;
   console.log("Project domain: " + hostUrl)
   console.log("Server listening on port: " + port);
-  console.log(cache.memsize())
+  
   cache.clear()
   
 }
