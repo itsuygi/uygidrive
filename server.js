@@ -147,7 +147,7 @@ app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res
     const filePath = path.join(user.uid, filename)
 
     await bucket.file(filePath).save(fileBuffer, fileOptions);
-    await bucket.file(filePath).makePublic()
+    //await bucket.file(filePath).makePublic()
 
     const fileUrl = getFileUrl(filename, req)
     res.send(fileUrl);
