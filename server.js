@@ -215,6 +215,8 @@ app.delete("/file/:filename", authenticateToken, async (req, res) => {
 
 app.get("/list", authenticateToken, async (req, res) => {
   try {
+    console.log("Recieved file list request.")
+    
     const user = req.user;
     const page = req.query.page; 
     const search = req.query.search;
@@ -222,8 +224,6 @@ app.get("/list", authenticateToken, async (req, res) => {
     const pageSize = 10;
 
     const userFolder = `${user.uid}/`;
-    
-    console.log("Recieved file list request.")
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
     let fileUrls = [];
