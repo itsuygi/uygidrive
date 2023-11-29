@@ -18,9 +18,9 @@ function setup() {
   const pageNumber = document.getElementById('pageNumber');
   const searchForm = document.getElementById('search');
   const searchBox = document.getElementById('searchBox');
-  const audio = document.getElementById('audio');
   const sortSelect = document.getElementById('sortSelect');
-  const preview = document.getElementById('preview');
+  
+  const previews = document.getElementById('previewDiv');
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
 
