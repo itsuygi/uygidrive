@@ -20,6 +20,27 @@ function setup() {
   const searchBox = document.getElementById('searchBox');
   const audio = document.getElementById('audio');
   const sortSelect = document.getElementById('sortSelect');
+  const preview = document.getElementById('preview');
+  var popup = document.getElementById('previewPopup');
+  var close = document.getElementsByClassName("close")[0];
+
+  function openPopup(url) {
+    preview.src = url
+    popup.style.display = "block";
+  }
+  function closePopup() {
+    preview.src = ""
+    popup.style.display = "none";
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == popup) {
+        closePopup()
+    }
+  }
+  close.onclick = function() {
+      closePopup()
+  }
   
   const firebaseConfig = {
     apiKey: "AIzaSyCILjXwpyNilznxbFTWC9J2Ys2JdJTX0vg",
@@ -153,6 +174,11 @@ function setup() {
           const fileName = document.createElement('span');
           var splitUrl = url.split("/")
           fileName.textContent = splitUrl[splitUrl.length - 1];
+          
+          fileName.addEventListener('click', function () {
+            openPopup(url)
+          });
+          
           fileItem.appendChild(fileName);
 
           const downloadButton = document.createElement('button');

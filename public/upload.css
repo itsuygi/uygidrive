@@ -248,3 +248,12 @@ header {
     text-decoration: none;
     cursor: pointer;
 }
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+  width: 80%;
+  height: 70%;
+}
