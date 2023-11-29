@@ -36,7 +36,7 @@ function setup() {
     
     loadedElement.addEventListener('onload', loaded)
     loadedElement.addEventListener('canplaythrough', loaded)
-    loadedElement.addEventListener('ready', loaded)
+    loadedElement.addEventListener('load', loaded)
   }
   
   
@@ -50,7 +50,8 @@ function setup() {
   }
   function closePopup() {
     for (var i = 0; i < previews.length; i++) {
-        previews[i].style.display = "none";
+      previews[i].style.display = "none";
+      previews[i].src = "";
     }
     popup.style.display = "none";
   }
