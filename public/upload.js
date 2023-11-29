@@ -243,7 +243,7 @@ function setup() {
         });
         document.documentElement.scrollTop = document.body.scrollTop = 420;
       } else {
-         fileList.innerHTML = 'Error while loading!';
+         fileList.innerHTML = "Error: " + listXhr.responseText;
       }
     };
     
