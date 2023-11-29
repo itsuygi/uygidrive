@@ -24,26 +24,33 @@ function setup() {
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
   
+  function loaded(loadedElement) {
+    loadedElement = loadedElement.target
+    console.log(loadedElement.id + " has loaded")
+    
+    loadedElement.style.display = "flex"
+  }
+  
   for (var i = 0; i < previews.length; i++) {
-    loadedElement.addEventListener('onload', function (e) {
-      for (var i = 0; i < previews.length; i++) {
-        if 
-      }
-    });
+    const loadedElement = previews[i]
+    
+    loadedElement.addEventListener('onload', loaded)
+    loadedElement.addEventListener('canplaythrough', loaded)
+    loadedElement.addEventListener('ready', loaded)
   }
   
   
 
   function openPopup(url) {
     for (var i = 0; i < previews.length; i++) {
-        previews[i].src = url;
+      previews[i].src = url;
     }
     
     popup.style.display = "block";
   }
   function closePopup() {
     for (var i = 0; i < previews.length; i++) {
-        previews[i].src = "";
+        previews[i].style.display = "none";
     }
     popup.style.display = "none";
   }

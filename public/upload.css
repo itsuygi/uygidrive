@@ -253,10 +253,16 @@ header {
 }
 
 .preview {
-  display: flex;
+  display: none;
   flex-direction: column;
   align-items: center;
   margin: auto; 
   width: 100%;
   height: 100%;
+}
+
+.audio-preview {
+  display: none;
+  flex-direction: column;
+  align-items: center;
 }
