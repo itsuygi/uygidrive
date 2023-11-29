@@ -20,16 +20,31 @@ function setup() {
   const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
   
-  const previews = document.getElementById('previewDiv');
+  const previews = document.getElementsByName('preview');
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
+  
+  for (var i = 0; i < previews.length; i++) {
+    loadedElement.addEventListener('onload', function (e) {
+      for (var i = 0; i < previews.length; i++) {
+        if 
+      }
+    });
+  }
+  
+  
 
   function openPopup(url) {
-    preview.src = url
+    for (var i = 0; i < previews.length; i++) {
+        previews[i].src = url;
+    }
+    
     popup.style.display = "block";
   }
   function closePopup() {
-    preview.src = ""
+    for (var i = 0; i < previews.length; i++) {
+        previews[i].src = "";
+    }
     popup.style.display = "none";
   }
   
