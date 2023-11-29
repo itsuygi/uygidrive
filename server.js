@@ -231,7 +231,6 @@ app.get("/list", authenticateToken, async (req, res) => {
     const filesOnly = files.filter((file) => !file.name.endsWith('/'));
     
     for (const file of files) {
-      console.log(file)
       bucket.file(file.name).makePrivate()
     }
 

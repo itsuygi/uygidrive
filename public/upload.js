@@ -23,6 +23,7 @@ function setup() {
   const previews = document.getElementsByName('preview');
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
+  var loadText = document.getElementById("loadText");
   
   let oneLoaded = false
   
@@ -30,6 +31,7 @@ function setup() {
     loadedElement = loadedElement.target
     console.log(loadedElement.id + " has loaded")
     
+    loadText.style.display = "none"
     loadedElement.style.display = "flex"
     oneLoaded = true
   }
@@ -42,9 +44,8 @@ function setup() {
     loadedElement.addEventListener('load', loaded)
   }
   
-  
-
   function openPopup(url) {
+    loadText.style.display = "flex"
     for (var i = 0; i < previews.length; i++) {
       previews[i].src = url;
     }
@@ -54,6 +55,7 @@ function setup() {
     setTimeout(function () {
       console.log("Timeout")
       if (oneLoaded == false) {
+        loadText.style.display = "none"
         document.getElementById("filePreview").style.display = "flex"
       }
     }, 7000)
@@ -205,9 +207,10 @@ function setup() {
           const fileItem = document.createElement('div');
           fileItem.classList.add('music-item');
           
-          const fileName = document.createElement('span');
+          const fileName = document.createElement('a');
           var splitUrl = url.split("/")
           fileName.textContent = splitUrl[splitUrl.length - 1];
+          fileName.href = "javascript:void(0);"
           
           fileName.addEventListener('click', function () {
             openPopup(url)
