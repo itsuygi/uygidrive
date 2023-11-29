@@ -24,11 +24,14 @@ function setup() {
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
   
+  let oneLoaded = false
+  
   function loaded(loadedElement) {
     loadedElement = loadedElement.target
     console.log(loadedElement.id + " has loaded")
     
     loadedElement.style.display = "flex"
+    oneLoaded = true
   }
   
   for (var i = 0; i < previews.length; i++) {
@@ -45,8 +48,15 @@ function setup() {
     for (var i = 0; i < previews.length; i++) {
       previews[i].src = url;
     }
-    
+    oneLoaded = false
     popup.style.display = "block";
+    
+    setTimeout(function () {
+      console.log("Timeout")
+      if (oneLoaded == false) {
+        document.getElementById("filePreview").style.display = "flex"
+      }
+    }, 7000)
   }
   function closePopup() {
     for (var i = 0; i < previews.length; i++) {
@@ -54,6 +64,7 @@ function setup() {
       previews[i].src = "";
     }
     popup.style.display = "none";
+    oneLoaded = false
   }
   
   window.onclick = function(event) {
