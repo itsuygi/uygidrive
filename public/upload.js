@@ -25,6 +25,28 @@ function setup() {
   var close = document.getElementsByClassName("close")[0];
   var loadText = document.getElementById("loadText");
   
+  function getTagByFileExtension(fileUrl) {
+    const extensionMapping = {
+      'mp3': 'audioPreview',
+      'wav': 'audioPreview',
+      'ogg': 'audioPreview',
+      'mp4': 'videoPreview',
+      'webm': 'videoPreview',
+      'png': 'imagePreview',
+      'jpg': 'imagePreview',
+      'jpeg': 'imagePreview',
+      'gif': 'imagePreview',
+      'pdf': 'filePreview',
+      'doc': 'filePreview',
+    };
+
+    const fileExtension = fileUrl.split('.').pop();
+
+    const tag = extensionMapping[fileExtension.toLowerCase()];
+
+    return document.getElementById(tag)
+  }
+  
   let oneLoaded = false
   
   function loaded(loadedElement) {
