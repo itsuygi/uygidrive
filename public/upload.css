@@ -229,12 +229,11 @@ header {
 
 .popup-content {
     background-color: #fefefe;
-    margin: 5% auto; 
-    padding: 10px;
+    margin: 5% auto;
+    padding: 20px;
     border: 1px solid #888;
-    width: 70%;
-    height: 70%;
-    display: flex;
+    width: 80%;
+    height: 80%;
 }
 
 .close {

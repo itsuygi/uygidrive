@@ -23,7 +23,7 @@ function setup() {
   const previews = document.getElementsByName('preview');
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
-  var loadText = document.getElementById("loadText");
+
   
   function getTagByFileExtension(fileUrl) {
     const extensionMapping = {
@@ -31,6 +31,7 @@ function setup() {
       'wav': 'audioPreview',
       'ogg': 'audioPreview',
       'mp4': 'videoPreview',
+      'mov': 'videoPreview',
       'webm': 'videoPreview',
       'png': 'imagePreview',
       'jpg': 'imagePreview',
@@ -41,46 +42,24 @@ function setup() {
     };
 
     const fileExtension = fileUrl.split('.').pop();
+    console.log(fileExtension)
 
     const tag = extensionMapping[fileExtension.toLowerCase()];
 
     return document.getElementById(tag)
   }
   
-  let oneLoaded = false
-  
-  function loaded(loadedElement) {
-    loadedElement = loadedElement.target
-    console.log(loadedElement.id + " has loaded")
-    
-    loadText.style.display = "none"
-    loadedElement.style.display = "flex"
-    oneLoaded = true
-  }
-  
-  for (var i = 0; i < previews.length; i++) {
-    const loadedElement = previews[i]
-    
-    loadedElement.addEventListener('onload', loaded)
-    loadedElement.addEventListener('canplaythrough', loaded)
-    loadedElement.addEventListener('load', loaded)
-  }
-  
   function openPopup(url) {
-    loadText.style.display = "flex"
-    for (var i = 0; i < previews.length; i++) {
-      previews[i].src = url;
-    }
-    oneLoaded = false
+    //loadText.style.display = "flex"
     popup.style.display = "block";
     
-    setTimeout(function () {
-      console.log("Timeout")
-      if (oneLoaded == false) {
-        loadText.style.display = "none"
-        document.getElementById("filePreview").style.display = "flex"
-      }
-    }, 7000)
+    const tag = getTagByFileExtension(url)
+    console.log(tag)
+    
+    if (tag) {
+      tag.src = url
+      tag.style.display = "flex"
+    }
   }
   function closePopup() {
     for (var i = 0; i < previews.length; i++) {
@@ -88,7 +67,6 @@ function setup() {
       previews[i].src = "";
     }
     popup.style.display = "none";
-    oneLoaded = false
   }
   
   window.onclick = function(event) {
