@@ -40,6 +40,12 @@ function setup() {
       'gif': 'imagePreview',
       'pdf': 'filePreview',
       'doc': 'filePreview',
+      'py': 'codePreview',
+      'c': 'codePreview',
+      'json': 'codePreview',
+      'js': 'codePreview',
+      'css': 'codePreview',
+      'html': 'codePreview',
     };
 
     const fileExtension = fileUrl.split('.').pop();
@@ -58,7 +64,12 @@ function setup() {
     console.log(tag)
     
     if (tag) {
-      tag.src = url
+      if (tag.id !== "codePreview") {
+        tag.src = url
+      } else {
+        fetch(url)
+        .then(async r => tag.innerHTML = await new Response(r.body).text());
+      }
       tag.style.display = "flex"
     } else {
       popupMessage.innerHTML = "Non-supported file type, try downloading."
