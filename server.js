@@ -251,11 +251,9 @@ app.get("/list", authenticateToken, async (req, res) => {
         case "date:new-first":
           fileUrls.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
           break;
-        // Diğer sıralama türleri eklenebilir
       }
     }
 
-    // Arama
     if (search) {
       const searchResults = fileUrls.filter((file) => {
         try {
@@ -268,7 +266,6 @@ app.get("/list", authenticateToken, async (req, res) => {
       fileUrls = searchResults;
     }
 
-    // Sayfalama
     let startIndex, endIndex;
     if (page) {
       startIndex = (page - 1) * pageSize;
@@ -276,7 +273,6 @@ app.get("/list", authenticateToken, async (req, res) => {
       fileUrls = fileUrls.slice(startIndex, endIndex);
     }
 
-    // Sonuçları gönder
     const response = {
       files: fileUrls,
       next: filesOnly.length > endIndex,
