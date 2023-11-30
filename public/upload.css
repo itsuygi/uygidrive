@@ -271,3 +271,13 @@ header {
   transform: translate(-50%, -50%);
   margin: auto
 }
+
+.code-preview {
+  display: none;
+  white-space: nowrap; 
+  overflow: scroll; 
+  text-overflow: ellipsis;
+  width: 100%;
+  height: 95%;
+  margin: auto
+}
