@@ -1,5 +1,5 @@
 body {
-  font-family: "Helvetica", sans-serif;
+  font-family: "Lucida Console", monospace;
   margin: 0;
   padding: 0;
   background-color: #f2f2f2;
@@ -256,12 +256,11 @@ header {
   display: none;
   flex-direction: column;
   align-items: center;
-  margin: auto; 
   width: 100%;
-  height: 100%;
+  height: 95%;
 }
 
-.audio-preview {
+.audio-preview, .video-preview {
   display: none;
   flex-direction: column;
   align-items: center;

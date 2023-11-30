@@ -23,6 +23,7 @@ function setup() {
   const previews = document.getElementsByName('preview');
   var popup = document.getElementById('previewPopup');
   var close = document.getElementsByClassName("close")[0];
+  var popupMessage = document.getElementById("popupMessage");
 
   
   function getTagByFileExtension(fileUrl) {
@@ -59,6 +60,8 @@ function setup() {
     if (tag) {
       tag.src = url
       tag.style.display = "flex"
+    } else {
+      popupMessage.innerHTML = "Non-supported file type, try downloading."
     }
   }
   function closePopup() {
@@ -67,6 +70,7 @@ function setup() {
       previews[i].src = "";
     }
     popup.style.display = "none";
+    popupMessage.innerHTML = ""
   }
   
   window.onclick = function(event) {
