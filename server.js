@@ -34,11 +34,11 @@ const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
+  
   let shareToken = req.query.shareToken
   let user = req.query.user
   
   if (shareToken) {
-    console.log("shareToken found")
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
       if (err) {
         console.error(err)
@@ -46,24 +46,27 @@ async function authenticateToken(req, res, next) {
 
       try {
         const requestedPath = `${user}/${req.params.filename}`
-        console.log(requestedPath, token_data.path)
+        
         if (user || token_data.path == requestedPath) {
           req.sharePath = token_data.path
-          return next();
+          return next()
+          console.log("returned")
         }
       } catch(err) {
         console.log(err)
       }
     });
   }
-
+  
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
     
     req.user = decodedClaims
     next();
   } catch (error) {
-    res.redirect('/login');
+    if (!req.sharePath) {
+      res.redirect('/login');
+    }
   }
 }
 
