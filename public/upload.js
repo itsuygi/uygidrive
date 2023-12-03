@@ -46,6 +46,7 @@ function setup() {
       'js': 'codePreview',
       'css': 'codePreview',
       'html': 'codePreview',
+      'txt': 'codePreview'
     };
 
     const fileExtension = fileUrl.split('.').pop();
