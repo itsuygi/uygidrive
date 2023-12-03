@@ -34,6 +34,7 @@ const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
+  let s = req.cookies.session || '';
 
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
