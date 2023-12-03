@@ -34,7 +34,7 @@ const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
-  let s = req.cookies.session || '';
+  let shareToken = req.query.shareToken
 
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
@@ -42,6 +42,10 @@ async function authenticateToken(req, res, next) {
     req.user = decodedClaims
     next();
   } catch (error) {
+    if (shareToken) {
+      req.shareToken = shareToken
+      return next()
+    }
     res.redirect('/login');
   }
 }
@@ -184,12 +188,6 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     
     const file = bucket.file(filePath);
     const fileContent = await file.download();
-
-    let memory = getMemoryUsage()
-    let memoryUsage = Math.round((memory * 100)/ 512 )
-
-    console.log("File downloaded: ", filePath)
-    console.log("Memory usage: %", memoryUsage)
 
     res.send(fileContent[0])
   } catch (error) {
