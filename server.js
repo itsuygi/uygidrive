@@ -285,6 +285,13 @@ app.get("/list", authenticateToken, async (req, res) => {
   }
 });
 
+function generateAccessToken(data, time) {
+  if (time == undefined) {
+    time = "10h"
+  }
+  return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: time });
+}
+
 app.get('/getShareLink', authenticateToken, async (req,res) => {
   try {
     const file = req.body.file
@@ -297,12 +304,15 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
     const filePath = `${req.user.uid}/${file}`
     console.log(filePath)
 
-    const [signedUrl] = await bucket.file(filePath).getSignedUrl({
+    /*const [url] = await bucket.file(filePath).getSignedUrl({
       action: "read",
       expires: new Date( Date.now() + days * 24 * 60 * 60 * 1000),
-    })
+    })*/
+    
+    const token = generateAccessToken({path: filePath})
+    const url = getFileUrl(file, req) + "?shareToken=" + token
 
-    res.send(signedUrl)
+    res.send(url)
   } catch (error) {
     console.error(error)
     res.status(500).send(error.message)
