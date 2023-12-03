@@ -35,6 +35,7 @@ const wss = new WebSocketServer({ server });
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
   let shareToken = req.query.shareToken
+  let user = req.query.user
   
   if (shareToken) {
     console.log("shareToken found")
@@ -44,8 +45,10 @@ async function authenticateToken(req, res, next) {
       }
 
       try {
-        if (token_data.filePath == req.params.filename) {
-          req.sharePath = token_data.filePath
+        const requestedPath = `${user}/${req.params.filename}`
+        console.log(requestedPath, token_data.path)
+        if (user || token_data.path == requestedPath) {
+          req.sharePath = token_data.path
           return next();
         }
       } catch(err) {
@@ -198,10 +201,15 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     const filename = req.params.filename;
     const rangeHeader = req.headers.range;
     
-    let filePath = `${user.uid}/${filename}`;
+    const sharePath = req.sharePath
+    console.log(sharePath)
     
-    if (req.sharePath) {
-      filePath = req.sharePath
+    let filePath;
+    
+    if (sharePath) {
+      filePath = sharePath
+    } else {
+      filePath = `${user.uid}/${filename}`
     }
     
     const file = bucket.file(filePath);
@@ -326,7 +334,7 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
       expires: new Date( Date.now() + days * 24 * 60 * 60 * 1000),
     })*/
     
-    const token = generateAccessToken({path: filePath, uid = req.user.uid})
+    const token = generateAccessToken({path: filePath, uid: req.user.uid})
     const url = getFileUrl(file, req) + "?shareToken=" + token + "&user=" + req.user.uid
 
     res.send(url)
