@@ -50,24 +50,32 @@ async function authenticateToken(req, res, next) {
 async function authenticateShareToken(req, res, next) {
   let shareToken = req.query.shareToken
   let user = req.params.user
+  
   let filename = req.params.filename
   
   if (shareToken) {
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
       if (err) {
-        res.send(err.message)
+        return res.send(err.message)
       }
 
       try {
         const requestedPath = `${user}/${filename}`
+        console.log(requestedPath, token_data.path)
+        console.log(requestedPath == token_data.path)
         
-        if (user || token_data.path == requestedPath) {
+        if (requestedPath == token_data.path) {
           req.sharePath = token_data.path
+          next()
+        } else {
+          res.status(401).send("Unauthorized")
         }
       } catch(err) {
-        res.status(401).send("Unauthorized")
+        res.status(401).send(err.message)
       }
     });
+  } else {
+    res.status(401).send("Unauthorized")
   }
 }
 
@@ -352,8 +360,8 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
       expires: new Date( Date.now() + days * 24 * 60 * 60 * 1000),
     })*/
     
-    const token = generateAccessToken({path: filePath, uid: user})
-    const url = getSharedFileUrl(file, user) + "?shareToken=" + token + "&user=" + user
+    const token = generateAccessToken({path: filePath})
+    const url = getSharedFileUrl(file, user) + "?shareToken=" + token
 
     res.send(url)
   } catch (error) {
