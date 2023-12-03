@@ -35,29 +35,6 @@ const wss = new WebSocketServer({ server });
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
   
-  let shareToken = req.query.shareToken
-  let user = req.query.user
-  
-  if (shareToken) {
-    jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
-      if (err) {
-        console.error(err)
-      }
-
-      try {
-        const requestedPath = `${user}/${req.params.filename}`
-        
-        if (user || token_data.path == requestedPath) {
-          req.sharePath = token_data.path
-          return next()
-          console.log("returned")
-        }
-      } catch(err) {
-        console.log(err)
-      }
-    });
-  }
-  
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
     
@@ -67,6 +44,30 @@ async function authenticateToken(req, res, next) {
     if (!req.sharePath) {
       res.redirect('/login');
     }
+  }
+}
+
+async function authenticateShareToken(req, res, next) {
+  let shareToken = req.query.shareToken
+  let user = req.params.user
+  let filename = req.params.filename
+  
+  if (shareToken) {
+    jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
+      if (err) {
+        res.send(err.message)
+      }
+
+      try {
+        const requestedPath = `${user}/${filename}`
+        
+        if (user || token_data.path == requestedPath) {
+          req.sharePath = token_data.path
+        }
+      } catch(err) {
+        res.status(401).send("Unauthorized")
+      }
+    });
   }
 }
 
@@ -204,18 +205,26 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     const filename = req.params.filename;
     const rangeHeader = req.headers.range;
     
-    const sharePath = req.sharePath
-    console.log(sharePath)
-    
-    let filePath;
-    
-    if (sharePath) {
-      filePath = sharePath
-    } else {
-      filePath = `${user.uid}/${filename}`
-    }
+    let filePath = `${user.uid}/${filename}`
     
     const file = bucket.file(filePath);
+    const fileContent = await file.download();
+
+    res.send(fileContent[0])
+  } catch (error) {
+    console.log("Error getting file: ", error)
+    res.status(500).send(error)
+  }
+});
+
+app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
+  try {
+    const sharePath = req.sharePath
+    
+    const user = req.params.user;
+    const filename = req.params.filename;
+    
+    const file = bucket.file(sharePath);
     const fileContent = await file.download();
 
     res.send(fileContent[0])
@@ -320,6 +329,10 @@ function generateAccessToken(data, time) {
   return jwt.sign(data, process.env.TOKEN_SECRET, { expiresIn: time });
 }
 
+function getSharedFileUrl(file, user) {
+  return `${hostUrl}/shared/${user}/${file}`
+}
+
 app.get('/getShareLink', authenticateToken, async (req,res) => {
   try {
     const file = req.body.file
@@ -327,6 +340,8 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
     if (!file) {
       return req.status(500).res("No file found in parameters.")
     }
+    
+    const user = req.user.uid
 
     const days = 5
     const filePath = `${req.user.uid}/${file}`
@@ -337,8 +352,8 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
       expires: new Date( Date.now() + days * 24 * 60 * 60 * 1000),
     })*/
     
-    const token = generateAccessToken({path: filePath, uid: req.user.uid})
-    const url = getFileUrl(file, req) + "?shareToken=" + token + "&user=" + req.user.uid
+    const token = generateAccessToken({path: filePath, uid: user})
+    const url = getSharedFileUrl(file, user) + "?shareToken=" + token + "&user=" + user
 
     res.send(url)
   } catch (error) {
