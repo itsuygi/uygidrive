@@ -284,8 +284,18 @@ app.get("/list", authenticateToken, async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-// Server handling
 
+app.get('/getShareLink', async (req,res) => {
+  const dateNow = Date.now()
+  
+  const [signedUrl] = await bucket.file(path).getSignedUrl({
+    action: "read",
+    expires: new Date.setDate(dateNow.getDate() + 5),
+  })
+});
+
+
+// Server handling
 function serverStart() {
   console.log("********* UygiDrive Server Started *********")
   var port = this.address().port;
