@@ -35,6 +35,24 @@ const wss = new WebSocketServer({ server });
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';
   let shareToken = req.query.shareToken
+  
+  if (shareToken) {
+    console.log("shareToken found")
+    jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
+      if (err) {
+        console.error(err)
+      }
+
+      try {
+        if (token_data.filePath == req.params.filename) {
+          req.sharePath = token_data.filePath
+          return next();
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    });
+  }
 
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
@@ -42,10 +60,6 @@ async function authenticateToken(req, res, next) {
     req.user = decodedClaims
     next();
   } catch (error) {
-    if (shareToken) {
-      req.shareToken = shareToken
-      return next()
-    }
     res.redirect('/login');
   }
 }
@@ -184,7 +198,11 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     const filename = req.params.filename;
     const rangeHeader = req.headers.range;
     
-    const filePath = `${user.uid}/${filename}`;
+    let filePath = `${user.uid}/${filename}`;
+    
+    if (req.sharePath) {
+      filePath = req.sharePath
+    }
     
     const file = bucket.file(filePath);
     const fileContent = await file.download();
@@ -308,8 +326,8 @@ app.get('/getShareLink', authenticateToken, async (req,res) => {
       expires: new Date( Date.now() + days * 24 * 60 * 60 * 1000),
     })*/
     
-    const token = generateAccessToken({path: filePath})
-    const url = getFileUrl(file, req) + "?shareToken=" + token
+    const token = generateAccessToken({path: filePath, uid = req.user.uid})
+    const url = getFileUrl(file, req) + "?shareToken=" + token + "&user=" + req.user.uid
 
     res.send(url)
   } catch (error) {
