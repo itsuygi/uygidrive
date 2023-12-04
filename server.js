@@ -119,21 +119,18 @@ app.get("/downloadYT", async (req, res) => {
 
     const stream = ytdl(videoUrl, {format: videoFormat});
     
-    const chunks = [];
+    stream.pipe(res)
+    
+    /*const chunks = [];
     
     stream.on('data', (chunk) => {
         console.log("Data recieved")
         chunks.push(chunk);
-      });
+      });*/
 
     stream.on('end', async () => {
-      const buffer = Buffer.concat(chunks);
-      
-      console.log(buffer)
-    
-      res.header("Content-Type", "video/mp4")
-      res.send(buffer)
-    });
+     console.log("ended")
+    }); 
 
     stream.on('error', (error) => {
       res.status(500).send(error.message);
