@@ -99,51 +99,45 @@ function url_parse(url){
     return (match&&match[7].length==11)? match[7] : false;
 }
 
-app.post("/dowloadYT", async (req, res) => {
+app.get("/downloadYT", async (req, res) => {
   try {
-    const videoUrl = req.body.url
+    const videoUrl = req.query.url
     
     if (isYouTubeUrl(videoUrl) == false) {
       return res.status(400).send("Not a valid YouTube URL!")
     }
     
     const id = url_parse(videoUrl)
-    const video = await ytsearch( { videoId: id } )
+    /*const video = await ytsearch( { videoId: id } )
     
     const title = video.title
-    const filename = title + ".mp3"
-    console.log(id, title, filename)
+    const filename = title + ".mp4"
+    console.log(id, title, filename)*/
     
     const info = await ytdl.getInfo(videoUrl);
-    const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: 'highest' });
 
-    const stream = ytdl(videoUrl, {format: audioFormat});
+    const stream = ytdl(videoUrl, {format: videoFormat});
     
     const chunks = [];
-    let buffer;
     
     stream.on('data', (chunk) => {
         console.log("Data recieved")
         chunks.push(chunk);
       });
 
-    stream.on('end', () => {
-      buffer = Buffer.concat(chunks);
+    stream.on('end', async () => {
+      const buffer = Buffer.concat(chunks);
+      
+      console.log(buffer)
+    
+      res.header("Content-Type", "video/mp4")
+      res.send(buffer)
     });
 
     stream.on('error', (error) => {
-      reject(error);
+      res.status(500).send(error.message);
     });
-    
-    const ffmpegStream = createFfmpegStream(stream);
-    const buffer = await bufferFromReadableStream(ffmpegStream)
-    console.log(buffer)
-    
-    await bucket.file(filename).save(buffer);
-    await bucket.file(filename).makePublic()
-
-    const fileUrl = getFileUrl(filename, req)
-    res.send(fileUrl)
   } catch (error) {
     console.error('YT File uploading error:', error.message);
     res.status(500).send(error.message);
