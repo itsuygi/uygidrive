@@ -14,6 +14,8 @@ const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
 const cookie = require('cookie-parser');
+const ytsearch = require("yt-search");
+const ytdl = require("ytdl-core")
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -78,6 +80,76 @@ async function authenticateShareToken(req, res, next) {
     res.status(401).send("Unauthorized")
   }
 }
+
+function isYouTubeUrl(url) {
+    const youtubeDomains = ["youtube.com", "youtu.be", "m.youtube"];
+
+    for (const domain of youtubeDomains) {
+        if (url.includes(domain)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function url_parse(url){
+    var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    var match = url.match(regExp);
+    return (match&&match[7].length==11)? match[7] : false;
+}
+
+app.post("/dowloadYT", async (req, res) => {
+  try {
+    const videoUrl = req.body.url
+    
+    if (isYouTubeUrl(videoUrl) == false) {
+      return res.status(400).send("Not a valid YouTube URL!")
+    }
+    
+    const id = url_parse(videoUrl)
+    const video = await ytsearch( { videoId: id } )
+    
+    const title = video.title
+    const filename = title + ".mp3"
+    console.log(id, title, filename)
+    
+    const info = await ytdl.getInfo(videoUrl);
+    const audioFormat = ytdl.chooseFormat(info.formats, { quality: 'highestaudio' });
+
+    const stream = ytdl(videoUrl, {format: audioFormat});
+    
+    const chunks = [];
+    let buffer;
+    
+    stream.on('data', (chunk) => {
+        console.log("Data recieved")
+        chunks.push(chunk);
+      });
+
+    stream.on('end', () => {
+      buffer = Buffer.concat(chunks);
+    });
+
+    stream.on('error', (error) => {
+      reject(error);
+    });
+    
+    const ffmpegStream = createFfmpegStream(stream);
+    const buffer = await bufferFromReadableStream(ffmpegStream)
+    console.log(buffer)
+    
+    await bucket.file(filename).save(buffer);
+    await bucket.file(filename).makePublic()
+
+    const fileUrl = getFileUrl(filename, req)
+    res.send(fileUrl)
+  } catch (error) {
+    console.error('YT File uploading error:', error.message);
+    res.status(500).send(error.message);
+  }
+});
+
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 

@@ -10,7 +10,9 @@
     "date-fns": "^2.30.0",
     "cookie-parser": "^1.4.6",
     "pug": "^3.0.2",
-    "ejs": "^3.1.9"
+    "ejs": "^3.1.9",
+    "yt-search": "^2.10.4",
+    "ytdl-core": "^4.11.5"
   },
   "scripts": {
     "start": "node server.js"
