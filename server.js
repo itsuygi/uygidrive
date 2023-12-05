@@ -141,6 +141,16 @@ app.get("/downloadYT", async (req, res) => {
   }
 });
 
+app.get("/searchYT", async (req, res) => {
+  const search = req.query.query
+  const searchResults = await ytsearch(search)
+  
+  if (searchResults) {
+    console.log(searchResults.videos)
+    res.json(searchResults.videos)
+  }
+});
+
 
 function getMemoryUsage() {
   let total_rss = require('fs').readFileSync("/sys/fs/cgroup/memory/memory.stat", "utf8").split("\n").filter(l => l.startsWith("total_rss"))[0].split(" ")[1]; 
