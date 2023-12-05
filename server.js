@@ -115,7 +115,7 @@ app.get("/downloadYT", async (req, res) => {
     console.log(id, title, filename)*/
     
     const info = await ytdl.getInfo(videoUrl);
-    const videoFormat = ytdl.chooseFormat(info.formats, { quality: '135' });
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: '18' });
 
     const stream = ytdl(videoUrl, {format: videoFormat});
     
