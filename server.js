@@ -151,7 +151,7 @@ app.get("/searchYT", async (req, res) => {
     console.log(searchResults.videos)
     
     searchResults.videos.forEach((video) => {
-      result.push({title: video.title, url: video.url, id:video.id})
+      result.push({title: video.title, url: video.url, id: video.videoId})
     });
      
     console.log(result)
