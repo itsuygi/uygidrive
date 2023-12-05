@@ -115,12 +115,12 @@ app.get("/downloadYT", async (req, res) => {
     console.log(id, title, filename)*/
     
     const info = await ytdl.getInfo(videoUrl);
-    const videoFormat = ytdl.chooseFormat(info.formats, { quality: 'highest' });
+    const videoFormat = ytdl.chooseFormat(info.formats, { quality: '135' });
 
     const stream = ytdl(videoUrl, {format: videoFormat});
     
     //res.header('Content-Disposition', `attachment; filename="ytvideo.mp4"`);
-    res.header("Content-Type", "video/mp4")
+    //res.header("Content-Type", "video/mp4; charset=binary")
     stream.pipe(res)
     
     /*const chunks = [];
