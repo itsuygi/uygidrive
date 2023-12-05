@@ -145,9 +145,17 @@ app.get("/searchYT", async (req, res) => {
   const search = req.query.query
   const searchResults = await ytsearch(search)
   
+  const result = []
+  
   if (searchResults) {
     console.log(searchResults.videos)
-    res.json(searchResults.videos)
+    
+    searchResults.videos.forEach((video) => {
+      result.push({title: video.title, url: video.url, id:video.id})
+    });
+     
+    console.log(result)
+    res.json(result)
   }
 });
 
