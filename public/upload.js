@@ -27,8 +27,8 @@ function setup() {
 
   
   var sharePopup = document.getElementById('sharePopup');
-  var sharePopupClose = document.getElementsByClassName("close")[0];
-  var shareMessage = document.getElementById("shareMessage");
+  var urlInput = document.getElementById("urlInput");
+  var sharePopupClose = document.getElementById("sharePopupClose");
 
   
   function getTagByFileExtension(fileUrl) {
@@ -169,15 +169,17 @@ function setup() {
   });
   
   function deleteFile(filename) {
-    const xhr = new XMLHttpRequest();
+    if(confirm('Are you sure to delete this file?')) {
+        const xhr = new XMLHttpRequest();
 
-    xhr.open('DELETE', '/file/' + filename, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-      console.log(xhr.responseText)
-      loadList()
+        xhr.open('DELETE', '/file/' + filename, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+          console.log(xhr.responseText)
+          loadList()
+        }
+        xhr.send();
     }
-    xhr.send();
   }
   
   function shareFile(filename) {
@@ -187,7 +189,8 @@ function setup() {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
       console.log(xhr.responseText)
-      //loadList()
+      
+      openSharePopup(xhr.responseText)
     }
     console.log(JSON.stringify({ file: filename }))
     xhr.send(JSON.stringify({ file: filename }));
@@ -197,12 +200,12 @@ function setup() {
     //loadText.style.display = "flex"
     sharePopup.style.display = "block";
 
-    popupMessage.innerHTML = "Non-supported file type, try downloading."
+    urlInput.value = url
   }
   
   function closeSharePopup() {
     sharePopup.style.display = "none";
-    shareMessage.innerHTML = ""
+    urlInput.innerHTML = ""
   }
   
   window.onclick = function(event) {
@@ -210,12 +213,11 @@ function setup() {
         closeSharePopup()
     }
   }
-  close.onclick = function() {
+  sharePopupClose.onclick = function() {
       closeSharePopup()
   }
   
-  function copyToClipboard() {
-    var urlInput = document.getElementById("urlInput");
+   document.getElementById("copyShareLink").onclick = function() {
     urlInput.select();
     document.execCommand("copy");
     alert("Link copied to clipboard!");

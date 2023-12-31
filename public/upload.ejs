@@ -39,15 +39,13 @@
     
   <div id="sharePopup" class="share-popup">
     <div class="popup-content">
-        <span class="close" onclick="closeSharePopup()">&times;</span>
+        <span id="sharePopupClose" class="close">&times;</span>
         <h3 id="shareMessage">Share This Link</h3>
-        
-        <form>
-            <label for="urlInput">URL:</label>
-            <input class="url-input" type="text" id="urlInput" readonly>
-            
-            <button class="copy-share-link-button" type="button" onclick="copyToClipboard()">Copy Link</button>
-        </form>
+
+          <label for="urlInput">URL:</label>
+          <input class="url-input" type="text" id="urlInput" readonly>
+
+          <button class="copy-share-link-button" type="button" id="copyShareLink">Copy Link</button>
     </div>
 </div>
   
