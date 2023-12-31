@@ -424,12 +424,12 @@ function getSharedFileUrl(file, user) {
   return `${hostUrl}/shared/${user}/${file}`
 }
 
-app.get('/getShareLink', authenticateToken, async (req,res) => {
+app.post('/getShareLink', authenticateToken, async (req,res) => {
   try {
     const file = req.body.file
 
     if (!file) {
-      return req.status(500).res("No file found in parameters.")
+      return res.status(500).send("No file found in parameters.")
     }
     
     const user = req.user.uid

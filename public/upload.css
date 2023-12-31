@@ -203,27 +203,18 @@ header {
   background-color: #ddd;
 }
 
-.delete-button {
+.delete-button, .share-button {
   color: #fff;
   border: none;
   border-radius: 3px;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 10px;
   cursor: pointer;
   margin: 10px;
   background-color: transparent;
 }
 
-.share-button {
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  padding: 5px 10px;
-  font-size: 14px;
-  cursor: pointer;
-  margin: 10px;
-  background-color: transparent;
-}
+
 
 .popup {
   display: none;

@@ -175,6 +175,19 @@ function setup() {
     xhr.send();
   }
   
+  function shareFile(filename) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/getShareLink', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+      //loadList()
+    }
+    console.log(JSON.stringify({ file: filename }))
+    xhr.send(JSON.stringify({ file: filename }));
+  }
+  
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
@@ -243,7 +256,16 @@ function setup() {
           fileItem.appendChild(downloadButton);
           
           const deleteButton = document.createElement('button');
-          deleteButton.textContent = '❌';
+          deleteButton.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 7l16 0" />
+            <path d="M10 11l0 6" />
+            <path d="M14 11l0 6" />
+            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+          </svg>
+          `
           deleteButton.classList.add('delete-button');
           deleteButton.addEventListener('click', function () {
             deleteFile(splitUrl[splitUrl.length - 1]);
@@ -252,7 +274,7 @@ function setup() {
           
           const shareButton = document.createElement('button');
           shareButton.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
             <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
             <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
@@ -261,8 +283,9 @@ function setup() {
             <path d="M8.7 13.3l6.6 3.4" />
           </svg>
           `
+          shareButton.classList.add('share-button');
           shareButton.addEventListener('click', function () {
-            console.log("share clicked")
+            shareFile(splitUrl[splitUrl.length - 1])
           });
           fileItem.appendChild(shareButton);
           
