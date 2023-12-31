@@ -26,6 +26,11 @@ function setup() {
   var popupMessage = document.getElementById("popupMessage");
 
   
+  var sharePopup = document.getElementById('sharePopup');
+  var sharePopupClose = document.getElementsByClassName("close")[0];
+  var shareMessage = document.getElementById("shareMessage");
+
+  
   function getTagByFileExtension(fileUrl) {
     const extensionMapping = {
       'mp3': 'audioPreview',
@@ -186,6 +191,34 @@ function setup() {
     }
     console.log(JSON.stringify({ file: filename }))
     xhr.send(JSON.stringify({ file: filename }));
+  }
+  
+  function openSharePopup(url) {
+    //loadText.style.display = "flex"
+    sharePopup.style.display = "block";
+
+    popupMessage.innerHTML = "Non-supported file type, try downloading."
+  }
+  
+  function closeSharePopup() {
+    sharePopup.style.display = "none";
+    shareMessage.innerHTML = ""
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == sharePopup) {
+        closeSharePopup()
+    }
+  }
+  close.onclick = function() {
+      closeSharePopup()
+  }
+  
+  function copyToClipboard() {
+    var urlInput = document.getElementById("urlInput");
+    urlInput.select();
+    document.execCommand("copy");
+    alert("Link copied to clipboard!");
   }
   
   searchForm.addEventListener('submit', function (e) {

@@ -283,3 +283,53 @@ header {
   height: 95%;
   margin: auto
 }
+
+
+.share-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #fff;
+    z-index: 1;
+}
+
+
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.url-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.copy-share-link-button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.copy-share-link-button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+    .share-popup {
+        width: 80%;
+    }
+}

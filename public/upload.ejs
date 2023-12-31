@@ -36,6 +36,20 @@
       <pre><code class="code" controls id="codePreview" name="preview" src></code></pre>
     </div>
   </div>
+    
+  <div id="sharePopup" class="share-popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeSharePopup()">&times;</span>
+        <h3 id="shareMessage">Share This Link</h3>
+        
+        <form>
+            <label for="urlInput">URL:</label>
+            <input class="url-input" type="text" id="urlInput" readonly>
+            
+            <button class="copy-share-link-button" type="button" onclick="copyToClipboard()">Copy Link</button>
+        </form>
+    </div>
+</div>
   
   <div class="widget container">
     <h1>Upload File</h1>
