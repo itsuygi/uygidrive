@@ -264,12 +264,13 @@ function setup() {
         
         fileList.innerHTML = '';
 
-        files.forEach(url => {
-          if (url.url) {
-            url = url.url
+        files.forEach(file => {
+          let url
+          if (file.url) {
+            url = file.url
           }
           const fileItem = document.createElement('div');
-          fileItem.classList.add('music-item');
+          fileItem.classList.add('file-item');
           
           const fileName = document.createElement('a');
           var splitUrl = url.split("/")
@@ -281,6 +282,12 @@ function setup() {
           });
           
           fileItem.appendChild(fileName);
+          
+          const fileSize = document.createElement('small');
+          fileSize.textContent = file.size
+          fileSize.classList.add('file-size');
+          
+          fileItem.appendChild(fileSize);
 
           const downloadButton = document.createElement('button');
           downloadButton.textContent = 'Download';

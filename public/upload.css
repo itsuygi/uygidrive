@@ -131,13 +131,13 @@ h1 {
   cursor: pointer;
 }
 
-.music-list {
+.file-list {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.music-item {
+.file-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -332,4 +332,8 @@ label {
     .share-popup {
         width: 80%;
     }
+}
+
+.file-size {
+  padding-left: 10px;
 }
