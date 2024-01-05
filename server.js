@@ -290,10 +290,15 @@ function getPublicUrl(filename) {
   return publicUrl
 }
 
-app.get("/file/:filename", authenticateToken, async (req, res) => {
+app.get("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
-    const filename = req.params.filename;
+    let filename = req.params[0];
+    
+     if (filename.endsWith("/")) {
+      filename = filename.slice(0, -1);
+    }
+    console.log(filename)
     const rangeHeader = req.headers.range;
     
     let filePath = `${user.uid}/${filename}`
@@ -306,7 +311,8 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
-    res.status(500).send(error)
+    
+    res.status(error.statusCode).send((error.statusCode == 404) ? "" : "")
   }
 });
 
