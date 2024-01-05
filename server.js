@@ -312,7 +312,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   } catch (error) {
     console.log("Error getting file: ", error)
     
-    res.status(error.statusCode).send((error.statusCode == 404) ? "" : "")
+    res.status(error.code).send((error.code == 404) ? "File not found" : error.message)
   }
 });
 
@@ -350,6 +350,17 @@ app.delete("/file/:filename", authenticateToken, async (req, res) => {
   }
 });
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
 
 app.get("/list", authenticateToken, async (req, res) => {
   try {
@@ -376,9 +387,10 @@ app.get("/list", authenticateToken, async (req, res) => {
       let fileNameSplit = file.name.split("/")
       const fileUrl = getFileUrl(fileNameSplit[fileNameSplit.length - 1], req);
       const fileMetadata = await file.getMetadata();
+      console.log(fileMetadata)
       const fileDate = fileMetadata[0].timeCreated;
 
-      fileUrls.push({ url: fileUrl, date: fileDate });
+      fileUrls.push({ url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
     }
 
     if (sort) {
