@@ -299,8 +299,10 @@ app.get("/file/:filename", authenticateToken, async (req, res) => {
     let filePath = `${user.uid}/${filename}`
     
     const file = bucket.file(filePath);
+    const fileMetadata = await file.getMetadata();
     const fileContent = await file.download();
-
+    
+    res.header("Content-Type", fileMetadata[0].contentType)
     res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
@@ -316,8 +318,10 @@ app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
     const filename = req.params.filename;
     
     const file = bucket.file(sharePath);
+    const fileMetadata = await file.getMetadata();
     const fileContent = await file.download();
-
+    
+    res.header("Content-Type", fileMetadata[0].contentType)
     res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
