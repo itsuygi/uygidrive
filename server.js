@@ -395,10 +395,13 @@ app.get("/list", authenticateToken, async (req, res) => {
       console.log(fileMetadata)
       const fileDate = fileMetadata[0].timeCreated;
       
+      const isFolder = file.name.endsWith('/')
+      
       var splitUrl = fileMetadata[0].name.split("/")
-      var fileName = splitUrl[splitUrl.length - 1]
+      console.log(splitUrl)
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
 
-      fileList.push({ fileName, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
+      fileList.push({ name, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0), type: (isFolder) ? "folder" : "file" });
     }
 
     if (sort) {

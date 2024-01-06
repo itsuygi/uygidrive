@@ -274,7 +274,7 @@ function setup() {
           
           const fileName = document.createElement('a');
           
-          fileName.textContent = file.fileName
+          fileName.textContent = file.name
           fileName.href = "javascript:void(0);"
           
           fileName.addEventListener('click', function () {
