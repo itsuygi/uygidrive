@@ -201,8 +201,8 @@ function getFileUrl(fileName) {
   return hostUrl + "/file/" + fileName;
 }
 
-function getFolderUrl(folderName) {
-  return hostUrl + "/folder/" + folderName;
+function getFolderUrl(folderPath) {
+  return hostUrl + "/list?path=" + folderPath;
 }
 
 app.post('/sessionLogin', (req, res) => {
@@ -412,9 +412,9 @@ app.get("/list", authenticateToken, async (req, res) => {
     const sort = req.query.sort;
     const pageSize = 10;
     
-    const path = req.query.path || "";
+    const pathQuery = req.query.path || "";
 
-    const userFolder = `${user.uid}/${path}`;
+    const userFolder = `${user.uid}/${pathQuery}`;
     console.log(userFolder)
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
@@ -436,7 +436,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
-      const fileUrl = (isFolder) ? getFolderUrl(name) : getFileUrl(name)
+      const fileUrl = (isFolder) ? getFolderUrl(path.join(null, splitUrl.shift())) : getFileUrl(name)
      
       
       const fileDate = fileMetadata[0].timeCreated;
