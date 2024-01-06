@@ -318,25 +318,37 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/file/*", authenticateToken, async (req, res) => {
+app.get("/folder/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
-    let filename = req.params[0];
+    let folderName = req.params[0];
     
-     if (filename.endsWith("/")) {
-      filename = filename.slice(0, -1);
+    let filePath = `${user.uid}/${folderName}`
+    
+    const [files] = await bucket.getFiles({ prefix: filePath });
+    
+    let result = []
+    
+    for (const file of files) {
+      const isFolder = file.name.endsWith('/')
+      const fileMetadata = await file.getMetadata();
+      
+      var splitUrl = fileMetadata[0].name.split("/")
+      let fileNameSplit = file.name.split("/")
+      
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
+      
+      const fileUrl = (isFolder) ? getFolderUrl(name) : getFileUrl(name)
+     
+      console.log(fileMetadata)
+      const fileDate = fileMetadata[0].timeCreated;
+      
+      console.log(splitUrl)
+
+      result.push({ name, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0), type: (isFolder) ? "folder" : "file" });
     }
-    console.log(filename)
-    const rangeHeader = req.headers.range;
     
-    let filePath = `${user.uid}/${filename}`
-    
-    const file = bucket.file(filePath);
-    const fileMetadata = await file.getMetadata();
-    const fileContent = await file.download();
-    
-    res.header("Content-Type", fileMetadata[0].contentType)
-    res.send(fileContent[0])
+    res.send(result)
   } catch (error) {
     console.log("Error getting file: ", error)
     
@@ -403,6 +415,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     const path = req.query.path || "";
 
     const userFolder = `${user.uid}/${path}`;
+    console.log(userFolder)
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
     let fileList = [];
@@ -425,10 +438,9 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       const fileUrl = (isFolder) ? getFolderUrl(name) : getFileUrl(name)
      
-      console.log(fileMetadata)
+      
       const fileDate = fileMetadata[0].timeCreated;
       
-      console.log(splitUrl)
 
       fileList.push({ name, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0), type: (isFolder) ? "folder" : "file" });
     }
