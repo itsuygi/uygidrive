@@ -414,6 +414,8 @@ app.get("/list", authenticateToken, async (req, res) => {
     
     const pathQuery = req.query.path || "";
 
+    
+    
     const userFolder = `${user.uid}/${pathQuery}`;
     console.log(userFolder)
 
