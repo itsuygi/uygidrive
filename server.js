@@ -436,7 +436,8 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
-      const fileUrl = (isFolder) ? getFolderUrl(path.join(null, splitUrl.shift())) : getFileUrl(name)
+      
+      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(name)
      
       
       const fileDate = fileMetadata[0].timeCreated;
