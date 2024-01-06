@@ -99,7 +99,7 @@ function url_parse(url){
     return (match&&match[7].length==11)? match[7] : false;
 }
 
-app.get("/downloadYT", async (req, res) => {
+/*app.get("/downloadYT", async (req, res) => {
   try {
     const videoUrl = req.query.url
     
@@ -108,11 +108,11 @@ app.get("/downloadYT", async (req, res) => {
     }
     
     const id = url_parse(videoUrl)
-    /*const video = await ytsearch( { videoId: id } )
+    const video = await ytsearch( { videoId: id } )
     
     const title = video.title
     const filename = title + ".mp4"
-    console.log(id, title, filename)*/
+    console.log(id, title, filename)
     
     const info = await ytdl.getInfo(videoUrl);
     const videoFormat = ytdl.chooseFormat(info.formats, { quality: '18' });
@@ -128,7 +128,7 @@ app.get("/downloadYT", async (req, res) => {
     stream.on('data', (chunk) => {
         console.log("Data recieved")
         chunks.push(chunk);
-      });*/
+      });
 
     stream.on('end', async () => {
      console.log("ended")
@@ -159,7 +159,7 @@ app.get("/searchYT", async (req, res) => {
     console.log(result)
     res.json(result)
   }
-});
+}); */
 
 
 function getMemoryUsage() {
@@ -316,6 +316,8 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   }
 });
 
+
+
 app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
   try {
     const sharePath = req.sharePath
@@ -362,7 +364,7 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-app.get("/list", authenticateToken, async (req, res) => {
+app.get("/list/*", authenticateToken, async (req, res) => {
   try {
     console.log("Recieved file list request.")
     
@@ -371,11 +373,13 @@ app.get("/list", authenticateToken, async (req, res) => {
     const search = req.query.search;
     const sort = req.query.sort;
     const pageSize = 10;
+    
+    const path = req.params[0];
 
-    const userFolder = `${user.uid}/`;
+    const userFolder = `${user.uid}/${path}`;
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
-    let fileUrls = [];
+    let fileList = [];
 
     const filesOnly = files.filter((file) => !file.name.endsWith('/'));
     
@@ -390,22 +394,22 @@ app.get("/list", authenticateToken, async (req, res) => {
       console.log(fileMetadata)
       const fileDate = fileMetadata[0].timeCreated;
 
-      fileUrls.push({ url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
+      fileList.push({ url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
     }
 
     if (sort) {
       switch (sort) {
         case "date:old-first":
-          fileUrls.sort((a, b) => compareAsc(new Date(b.date), new Date(a.date)));
+          fileList.sort((a, b) => compareAsc(new Date(b.date), new Date(a.date)));
           break;
         case "date:new-first":
-          fileUrls.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
+          fileList.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
           break;
       }
     }
 
     if (search) {
-      const searchResults = fileUrls.filter((file) => {
+      const searchResults = fileList.filter((file) => {
         try {
           return file.url.toLowerCase().includes(search);
         } catch {
@@ -413,18 +417,19 @@ app.get("/list", authenticateToken, async (req, res) => {
         }
       });
 
-      fileUrls = searchResults;
+      fileList = searchResults;
     }
 
     let startIndex, endIndex;
     if (page) {
       startIndex = (page - 1) * pageSize;
       endIndex = page * pageSize;
-      fileUrls = fileUrls.slice(startIndex, endIndex);
+      
+      fileList = fileList.slice(startIndex, endIndex);
     }
 
     const response = {
-      files: fileUrls,
+      files: fileList,
       next: filesOnly.length > endIndex,
     };
 
