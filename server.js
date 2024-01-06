@@ -364,7 +364,7 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-app.get("/list/*", authenticateToken, async (req, res) => {
+app.get("/list", authenticateToken, async (req, res) => {
   try {
     console.log("Recieved file list request.")
     
@@ -374,14 +374,15 @@ app.get("/list/*", authenticateToken, async (req, res) => {
     const sort = req.query.sort;
     const pageSize = 10;
     
-    const path = req.params[0];
+    const path = req.query.path || "";
 
     const userFolder = `${user.uid}/${path}`;
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
     let fileList = [];
 
-    const filesOnly = files.filter((file) => !file.name.endsWith('/'));
+    const filesOnly = files
+          //files.filter((file) => !file.name.endsWith('/'));
     
     /*for (const file of files) {
       bucket.file(file.name).makePrivate()
@@ -393,8 +394,11 @@ app.get("/list/*", authenticateToken, async (req, res) => {
       const fileMetadata = await file.getMetadata();
       console.log(fileMetadata)
       const fileDate = fileMetadata[0].timeCreated;
+      
+      var splitUrl = fileMetadata[0].name.split("/")
+      var fileName = splitUrl[splitUrl.length - 1]
 
-      fileList.push({ url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
+      fileList.push({ fileName, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0) });
     }
 
     if (sort) {

@@ -273,8 +273,8 @@ function setup() {
           fileItem.classList.add('file-item');
           
           const fileName = document.createElement('a');
-          var splitUrl = url.split("/")
-          fileName.textContent = splitUrl[splitUrl.length - 1];
+          
+          fileName.textContent = file.fileName
           fileName.href = "javascript:void(0);"
           
           fileName.addEventListener('click', function () {
