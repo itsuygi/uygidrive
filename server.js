@@ -418,6 +418,19 @@ app.get("/list", authenticateToken, async (req, res) => {
     
     const userFolder = `${user.uid}/${pathQuery}`;
     console.log(userFolder)
+    
+    /*let testref = admin.storage().bucket().ref(`${user.uid}/${pathQuery}`)
+    admin.listAll(testref)
+      .then((res) => {
+      res.prefixes.forEach((folderRef) => {
+        console.log(folderRef)
+      });
+      res.items.forEach((itemRef) => {
+       console.log(itemRef)
+      });
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+    });*/
 
     const [files] = await bucket.getFiles({ prefix: userFolder });
     let fileList = [];
