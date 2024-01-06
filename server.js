@@ -197,10 +197,12 @@ const maxRetries = 10
 const hostUrl = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
 
 
-function getFileUrl(fileName, req) {
-  var fileUrl = "https://" + req.get("host") + "/file/" + fileName;
+function getFileUrl(fileName) {
+  return hostUrl + "/file/" + fileName;
+}
 
-  return fileUrl;
+function getFolderUrl(folderName) {
+  return hostUrl + "/folder/" + folderName;
 }
 
 app.post('/sessionLogin', (req, res) => {
@@ -316,7 +318,31 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   }
 });
 
-
+app.get("/file/*", authenticateToken, async (req, res) => {
+  try {
+    const user = req.user
+    let filename = req.params[0];
+    
+     if (filename.endsWith("/")) {
+      filename = filename.slice(0, -1);
+    }
+    console.log(filename)
+    const rangeHeader = req.headers.range;
+    
+    let filePath = `${user.uid}/${filename}`
+    
+    const file = bucket.file(filePath);
+    const fileMetadata = await file.getMetadata();
+    const fileContent = await file.download();
+    
+    res.header("Content-Type", fileMetadata[0].contentType)
+    res.send(fileContent[0])
+  } catch (error) {
+    console.log("Error getting file: ", error)
+    
+    res.status(error.code).send((error.code == 404) ? "File not found" : error.message)
+  }
+});
 
 app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
   try {
@@ -389,17 +415,20 @@ app.get("/list", authenticateToken, async (req, res) => {
     }*/
 
     for (const file of filesOnly) {
-      let fileNameSplit = file.name.split("/")
-      const fileUrl = getFileUrl(fileNameSplit[fileNameSplit.length - 1], req);
+      const isFolder = file.name.endsWith('/')
       const fileMetadata = await file.getMetadata();
+      
+      var splitUrl = fileMetadata[0].name.split("/")
+      let fileNameSplit = file.name.split("/")
+      
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
+      
+      const fileUrl = (isFolder) ? getFolderUrl(name) : getFileUrl(name)
+     
       console.log(fileMetadata)
       const fileDate = fileMetadata[0].timeCreated;
       
-      const isFolder = file.name.endsWith('/')
-      
-      var splitUrl = fileMetadata[0].name.split("/")
       console.log(splitUrl)
-      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
 
       fileList.push({ name, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0), type: (isFolder) ? "folder" : "file" });
     }

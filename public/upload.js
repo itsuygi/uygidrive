@@ -310,7 +310,7 @@ function setup() {
           `
           deleteButton.classList.add('delete-button');
           deleteButton.addEventListener('click', function () {
-            deleteFile(splitUrl[splitUrl.length - 1]);
+            deleteFile(file.name);
           });
           fileItem.appendChild(deleteButton);
           
@@ -327,7 +327,7 @@ function setup() {
           `
           shareButton.classList.add('share-button');
           shareButton.addEventListener('click', function () {
-            shareFile(splitUrl[splitUrl.length - 1])
+            shareFile(file.name)
           });
           fileItem.appendChild(shareButton);
           
