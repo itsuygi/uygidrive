@@ -16,6 +16,7 @@ const cache = require('memory-cache');
 const cookie = require('cookie-parser');
 const ytsearch = require("yt-search");
 const ytdl = require("ytdl-core")
+const busboy = require('busboy');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -353,52 +354,41 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
   }
 });
 
-app.post('/upload', authenticateToken, upload.single('file'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).send('No file or non-accepted file type.');
-    }
-    
-    //const file = req.file;
-    const user = req.user;
-    const filename = req.get('content-disposition').split('filename=')[1].replace(/"/g, '')
-
-    /*if (!file) {
-      return res.status(400).send('Dosya yüklenemedi.');
-    }*/
-
+app.post('/upload', authenticateToken, (req, res) => {
+  const bb = busboy({ headers: req.headers });
+  const user = req.user
+  
+  bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    filename = filename.filename
     const filePath = path.join(user.uid, filename)
+    console.log(filePath)
     
-    // Firebase Storage'a dosyayı yükleme
     const fileUpload = bucket.file(filePath);
-    
-    const fileStream = fileUpload.createWriteStream({
+
+    const uploadStream = fileUpload.createWriteStream({
       metadata: {
-        contentType: req.get('content-type'),
+        contentType: mimetype,
       },
     });
 
-    fileStream.on('error', (err) => {
+    file.pipe(uploadStream);
+    
+    file.on("data", () => {
+      console.log("[File Upload]: Data recieved")
+    })
+
+    uploadStream.on('error', (err) => {
       console.error(err);
       return res.status(500).send('Dosya yüklenirken bir hata oluştu.');
     });
 
-    fileStream.on('finish', () => {
+    uploadStream.on('finish', () => {
       const fileUrl = getFileUrl(filename, req)
       res.send(fileUrl);
     });
-    
-    fileStream.on('data', () => {
-      console.log("data")
-    });
+  });
 
-    // Multer'dan alınan dosya stream'ini Firebase Storage'a iletme
-    //console.log(file)
-    req.pipe(fileStream);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Dosya yüklenirken bir hata oluştu.');
-  }
+  req.pipe(bb);
 });
 
 app.get("/local/:filename", (req, res) => {

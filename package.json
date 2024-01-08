@@ -12,7 +12,8 @@
     "ejs": "^3.1.9",
     "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.5",
-    "multer": "^1.4.4"
+    "multer": "^1.4.4",
+    "busboy": "^1.6.0"
   },
   "scripts": {
     "start": "node server.js"
