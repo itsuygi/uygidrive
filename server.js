@@ -359,21 +359,22 @@ app.post('/upload', authenticateToken, upload.single('file'), async (req, res) =
       return res.status(400).send('No file or non-accepted file type.');
     }
     
-    const file = req.file;
+    //const file = req.file;
     const user = req.user;
-    const filename = file.originalname
+    const filename = req.get('content-disposition').split('filename=')[1].replace(/"/g, '')
 
-    if (!file) {
+    /*if (!file) {
       return res.status(400).send('Dosya yüklenemedi.');
-    }
+    }*/
 
     const filePath = path.join(user.uid, filename)
-
+    
     // Firebase Storage'a dosyayı yükleme
     const fileUpload = bucket.file(filePath);
+    
     const fileStream = fileUpload.createWriteStream({
       metadata: {
-        contentType: file.mimetype,
+        contentType: req.get('content-type'),
       },
     });
 
@@ -392,8 +393,8 @@ app.post('/upload', authenticateToken, upload.single('file'), async (req, res) =
     });
 
     // Multer'dan alınan dosya stream'ini Firebase Storage'a iletme
-    console.log(file)
-    file.buffer.pipe(fileStream);
+    //console.log(file)
+    req.pipe(fileStream);
   } catch (error) {
     console.error(error);
     res.status(500).send('Dosya yüklenirken bir hata oluştu.');
