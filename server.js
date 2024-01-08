@@ -392,7 +392,8 @@ app.post('/upload', authenticateToken, upload.single('file'), async (req, res) =
     });
 
     // Multer'dan alınan dosya stream'ini Firebase Storage'a iletme
-    file.stream.pipe(fileStream)
+    console.log(file)
+    file.buffer.pipe(fileStream);
   } catch (error) {
     console.error(error);
     res.status(500).send('Dosya yüklenirken bir hata oluştu.');
