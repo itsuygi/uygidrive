@@ -290,6 +290,16 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
     let contentBuffer = []
     let totalBytesInBuffer = 0
     
+    const fileOptions = {
+      metadata: {
+        contentType: file.mimetype
+      }
+    };
+    
+    const filePath = path.join(user.uid, filename)
+
+    let bucketFile = bucket.file(filePath)
+    
     req.on('data', chunk => {
       contentBuffer.push(chunk);
       totalBytesInBuffer += chunk.length;
@@ -303,7 +313,18 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
 
         req.connection.destroy();
       }*/
+    })
+    .pipe(file.createWriteStream({
+      metadata: fileOptions
+    }))
+    .on('error', function(err) {})
+    .on('finish', function() {
+      const fileUrl = getFileUrl(filename, req)
+      res.send(fileUrl)
     });
+    
+    fs.createReadStream('/Users/stephen/Photos/birthday-at-the-zoo/panda.jpg')
+      
 
     req.on('aborted', function() {
       print("Upload aborted.")
@@ -313,9 +334,8 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
       contentBuffer = Buffer.concat(contentBuffer, totalBytesInBuffer);
 
       try {
-        const fileId = await files.create(fileName, contentType, contentBuffer);
-
-        res.status(201).json({fileId: fileId});
+        
+        //res.status(201).json({result: true});
       } catch (err) {
         console.error(err);
 
@@ -326,19 +346,7 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
       }
     });
 
-    const fileOptions = {
-      metadata: {
-        contentType: file.mimetype
-      }
-    };
     
-    const filePath = path.join(user.uid, filename)
-
-    await bucket.file(filePath).save(fileBuffer, fileOptions);
-    //await bucket.file(filePath).makePublic()
-
-    const fileUrl = getFileUrl(filename, req)
-    res.send(fileUrl);
   } catch (error) {
     console.error('File uploading error:', error);
     res.status(500).send(error.message);
