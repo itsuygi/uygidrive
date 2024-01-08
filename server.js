@@ -353,6 +353,52 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
   }
 });
 
+app.post('/upload', authenticateToken, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file or non-accepted file type.');
+    }
+    
+    const file = req.file;
+    const user = req.user;
+    const filename = file.originalname
+
+    if (!file) {
+      return res.status(400).send('Dosya yüklenemedi.');
+    }
+
+    const filePath = path.join(user.uid, filename)
+
+    // Firebase Storage'a dosyayı yükleme
+    const fileUpload = bucket.file(filePath);
+    const fileStream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    fileStream.on('error', (err) => {
+      console.error(err);
+      return res.status(500).send('Dosya yüklenirken bir hata oluştu.');
+    });
+
+    fileStream.on('finish', () => {
+      const fileUrl = getFileUrl(filename, req)
+      res.send(fileUrl);
+    });
+    
+    fileStream.on('data', () => {
+      console.log("data")
+    });
+
+    // Multer'dan alınan dosya stream'ini Firebase Storage'a iletme
+    file.stream.pipe(fileStream)
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Dosya yüklenirken bir hata oluştu.');
+  }
+});
+
 app.get("/local/:filename", (req, res) => {
  const filename = req.params.filename;
   console.log("Sending file: " + filename);
