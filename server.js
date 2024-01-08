@@ -276,6 +276,75 @@ app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res
   }
 });
 
+app.post("/uploadFileV2", authenticateToken, async (req,res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).send('No file or non-accepted file type.');
+    }
+
+    const user = req.user
+    const file = req.file;
+    const filename = file.originalname;
+    const fileBuffer = file.buffer;
+    
+    let contentBuffer = []
+    let totalBytesInBuffer = 0
+    
+    req.on('data', chunk => {
+      contentBuffer.push(chunk);
+      totalBytesInBuffer += chunk.length;
+
+      // Look to see if the file size is too large.
+      /*if (totalBytesInBuffer > maxFileSize) {
+        req.pause();
+
+        res.header('Connection', 'close');
+        res.status(413).json({error: `The file size exceeded the limit of ${maxFileSize} bytes`});
+
+        req.connection.destroy();
+      }*/
+    });
+
+    req.on('aborted', function() {
+      print("Upload aborted.")
+    });
+
+    req.on('end', async function() {
+      contentBuffer = Buffer.concat(contentBuffer, totalBytesInBuffer);
+
+      try {
+        const fileId = await files.create(fileName, contentType, contentBuffer);
+
+        res.status(201).json({fileId: fileId});
+      } catch (err) {
+        console.error(err);
+
+        res.header('Connection', 'close');
+        res.status(500).json({error: 'Oops, something broke!'});
+
+        req.connection.destroy();
+      }
+    });
+
+    const fileOptions = {
+      metadata: {
+        contentType: file.mimetype
+      }
+    };
+    
+    const filePath = path.join(user.uid, filename)
+
+    await bucket.file(filePath).save(fileBuffer, fileOptions);
+    //await bucket.file(filePath).makePublic()
+
+    const fileUrl = getFileUrl(filename, req)
+    res.send(fileUrl);
+  } catch (error) {
+    console.error('File uploading error:', error);
+    res.status(500).send(error.message);
+  }
+});
+
 app.get("/local/:filename", (req, res) => {
  const filename = req.params.filename;
   console.log("Sending file: " + filename);
