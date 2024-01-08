@@ -422,10 +422,15 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     
     const file = bucket.file(filePath);
     const fileMetadata = await file.getMetadata();
-    const fileContent = await file.download();
+    const splitUrl = fileMetadata[0].name.split("/")
     
-    res.header("Content-Type", fileMetadata[0].contentType)
-    res.send(fileContent[0])
+    res.header("Content-Type", fileMetadata[0].contentType || "")
+    
+    const fileReadStream = file.createReadStream();
+
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${splitUrl[splitUrl.length - 1]}"`);
+    fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
     
