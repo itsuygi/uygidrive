@@ -128,7 +128,7 @@ function setup() {
     const formData = new FormData(this);
     const xhr = new XMLHttpRequest();
 
-    xhr.open('POST', '/uploadFile', true);
+    xhr.open('POST', '/upload', true);
     
     progressDiv.style.display = "block"
     uploadForm.style.display = "none"
