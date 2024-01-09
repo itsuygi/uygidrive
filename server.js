@@ -407,6 +407,18 @@ function getPublicUrl(filename) {
   return publicUrl
 }
 
+function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
 app.get("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
@@ -422,9 +434,11 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     
     const file = bucket.file(filePath);
     const fileMetadata = await file.getMetadata();
+    
     const splitUrl = fileMetadata[0].name.split("/")
     
     res.header("Content-Type", fileMetadata[0].contentType || "")
+    res.header("Content-Length", fileMetadata[0].size || 0)
     
     const fileReadStream = file.createReadStream();
 
@@ -509,18 +523,6 @@ app.delete("/file/:filename", authenticateToken, async (req, res) => {
     res.status(500).json({result: "error", message: error.message})
   }
 });
-
-function formatBytes(bytes, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
 
 app.get("/list", authenticateToken, async (req, res) => {
   try {
