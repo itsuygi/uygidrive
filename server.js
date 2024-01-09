@@ -17,6 +17,7 @@ const cookie = require('cookie-parser');
 const ytsearch = require("yt-search");
 const ytdl = require("ytdl-core")
 const busboy = require('busboy');
+const contentDisposition = require('content-disposition');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -443,7 +444,10 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     const fileReadStream = file.createReadStream();
 
     res.setHeader('Content-Type', 'application/octet-stream');
-    res.setHeader('Content-Disposition', `attachment; filename="${splitUrl[splitUrl.length - 1]}"`);
+    const filenameFromStorage = splitUrl[splitUrl.length - 1]
+    console.log(contentDisposition(filenameFromStorage))
+    
+    res.setHeader('Content-Disposition', contentDisposition(filenameFromStorage));
     fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
