@@ -421,6 +421,13 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+const replaceSpecialChars = (str) => {
+	return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+		.replace(/([^\w]+|\s+)/g, '-') // Replace space and other characters by hyphen
+		.replace(/\-\-+/g, '-')	// Replaces multiple hyphens by one hyphen
+		.replace(/(^-+|-+$)/g, ''); // Remove extra hyphens from beginning or end of the string
+}
+
 app.get("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
@@ -448,7 +455,8 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     const filenameFromStorage = splitUrl[splitUrl.length - 1]
     console.log(contentDisposition(filenameFromStorage))
     
-    res.setHeader('Content-Disposition', contentDisposition(filenameFromStorage));
+    //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
+    res.setHeader("Content-Disposition", contentDisposition(filenameFromStorage))
     fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
