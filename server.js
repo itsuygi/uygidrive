@@ -681,6 +681,8 @@ app.post('/getShareLink', authenticateToken, async (req,res) => {
 
 app.post("/qr", (req,res) => {
  console.log(req.body)
+  
+  res.send("1")
 })
 
 // Server handling
