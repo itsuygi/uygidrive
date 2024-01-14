@@ -381,7 +381,7 @@ app.post('/upload', authenticateToken, (req, res) => {
 
     uploadStream.on('error', (err) => {
       console.error(err);
-      return res.status(500).send('Dosya yüklenirken bir hata oluştu.');
+      return res.status(500).render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while uploading"});
     });
 
     uploadStream.on('finish', () => {
@@ -461,7 +461,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   } catch (error) {
     console.log("Error getting file: ", error)
     
-    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "file not found" : error.message});
+    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "File not found" : error.message});
   }
 });
 
@@ -518,7 +518,7 @@ app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
     res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
-    res.status(500).send(error)
+    res.status(500).render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while getting file"});
   }
 });
 
@@ -635,7 +635,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Error while listing the files:", error);
-    res.status(500).send(error.message);
+    res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while listing files"});
   }
 });
 
