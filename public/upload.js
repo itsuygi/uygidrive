@@ -1,5 +1,6 @@
 let currentPage = 1;
 let sort = ""
+let firstLoad = true
 
 function setup() {
   const uploadForm = document.getElementById('uploadForm');
@@ -349,6 +350,7 @@ function setup() {
           const fileName = document.createElement('a');
           
           fileName.textContent = file.name
+          fileName.classList.add("file-title")
           fileName.href = "javascript:void(0);"
           
           fileName.addEventListener('click', function () {
@@ -412,7 +414,12 @@ function setup() {
           
           fileList.appendChild(line);
         });
-        document.documentElement.scrollTop = document.body.scrollTop = 420;
+        
+        if (firstLoad == false) {
+          document.documentElement.scrollTop = document.body.scrollTop = 420;
+        }
+        
+        firstLoad = false
       } else {
          fileList.innerHTML = "Error: " + listXhr.responseText;
       }
