@@ -5,9 +5,9 @@ function setup() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
   const fileInput = document.getElementById('fileInput');
-  const progressBar = document.getElementById('progressBar');
-  const progressDiv = document.getElementById('progressContainer');
-  const progressText = document.getElementById('progressText');
+  //const progressBar = document.getElementById('progressBar');
+  //const progressDiv = document.getElementById('progressContainer');
+  //const progressText = document.getElementById('progressText');
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
   const fileList = document.getElementById('fileList');
@@ -19,6 +19,7 @@ function setup() {
   const searchForm = document.getElementById('search');
   const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
+  const uploadContainer = document.getElementById('uploadContainer');
   
   const previews = document.getElementsByName('preview');
   var popup = document.getElementById('previewPopup');
@@ -136,34 +137,46 @@ function setup() {
 
       xhr.open('POST', '/upload', true);
 
-      progressDiv.style.display = "block"
+      //progressDiv.style.display = "block"
       uploadForm.style.display = "none"
       
       let progressContainer = document.createElement("div");
+      progressTag.classList.add('progress-container');
       
       let progressTag = document.createElement("progress");
-      progressContainer
+      progressTag.value = 0
+      progressTag.max = 100
+      progressTag.classList.add('file-progress');
+      progressContainer.appendChild(progressTag)
+      
+      let progressSpan = document.createElement("span");
+      progressSpan.classList.add('progress-text');
+      progressContainer.appendChild(progressSpan)
+      
+      document.getElementById("uploadContainer").appendChild(progressContainer)
       
 
       xhr.upload.onprogress = function (e) {
         if (e.lengthComputable) {
           const percentComplete = Math.floor((e.loaded / e.total) * 100);
-          progressBar.value = percentComplete;
-          progressText.textContent = percentComplete + '%';
+          progressTag.value = percentComplete;
+          progressSpan.textContent = percentComplete + '%';
         }
       };
 
       xhr.onload = function () {
         if (xhr.status === 200) {
           var url = xhr.responseText;
-          progressDiv.style.display = 'none';
+          //progressDiv.style.display = 'none';
+          progressContainer.remove();
           successBox.style.display = 'block';
           fileURL.innerHTML = url;
           fileURL.href = url;
 
           loadList();
         } else {
-          progressDiv.style.display = 'none';
+          //progressDiv.style.display = 'none';
+          progressContainer.remove();
           errorMessage.innerHTML = xhr.responseText;
           errorBox.style.display = "block";
         }
