@@ -660,7 +660,7 @@ app.post('/getShareLink', authenticateToken, async (req,res) => {
     
     const user = req.user.uid
 
-    const days = 5
+    const days = 21
     const filePath = `${req.user.uid}/${file}`
     console.log(filePath)
 
@@ -678,7 +678,6 @@ app.post('/getShareLink', authenticateToken, async (req,res) => {
     res.status(500).send(error.message)
   }
 });
-
 
 // Server handling
 function serverStart() {
