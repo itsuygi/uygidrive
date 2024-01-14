@@ -129,7 +129,9 @@ function setup() {
     
     let files = fileInput.files
 
-    files.forEach( (file) => {
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i]
+      
       const formData = new FormData();
       formData.append("file", file)
       
@@ -141,7 +143,7 @@ function setup() {
       uploadForm.style.display = "none"
       
       let progressContainer = document.createElement("div");
-      progressTag.classList.add('progress-container');
+      progressContainer.classList.add('progress-container');
       
       let progressTag = document.createElement("progress");
       progressTag.value = 0
@@ -150,6 +152,7 @@ function setup() {
       progressContainer.appendChild(progressTag)
       
       let progressSpan = document.createElement("span");
+      progressSpan.innerHTML = "0%"
       progressSpan.classList.add('progress-text');
       progressContainer.appendChild(progressSpan)
       
@@ -183,13 +186,19 @@ function setup() {
       };
 
       xhr.send(formData);
-    });
+    };
    
   });
   
   fileInput.addEventListener('change', function () {
     const selectedFileName = document.getElementById('selectedFileName');
-    selectedFileName.textContent = this.files[0].name;
+    
+    selectedFileName.textContent = ""
+    
+    for (let i = 0; i < this.files.length; i++) {
+      selectedFileName.innerHTML += this.files[i].name + "<br>"
+    }
+    
     this.style.display = 'none';
     
     uploadButton.style.display = 'block';
