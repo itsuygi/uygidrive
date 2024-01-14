@@ -195,6 +195,7 @@ function setup() {
             let urlList = document.getElementById("urlList")
             
             for (let urlsI = 0; urlsI < doneUploadingFiles.length; urlsI++) {
+              let urlLi = document.createElement("li")
               
               let urlTag = document.createElement("a")
               urlTag.style = "color: CornflowerBlue"
@@ -202,8 +203,10 @@ function setup() {
               urlTag.href = doneUploadingFiles[urlsI]
               urlTag.innerText = doneUploadingFiles[urlsI]
 
-              urlList.appendChild(urlTag)
-              urlList.appendChild(document.createElement("br"))
+              urlLi.appendChild(urlTag)
+              urlList.appendChild(urlLi)
+              
+              //urlList.appendChild(document.createElement("br"))
             }
           }
           

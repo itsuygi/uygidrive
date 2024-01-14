@@ -444,7 +444,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     
     const fileReadStream = file.createReadStream();
 
-    res.setHeader('Content-Type', 'application/octet-stream');
+    //res.setHeader('Content-Type', 'application/octet-stream');
     const filenameFromStorage = splitUrl[splitUrl.length - 1]
     console.log(contentDisposition(filenameFromStorage))
     
