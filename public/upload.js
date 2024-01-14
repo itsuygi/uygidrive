@@ -128,6 +128,8 @@ function setup() {
     e.preventDefault();
     
     let files = fileInput.files
+    
+    let doneUploadingFiles = []
 
     for (let i = 0; i < files.length; i++) {
       let file = files[i]
@@ -142,6 +144,8 @@ function setup() {
       //progressDiv.style.display = "block"
       uploadForm.style.display = "none"
       
+      
+      // Upload progress container
       let progressContainer = document.createElement("div");
       progressContainer.classList.add('progress-container');
       
@@ -170,13 +174,32 @@ function setup() {
       xhr.onload = function () {
         if (xhr.status === 200) {
           var url = xhr.responseText;
-          //progressDiv.style.display = 'none';
-          progressContainer.remove();
+          
+          doneUploadingFiles.push(url)
+          
+          if (doneUploadingFiles.length == files.length) {
+            let progressContainers = document.getElementsByClassName("progress-container")
+            
+            progressContainers.forEach((container) => {
+              container.remove()
+            })
+            
+            successBox.style.display = 'block';
+            
+            let urlList = document.getElementById("urlList")
+            
+            let urlTag = document.createElement("a")
+            urlTag.style = "color: CornflowerBlue"
+            urlTag.target = "_blank"
+            urlTag.
+          }
+          
+          /*progressContainer.remove();
           successBox.style.display = 'block';
           fileURL.innerHTML = url;
           fileURL.href = url;
 
-          loadList();
+          loadList();*/
         } else {
           //progressDiv.style.display = 'none';
           progressContainer.remove();
@@ -196,7 +219,7 @@ function setup() {
     selectedFileName.textContent = ""
     
     for (let i = 0; i < this.files.length; i++) {
-      selectedFileName.innerHTML += this.files[i].name + "<br>"
+      selectedFileName.innerHTML += "<li>" + this.files[i].name + ""
     }
     
     this.style.display = 'none';
