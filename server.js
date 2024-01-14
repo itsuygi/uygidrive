@@ -461,7 +461,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   } catch (error) {
     console.log("Error getting file: ", error)
     
-    res.status(error.code).send((error.code == 404) ? "File not found" : error.message)
+    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "file not found" : error.message});
   }
 });
 
