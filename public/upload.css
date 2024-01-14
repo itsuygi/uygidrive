@@ -71,7 +71,6 @@ h1 {
 }
 
 .progress-container {
-  /*display: none;*/
   margin: 20px 0;
   flex-direction: column;
   align-items: center;
@@ -92,8 +91,8 @@ h1 {
 }
 
 .result-box {
-  display: none;
   margin: 20px 0;
+  display: none
 }
 
 .success-text,
@@ -135,14 +134,15 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 5px;
 }
 
 .file-item {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 10px 0;
-  position: relative;
+  margin: 5px 0;
 }
 
 button {
@@ -189,11 +189,12 @@ header {
 }
 
 .site-name {
-  padding: 10px;
+  padding: 0;
+  margin-bottom: 10px;
 }
 
 .user-info {
-  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -225,18 +226,16 @@ header {
   background-color: transparent;
 }
 
-
-
 .popup {
   display: none;
   position: fixed;
   z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; 
-  height: 100%; 
-  overflow: auto; 
-  background-color: rgb(0,0,0); 
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.4);
 }
 
@@ -264,7 +263,6 @@ header {
     cursor: pointer;
 }
 
-
 .img-preview, .file-preview {
   display: none;
   flex-direction: column;
@@ -287,14 +285,13 @@ header {
 
 .code-preview {
   display: none;
-  white-space: nowrap; 
-  overflow: scroll; 
+  white-space: nowrap;
+  overflow: scroll;
   text-overflow: ellipsis;
   width: 100%;
   height: 95%;
   margin: auto
 }
-
 
 .share-popup {
     display: none;
@@ -308,8 +305,6 @@ header {
     background-color: #fff;
     z-index: 1;
 }
-
-
 
 form {
     margin-top: 20px;
@@ -349,11 +344,14 @@ input {
 
 /* Responsive */
 @media screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+        margin: 5px;
+    }
+
     .share-popup {
         width: 80%;
     }
-}
 
-.file-size {
-  padding-left: 10px;
+    /* Diğer responsive ayarlar buraya eklenebilir */
 }
