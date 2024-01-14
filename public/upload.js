@@ -149,6 +149,11 @@ function setup() {
       let progressContainer = document.createElement("div");
       progressContainer.classList.add('progress-container');
       
+      let progressName = document.createElement("span");
+      progressName.innerHTML = file.name
+      progressName.classList.add('file-name');
+      progressContainer.appendChild(progressName)
+      
       let progressTag = document.createElement("progress");
       progressTag.value = 0
       progressTag.max = 100
@@ -176,26 +181,33 @@ function setup() {
           var url = xhr.responseText;
           
           doneUploadingFiles.push(url)
+          progressContainer.remove();
           
           if (doneUploadingFiles.length == files.length) {
             let progressContainers = document.getElementsByClassName("progress-container")
             
-            progressContainers.forEach((container) => {
-              container.remove()
-            })
+            /*for (let containerI = 0; containerI < progressContainers.length; containerI++) {
+              progressContainers[containerI].remove()
+            }*/
             
             successBox.style.display = 'block';
             
             let urlList = document.getElementById("urlList")
             
-            let urlTag = document.createElement("a")
-            urlTag.style = "color: CornflowerBlue"
-            urlTag.target = "_blank"
-            urlTag.
+            for (let urlsI = 0; urlsI < doneUploadingFiles.length; urlsI++) {
+              
+              let urlTag = document.createElement("a")
+              urlTag.style = "color: CornflowerBlue"
+              urlTag.target = "_blank"
+              urlTag.href = doneUploadingFiles[urlsI]
+              urlTag.innerText = doneUploadingFiles[urlsI]
+
+              urlList.appendChild(urlTag)
+              urlList.appendChild(document.createElement("br"))
+            }
           }
           
-          /*progressContainer.remove();
-          successBox.style.display = 'block';
+          /*successBox.style.display = 'block';
           fileURL.innerHTML = url;
           fileURL.href = url;
 
