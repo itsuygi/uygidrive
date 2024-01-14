@@ -1,4 +1,4 @@
-// Uploading System by Uygi © 2023
+// Cloud Storage System by Uygi © 2023
 
 const express = require("express");
 const router = express.Router();
@@ -66,7 +66,6 @@ async function authenticateShareToken(req, res, next) {
       try {
         const requestedPath = `${user}/${filename}`
         console.log(requestedPath, token_data.path)
-        console.log(requestedPath == token_data.path)
         
         if (requestedPath == token_data.path) {
           req.sharePath = token_data.path

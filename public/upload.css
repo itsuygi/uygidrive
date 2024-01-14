@@ -145,6 +145,17 @@ h1 {
   position: relative;
 }
 
+button {
+  background-color: #0072e3;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  margin: 10px;
+}
+
 .copy-link-button {
   background-color: #0072e3;
   color: #fff;
@@ -313,6 +324,15 @@ label {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+  max-width: 95%;
 }
 
 .copy-share-link-button {
