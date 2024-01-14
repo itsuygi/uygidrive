@@ -125,39 +125,53 @@ function setup() {
 
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
-    const formData = new FormData(this);
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', '/upload', true);
     
-    progressDiv.style.display = "block"
-    uploadForm.style.display = "none"
+    let files = fileInput.files
 
-    xhr.upload.onprogress = function (e) {
-      if (e.lengthComputable) {
-        const percentComplete = Math.floor((e.loaded / e.total) * 100);
-        progressBar.value = percentComplete;
-        progressText.textContent = percentComplete + '%';
-      }
-    };
+    files.forEach( (file) => {
+      const formData = new FormData();
+      formData.append("file", file)
+      
+      const xhr = new XMLHttpRequest();
 
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        var url = xhr.responseText;
-        progressDiv.style.display = 'none';
-        successBox.style.display = 'block';
-        fileURL.innerHTML = url;
-        fileURL.href = url;
+      xhr.open('POST', '/upload', true);
 
-        loadList();
-      } else {
-        progressDiv.style.display = 'none';
-        errorMessage.innerHTML = xhr.responseText;
-        errorBox.style.display = "block";
-      }
-    };
+      progressDiv.style.display = "block"
+      uploadForm.style.display = "none"
+      
+      let progressContainer = document.createElement("div");
+      
+      let progressTag = document.createElement("progress");
+      progressContainer
+      
 
-    xhr.send(formData);
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          const percentComplete = Math.floor((e.loaded / e.total) * 100);
+          progressBar.value = percentComplete;
+          progressText.textContent = percentComplete + '%';
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var url = xhr.responseText;
+          progressDiv.style.display = 'none';
+          successBox.style.display = 'block';
+          fileURL.innerHTML = url;
+          fileURL.href = url;
+
+          loadList();
+        } else {
+          progressDiv.style.display = 'none';
+          errorMessage.innerHTML = xhr.responseText;
+          errorBox.style.display = "block";
+        }
+      };
+
+      xhr.send(formData);
+    });
+   
   });
   
   fileInput.addEventListener('change', function () {

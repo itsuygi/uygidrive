@@ -358,6 +358,8 @@ app.post('/upload', authenticateToken, (req, res) => {
   const bb = busboy({ headers: req.headers });
   const user = req.user
   
+  let fileUrl = []
+  
   bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
     filename = filename.filename
     const filePath = path.join(user.uid, filename)
