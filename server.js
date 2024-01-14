@@ -60,7 +60,7 @@ async function authenticateShareToken(req, res, next) {
   if (shareToken) {
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
       if (err) {
-        return res.send(err.message)
+        return res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": (err.message == "jwt expired") ? "url expired" : err.message});
       }
 
       try {
@@ -71,14 +71,14 @@ async function authenticateShareToken(req, res, next) {
           req.sharePath = token_data.path
           next()
         } else {
-          res.status(401).send("Unauthorized")
+          res.render(__dirname + '/public/views/error.ejs', {"title": 401, "detail": "Unauthorized"});
         }
       } catch(err) {
-        res.status(401).send(err.message)
+        res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": err.message});
       }
     });
   } else {
-    res.status(401).send("Unauthorized")
+    res.render(__dirname + '/public/views/error.ejs', {"title": 401, "detail": "no share token provided"});
   }
 }
 
