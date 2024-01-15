@@ -187,10 +187,6 @@ window.onload = function() {
     
   }
   
-  function openPreview() {
-    
-  }
-  
   loadList()
   
   function loadList() {
@@ -234,7 +230,7 @@ window.onload = function() {
           
           
           let fileHTML = `
-          <div class="file-card" onclick="openPreview('${file.name}')">
+          <div class="file-card" onclick="openPreview('${file.url}')">
             <div class="file-actions">
               <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
             </div>
@@ -285,4 +281,11 @@ window.onload = function() {
 
 function logout() {
   window.location.replace("/sessionLogout");
+}
+
+function openPreview(fileUrl) {
+  let modal = document.getElementById("previewEmbed")
+  modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958
+  .src = fileUrl
+  $("#previewModal").modal();
 }
