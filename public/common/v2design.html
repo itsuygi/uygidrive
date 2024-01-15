@@ -140,7 +140,7 @@
   </div>
     
   <div class="container mt-5">
-    <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#exampleModalCenter">
+    <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#uploadModal">
       <i class="fas fa-upload mr-2"></i> Upload New File
     </button>
   </div>
@@ -158,9 +158,9 @@
         <div class="modal-body">
           <!-- Your existing upload form content -->
           <form name="uploadForm" id="uploadForm" class="upload-form">
-            <input type="file" multiple name="file" id="fileInput" class="file-input" style="display: none">
+            <input type="file" multiple name="file" id="fileInput" class="file-input">
             <label for="fileInput" class="custom-file-input btn btn-primary">Choose a file</label>
-            <span id="selectedFileName" class="file-name">No file selected</span>
+            <!--<span id="selectedFileName" class="file-name">No file selected</span>-->
             <input type="submit" value="Upload" id="uploadButton" class="upload-button">
           </form>
         </div>
