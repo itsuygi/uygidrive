@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="upload.js"></script>
+  <script src="/common/color-mode.js"></script>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://kit.fontawesome.com/6135f8c6a5.js" crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
+  <title>UygiDrive - Upload</title>
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    header {
+      background-color: #007bff;
+    }
+
+    .site-name {
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .user-info {
+      color: white;
+    }
+
+    .upload-container {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .upload-button:hover {
+      background-color: #218838;
+    }
+
+    .result-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <header class="p-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="site-name">UygiDrive</div>
+        </div>
+        <div class="col-md-6 text-right user-info">
+          <%= email %>
+          <button id="logout-btn" onclick="logout()" class="btn btn-secondary ml-3">Logout</button>
+        </div>
+      </div>
+    </div>
+  </header>
+    
+  <div id="previewPopup" class="popup">
+    <!-- Your existing popup content -->
+  </div>
+    
+  <div id="sharePopup" class="share-popup">
+    <!-- Your existing share popup content -->
+  </div>
+  
+  <div class="widget container upload-container">
+    <h1 class="mb-4">Upload File</h1>
+    
+    <form name="uploadForm" id="uploadForm" class="upload-form">
+      <!-- Your existing form elements with Bootstrap classes -->
+      <input type="file" multiple name="file" id="fileInput" class="file-input" style="display: none">
+      <label for="fileInput" class="custom-file-input btn btn-primary">Choose a file</label>
+      <span id="selectedFileName" class="file-name">No file selected</span>
+      <input type="submit" value="Upload" id="uploadButton" class="upload-button">
+    </form>
+    
+    <div id="successBox" class="result-box mt-3 bg-success text-white">
+      <!-- Your existing success box content -->
+    </div>
+    
+    <div id="errorBox" class="result-box mt-3 bg-danger text-white">
+      <!-- Your existing error box content -->
+    </div>
+  </div>
+  
+  <div class="widget container mt-4">
+    <h1 class="mb-4">Uploaded Files</h1>
+    
+    <form id="search" class="button-group">
+      <!-- Your existing search form with Bootstrap classes -->
+      <input type="text" id="searchBox" placeholder="Search..." class="form-control">
+    </form>
+    
+    <br>
+    
+    <div class="sorting-menu">
+      <!-- Your existing sorting menu with Bootstrap classes -->
+      <label for="sortSelect">Sort by:</label>
+      <select id="sortSelect" class="form-control">
+        <option value="">Alphabetical</option>
+        <option value="date:new-first">Newest First</option>
+      </select>
+    </div>
+    
+    <hr>
+    
+    <div id="fileList" class="file-list">
+      <!-- Your existing file list content -->
+    </div>
+    
+    <div id="page" class="button-group mt-3">
+      <button id="previousPage" class="btn btn-secondary">Previous</button>
+      <b id="pageNumber" class="mx-2">1</b>
+      <button id="nextPage" class="btn btn-secondary">Next</button>
+    </div>
+  </div>
+  
+  <div class="theme-toggle" id="theme-toggle">
+    <span class="theme-icon" id="theme-icon">
+      <i class="fas fa-moon"></i>
+    </span>
+  </div>
+  
+  <audio id="audio" src autoplay></audio>
+  <iframe id="download_iframe" style="display:none;"></iframe>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
