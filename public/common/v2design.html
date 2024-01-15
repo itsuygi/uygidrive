@@ -40,7 +40,6 @@
       background-color: #ffffff;
       border-radius: 10px;
       padding: 20px;
-      margin-top: 20px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
@@ -106,6 +105,15 @@
     .file-actions i:hover {
       color: #5a6268;
     }
+
+    .search-sort-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .sorting-menu {
+      margin-left: 10px;
+    }
   </style>
 </head>
 <body>
@@ -130,44 +138,53 @@
   <div id="sharePopup" class="share-popup">
     <!-- Your existing share popup content -->
   </div>
+    
+  <div class="container mt-5">
+    <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#exampleModalCenter">
+      <i class="fas fa-upload mr-2"></i> Upload New File
+    </button>
+  </div>
   
-  <div class="widget container upload-container">
-    <h1 class="mb-4">Upload File</h1>
-    
-    <form name="uploadForm" id="uploadForm" class="upload-form">
-      <!-- Your existing form elements with Bootstrap classes -->
-      <input type="file" multiple name="file" id="fileInput" class="file-input" style="display: none">
-      <label for="fileInput" class="custom-file-input btn btn-primary">Choose a file</label>
-      <span id="selectedFileName" class="file-name">No file selected</span>
-      <input type="submit" value="Upload" id="uploadButton" class="upload-button">
-    </form>
-    
-    <div id="successBox" class="result-box mt-3 bg-success text-white">
-      <!-- Your existing success box content -->
-    </div>
-    
-    <div id="errorBox" class="result-box mt-3 bg-danger text-white">
-      <!-- Your existing error box content -->
+  <!-- Upload Modal -->
+  <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadModalLabel">Upload File</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Your existing upload form content -->
+          <form name="uploadForm" id="uploadForm" class="upload-form">
+            <input type="file" multiple name="file" id="fileInput" class="file-input" style="display: none">
+            <label for="fileInput" class="custom-file-input btn btn-primary">Choose a file</label>
+            <span id="selectedFileName" class="file-name">No file selected</span>
+            <input type="submit" value="Upload" id="uploadButton" class="upload-button">
+          </form>
+        </div>
+      </div>
     </div>
   </div>
   
   <div class="widget container mt-4">
-    <h1 class="mb-4">Uploaded Files</h1>
+    <div class="search-sort-bar">
+      <form id="search" class="button-group">
+        <!-- Your existing search form with Bootstrap classes -->
+        <input type="text" id="searchBox" placeholder="Search..." class="form-control">
+      </form>
     
-    <form id="search" class="button-group">
-      <!-- Your existing search form with Bootstrap classes -->
-      <input type="text" id="searchBox" placeholder="Search..." class="form-control">
-    </form>
-    
-    <br>
-    
-    <div class="sorting-menu">
-      <!-- Your existing sorting menu with Bootstrap classes -->
-      <label for="sortSelect">Sort by:</label>
-      <select id="sortSelect" class="form-control">
-        <option value="">Alphabetical</option>
-        <option value="date:new-first">Newest First</option>
-      </select>
+      <div class="dropdown sorting-menu">
+        <!-- Your existing sorting menu with Bootstrap classes -->
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Sort by
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortDropdown">
+          <a class="dropdown-item" href="#">Alphabetical</a>
+          <a class="dropdown-item" href="#">Newest First</a>
+        </div>
+      </div>
     </div>
     
     <hr>
@@ -221,6 +238,14 @@
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script>
+    $(document).ready(function(){
+      $("#uploadButton").click(function(){
+        $("#uploadModal").modal();
+      });
+    });
+  </script>
 
 </body>
 </html>
