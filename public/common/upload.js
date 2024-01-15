@@ -187,6 +187,10 @@ window.onload = function() {
     
   }
   
+  function openPreview() {
+    
+  }
+  
   loadList()
   
   function loadList() {
@@ -230,7 +234,7 @@ window.onload = function() {
           
           
           let fileHTML = `
-          <div class="file-card">
+          <div class="file-card" onclick="openPreview('${file.name}')">
             <div class="file-actions">
               <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
             </div>
