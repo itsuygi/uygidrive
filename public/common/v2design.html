@@ -83,11 +83,26 @@
     }
 
     .file-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+      overflow: hidden;
       background-color: #ffffff;
       border-radius: 10px;
       padding: 15px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      position: relative;
+      transition: filter 0.3s ease-in-out;
+      margin-bottom: 20px;
+    }
+
+    .file-card:hover {
+      filter: grayscale(100%);
+    }
+
+    .file-preview-image {
+      width: 100%;
+      height: auto;
     }
 
     .file-actions {
@@ -104,6 +119,14 @@
 
     .file-actions i:hover {
       color: #5a6268;
+    }
+
+    .file-name {
+      margin-top: 10px;
+      overflow: hidden;
+      white-space: normal;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
     .search-sort-bar {
@@ -163,6 +186,30 @@
             <!--<span id="selectedFileName" class="file-name">No file selected</span>-->
             <input type="submit" value="Upload" id="uploadButton" class="upload-button">
           </form>
+          
+          <div id="successBox" class="result-box alert alert-success" style="displa">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-check-circle mr-2"></i>
+                <p class="success-text">File(s) uploaded successfully!</p>
+                <p class="url-text" id="urlList">URLs: <!--<a id="fileURL" href="#" target="_blank" style="color: CornflowerBlue"></a>--></p>
+              </div>
+              <button id="reloadButton" class="reload-button btn btn-primary" onclick="location.reload()">Upload another one</button>
+            </div>
+          </div>
+
+          <!-- Error Box in Upload Modal -->
+          <div id="errorBox" class="result-box alert alert-danger">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <p class="error-text">Unable to upload file</p>
+                <i id="errorDesc">An error occurred while uploading the file:</i>
+                <p id="errorMessage" style="color:red"></p>
+              </div>
+              <button class="reload-button btn btn-danger" onclick="location.reload()">Try again</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

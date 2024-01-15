@@ -45,6 +45,110 @@ window.onload = function() {
     xhr.send(JSON.stringify({ idToken: idToken }));
   }
   
+  uploadForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    
+    let files = fileInput.files
+    
+    let doneUploadingFiles = []
+
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i]
+      
+      const formData = new FormData();
+      formData.append("file", file)
+      
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/upload', true);
+
+      //progressDiv.style.display = "block"
+      uploadForm.style.display = "none"
+      
+      
+      // Upload progress container
+      let progressContainer = document.createElement("div");
+      progressContainer.classList.add('progress-container');
+      
+      let progressName = document.createElement("span");
+      progressName.innerHTML = file.name
+      progressName.classList.add('file-name');
+      progressContainer.appendChild(progressName)
+      
+      let progressTag = document.createElement("progress");
+      progressTag.value = 0
+      progressTag.max = 100
+      progressTag.classList.add('file-progress');
+      progressContainer.appendChild(progressTag)
+      
+      let progressSpan = document.createElement("span");
+      progressSpan.innerHTML = "0%"
+      progressSpan.classList.add('progress-text');
+      progressContainer.appendChild(progressSpan)
+      
+      document.getElementById("uploadContainer").appendChild(progressContainer)
+      
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) {
+          const percentComplete = Math.floor((e.loaded / e.total) * 100);
+          progressTag.value = percentComplete;
+          progressSpan.textContent = percentComplete + '%';
+        }
+      };
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var url = xhr.responseText;
+          
+          doneUploadingFiles.push(url)
+          progressContainer.remove();
+          
+          if (doneUploadingFiles.length == files.length) {
+            let progressContainers = document.getElementsByClassName("progress-container")
+            
+            /*for (let containerI = 0; containerI < progressContainers.length; containerI++) {
+              progressContainers[containerI].remove()
+            }*/
+            
+            successBox.style.display = 'block';
+            
+            let urlList = document.getElementById("urlList")
+            
+            for (let urlsI = 0; urlsI < doneUploadingFiles.length; urlsI++) {
+              let urlLi = document.createElement("li")
+              
+              let urlTag = document.createElement("a")
+              urlTag.style = "color: CornflowerBlue"
+              urlTag.target = "_blank"
+              urlTag.href = doneUploadingFiles[urlsI]
+              urlTag.innerText = doneUploadingFiles[urlsI]
+
+              urlLi.appendChild(urlTag)
+              urlList.appendChild(urlLi)
+              
+              //urlList.appendChild(document.createElement("br"))
+            }
+          }
+          
+          /*successBox.style.display = 'block';
+          fileURL.innerHTML = url;
+          fileURL.href = url;
+
+          loadList();*/
+        } else {
+          //progressDiv.style.display = 'none';
+          progressContainer.remove();
+          errorMessage.innerHTML = xhr.responseText;
+          errorBox.style.display = "block";
+        }
+      };
+
+      xhr.send(formData);
+    };
+   
+  });
+  
   function deleteFile(filename) {
     if(confirm('Are you sure to delete this file?')) {
         const xhr = new XMLHttpRequest();
@@ -72,6 +176,12 @@ window.onload = function() {
     console.log(JSON.stringify({ file: filename }))
     xhr.send(JSON.stringify({ file: filename }));
   }
+  
+  searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    
+    loadList()
+  });
   
   function openModal(name) {
     
@@ -124,7 +234,7 @@ window.onload = function() {
             <div class="file-actions">
               <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
             </div>
-            <h5>${file.name}</h5>
+            <h5 class="file-name">${file.name}</h5>
             <p>${file.size}</p>
             
           </div>
