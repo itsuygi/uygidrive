@@ -294,8 +294,10 @@ function resetUpload() {
   const successBox = document.getElementById('successBox');
   const errorBox = document.getElementById('errorBox');
   const uploadForm = document.getElementById('uploadForm');
+  const fileInput = document.getElementById('fileInput');
   
   successBox.style.display = "none"
   errorBox.style.display = "none"
   uploadForm.style.display = "block"
+  fileInput.value = null
 }
