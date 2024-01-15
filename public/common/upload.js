@@ -285,7 +285,17 @@ function logout() {
 
 function openPreview(fileUrl) {
   let modal = document.getElementById("previewEmbed")
-  modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958
-  .src = fileUrl
+  modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+  modal.src = fileUrl
   $("#previewModal").modal();
+}
+
+function resetUpload() {
+  const successBox = document.getElementById('successBox');
+  const errorBox = document.getElementById('errorBox');
+  const uploadForm = document.getElementById('uploadForm');
+  
+  successBox.style.display = "none"
+  errorBox.style.display = "none"
+  uploadForm.style.display = "block"
 }

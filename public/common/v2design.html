@@ -128,6 +128,7 @@
       text-overflow: ellipsis;
       max-width: 100%;
       font-size: 18px;
+      padding-right: 10px
     }
 
     .search-sort-bar {
@@ -137,6 +138,10 @@
 
     .sorting-menu {
       margin-left: 10px;
+    }
+    
+    .progress-name {
+      padding-right: 10px
     }
   </style>
 </head>
@@ -175,7 +180,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="uploadModalLabel">Upload File</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="resetUpload()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -195,7 +200,7 @@
                 <p class="success-text">File(s) uploaded successfully!</p>
                 <p class="url-text" id="urlList">URLs: <!--<a id="fileURL" href="#" target="_blank" style="color: CornflowerBlue"></a>--></p>
               </div>
-              <button id="reloadButton" class="reload-button btn btn-primary" onclick="location.reload()">Upload another one</button>
+              <!--<button id="reloadButton" class="reload-button btn btn-primary" onclick="location.reload()">Upload another one</button>-->
             </div>
           </div>
 
@@ -221,7 +226,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="previewModalLabel"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="document.getElementById('previewEmbed').src='https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958'">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
