@@ -305,7 +305,7 @@ function resizeIFrameToFitContent( iFrame ) {
 }
 
 function openPreview(fileUrl) {
-  let previews = document.getElementsByClassName("previewEmbed")
+  let previews = document.getElementsByClassName("preview")
   
   for (let i = 0; i < previews.length; i++) {
     let modal = previews[i]
@@ -318,7 +318,7 @@ function openPreview(fileUrl) {
 }
 
 function closePreview() {
-  let previews = document.getElementsByClassName("previewEmbed")
+  let previews = document.getElementsByClassName("preview")
   
   for (let i = 0; i < previews.length; i++) {
     let modal = previews[i]
