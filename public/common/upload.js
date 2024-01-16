@@ -152,39 +152,6 @@ window.onload = function() {
    
   });
   
-  function deleteFile(filename) {
-    if(confirm('Are you sure to delete this file?')) {
-        const xhr = new XMLHttpRequest();
-
-        xhr.open('DELETE', '/file/' + filename, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = function () {
-          console.log(xhr.responseText)
-          loadList()
-        }
-        xhr.send();
-    }
-  }
-  
-  function shareFile(filename) {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('POST', '/getShareLink', true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-      console.log(xhr.responseText)
-      
-      openShareModal(xhr.responseText)
-    }
-    console.log(JSON.stringify({ file: filename }))
-    xhr.send(JSON.stringify({ file: filename }));
-  }
-  
-  function openShareModal(url) {
-    urlInput.value = url
-    $("#shareModal").modal();
-  }
-  
   document.getElementById("copyShareLink").onclick = function() {
     urlInput.select();
     document.execCommand("copy");
@@ -248,7 +215,7 @@ window.onload = function() {
               <div class="dropdown-menu" >
                 <!-- Dropdown menu links -->
                 
-                <!--<h6 class="dropdown-header">File actions</h6>-->f
+                <!--<h6 class="dropdown-header">File actions</h6>-->
                 <a class="dropdown-item" onclick="shareFile('${file.name}')">
                   <i class="fa-solid fa-share"></i>
                   Share
@@ -341,4 +308,40 @@ function resetUpload() {
   errorBox.style.display = "none"
   uploadForm.style.display = "block"
   fileInput.value = null
+}
+
+function shareFile(filename) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('POST', '/getShareLink', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    console.log(xhr.responseText)
+
+    openShareModal(xhr.responseText)
+  }
+  console.log(JSON.stringify({ file: filename }))
+  xhr.send(JSON.stringify({ file: filename }));
+}
+
+function openShareModal(url) {
+  let urlInput = document.getElementById("urlInput")
+  
+  urlInput.value = url
+  $("#shareModal").modal();
+}
+
+function deleteFile(filename) {
+  if(confirm('Are you sure to delete this file?')) {
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('DELETE', '/file/' + filename, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.onload = function () {
+        console.log(xhr.responseText)
+        
+        //loadList()
+      }
+      xhr.send();
+  }
 }
