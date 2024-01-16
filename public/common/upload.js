@@ -231,13 +231,22 @@ window.onload = function() {
           
           
           let fileHTML = `
-          <div class="file-card" onclick="openPreview('${file.url}')">
-            <div class="file-actions">
-              <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+          <div class="file-card">
+            <div class="file-actions" >
+              <li class="fas fa-ellipsis-v" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ></li>
+              <div class="dropdown-menu" >
+                <!-- Dropdown menu links -->
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+                
+              </div>
             </div>
-            <h5 class="file-name">${file.name}</h5>
-            <p>${file.size}</p>
             
+            <div onclick="openPreview('${file.url}')">
+              <h5 class="file-name">${file.name}</h5>
+              <p>${file.size}</p>
+            </div>
           </div>
         `
           fileList.insertAdjacentHTML( 'beforeend', fileHTML );
