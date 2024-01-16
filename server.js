@@ -231,7 +231,7 @@ app.get('/sessionLogout', (req, res) => {
 });
 
 app.get("/", authenticateToken, (req, res) => {
-  res.render(__dirname + '/public/upload.ejs', { email: req.user.email });
+  res.render(__dirname + '/public/uploadv2.ejs', { email: req.user.email });
 });
 
 app.get("/login", async (req, res) => {

@@ -2,13 +2,7 @@ let currentPage = 1;
 let sort = ""
 let firstLoad = true
 
-let fileList 
-let nextPage
-let prePage
-let searchBox
-let pageNumber
-
-window.onload = function() {
+function setup() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
   const fileInput = document.getElementById('fileInput');
@@ -17,19 +11,95 @@ window.onload = function() {
   //const progressText = document.getElementById('progressText');
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
+  const fileList = document.getElementById('fileList');
   const errorBox = document.getElementById('errorBox');
-  const errorMessage = document.getElementById('errorMessage'); 
+  const errorMessage = document.getElementById('errorMessage');
+  const nextPage = document.getElementById('nextPage');
+  const prePage = document.getElementById('previousPage');
+  const pageNumber = document.getElementById('pageNumber');
   const searchForm = document.getElementById('search');
+  const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
+  const uploadContainer = document.getElementById('uploadContainer');
   
-  fileList = document.getElementById('fileList');
-  nextPage = document.getElementById('nextPage');
-  prePage = document.getElementById('previousPage');
-  searchBox = document.getElementById('searchBox');
-  pageNumber = document.getElementById('pageNumber');
+  const previews = document.getElementsByName('preview');
+  var popup = document.getElementById('previewPopup');
+  var close = document.getElementsByClassName("close")[0];
+  var popupMessage = document.getElementById("popupMessage");
+
   
-  let previewModal = document.getElementById("previewEmbed")
-  let urlInput = document.getElementById("urlInput")
+  var sharePopup = document.getElementById('sharePopup');
+  var urlInput = document.getElementById("urlInput");
+  var sharePopupClose = document.getElementById("sharePopupClose");
+
+  
+  function getTagByFileExtension(fileUrl) {
+    const extensionMapping = {
+      'mp3': 'audioPreview',
+      'wav': 'audioPreview',
+      'ogg': 'audioPreview',
+      'mp4': 'videoPreview',
+      'mov': 'videoPreview',
+      'webm': 'videoPreview',
+      'png': 'imagePreview',
+      'jpg': 'imagePreview',
+      'jpeg': 'imagePreview',
+      'gif': 'imagePreview',
+      'pdf': 'filePreview',
+      'doc': 'filePreview',
+      'py': 'codePreview',
+      'c': 'codePreview',
+      'json': 'codePreview',
+      'js': 'codePreview',
+      'css': 'codePreview',
+      'html': 'codePreview',
+      'txt': 'codePreview'
+    };
+
+    const fileExtension = fileUrl.split('.').pop();
+    console.log(fileExtension)
+
+    const tag = extensionMapping[fileExtension.toLowerCase()];
+
+    return document.getElementById(tag)
+  }
+  
+  function openPopup(url) {
+    //loadText.style.display = "flex"
+    popup.style.display = "block";
+    
+    const tag = getTagByFileExtension(url)
+    console.log(tag)
+    
+    if (tag) {
+      if (tag.id !== "codePreview") {
+        tag.src = url
+      } else {
+        fetch(url)
+        .then(async r => tag.innerHTML = await new Response(r.body).text());
+      }
+      tag.style.display = "flex"
+    } else {
+      popupMessage.innerHTML = "Non-supported file type, try downloading."
+    }
+  }
+  function closePopup() {
+    for (var i = 0; i < previews.length; i++) {
+      previews[i].style.display = "none";
+      previews[i].src = "";
+    }
+    popup.style.display = "none";
+    popupMessage.innerHTML = ""
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == popup) {
+        closePopup()
+    }
+  }
+  close.onclick = function() {
+      closePopup()
+  }
   
   const firebaseConfig = {
     apiKey: "AIzaSyCILjXwpyNilznxbFTWC9J2Ys2JdJTX0vg",
@@ -54,7 +124,7 @@ window.onload = function() {
     }
     xhr.send(JSON.stringify({ idToken: idToken }));
   }
-  
+
   uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
@@ -141,8 +211,6 @@ window.onload = function() {
             }
           }
           
-          loadList()
-          
           /*successBox.style.display = 'block';
           fileURL.innerHTML = url;
           fileURL.href = url;
@@ -161,7 +229,70 @@ window.onload = function() {
    
   });
   
-  document.getElementById("copyShareLink").onclick = function() {
+  fileInput.addEventListener('change', function () {
+    const selectedFileName = document.getElementById('selectedFileName');
+    
+    selectedFileName.textContent = ""
+    
+    for (let i = 0; i < this.files.length; i++) {
+      selectedFileName.innerHTML += "<li>" + this.files[i].name + ""
+    }
+    
+    this.style.display = 'none';
+    
+    uploadButton.style.display = 'block';
+  });
+  
+  function deleteFile(filename) {
+    if(confirm('Are you sure to delete this file?')) {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('DELETE', '/file/' + filename, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+          console.log(xhr.responseText)
+          loadList()
+        }
+        xhr.send();
+    }
+  }
+  
+  function shareFile(filename) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('POST', '/getShareLink', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+      
+      openSharePopup(xhr.responseText)
+    }
+    console.log(JSON.stringify({ file: filename }))
+    xhr.send(JSON.stringify({ file: filename }));
+  }
+  
+  function openSharePopup(url) {
+    //loadText.style.display = "flex"
+    sharePopup.style.display = "block";
+
+    urlInput.value = url
+  }
+  
+  function closeSharePopup() {
+    sharePopup.style.display = "none";
+    urlInput.innerHTML = ""
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == sharePopup) {
+        closeSharePopup()
+    }
+  }
+  sharePopupClose.onclick = function() {
+      closeSharePopup()
+  }
+  
+   document.getElementById("copyShareLink").onclick = function() {
     urlInput.select();
     document.execCommand("copy");
     alert("Link copied to clipboard!");
@@ -173,42 +304,9 @@ window.onload = function() {
     loadList()
   });
   
+  loadList();
   
-  
-  loadList()
-  
-  
-  
-  /*sortSelect.addEventListener('change', function () {
-     const selectedValue = sortSelect.value;
-     
-     sort = selectedValue
-     currentPage = 1
-     loadList()
-   });*/
-  
-   nextPage.addEventListener('click', function () {
-     currentPage++
-     loadList()
-     console.log("Loading next page")
-   });
-  
-   prePage.addEventListener('click', function () {
-     
-     if (currentPage - 1 >= 1) {
-       currentPage--
-       loadList()
-       console.log("Loading previous page")
-     }
-   });
-  
-  previewModal.onload = function () {
-    console.log("loaded")
-    //resizeIFrameToFitContent(previewModal)
-  };
-}
-
-function loadList() {
+  function loadList() {
     fileList.innerHTML = 'Loading...';
     
     const search = searchBox.value
@@ -246,43 +344,75 @@ function loadList() {
           if (file.url) {
             url = file.url
           }
+          const fileItem = document.createElement('div');
+          fileItem.classList.add('file-item');
           
+          const fileName = document.createElement('a');
           
-          let fileHTML = `
-          <div class="file-card">
-            <div class="file-actions" >
-              <li class="fas fa-ellipsis-v" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ></li>
-              <div class="dropdown-menu" >
-                <!-- Dropdown menu links -->
-                
-                <!--<h6 class="dropdown-header">File actions</h6>-->
-                <a class="dropdown-item" onclick="downloadFile('${file.url}')">
-                  <i class="fa-solid fa-download"></i>
-                  Download
-                </a>
-                
-                <a class="dropdown-item" onclick="shareFile('${file.name}')">
-                  <i class="fa-solid fa-share"></i>
-                  Share
-                </a>
-                
-                <div class="dropdown-divider"></div>
-                
-                <a class="dropdown-item" onclick="deleteFile('${file.name}')">
-                  <i class="fa-solid fa-trash"></i>
-                  Delete
-                </a>
-                
-              </div>
-            </div>
-            
-            <div onclick="openPreview('${file.url}')">
-              <h5 class="file-name">${file.name}</h5>
-              <p>${file.size}</p>
-            </div>
-          </div>
-        `
-          fileList.insertAdjacentHTML( 'beforeend', fileHTML );
+          fileName.textContent = file.name
+          fileName.classList.add("file-title")
+          fileName.href = "javascript:void(0);"
+          
+          fileName.addEventListener('click', function () {
+            openPopup(url)
+          });
+          
+          fileItem.appendChild(fileName);
+          
+          const fileSize = document.createElement('small');
+          fileSize.textContent = file.size
+          fileSize.classList.add('file-size');
+          
+          fileItem.appendChild(fileSize);
+
+          const downloadButton = document.createElement('button');
+          downloadButton.textContent = 'Download';
+          downloadButton.classList.add('copy-link-button');
+          downloadButton.addEventListener('click', function () {
+            document.getElementById('download_iframe').src = url; 
+          });
+          fileItem.appendChild(downloadButton);
+          
+          const deleteButton = document.createElement('button');
+          deleteButton.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 7l16 0" />
+            <path d="M10 11l0 6" />
+            <path d="M14 11l0 6" />
+            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+          </svg>
+          `
+          deleteButton.classList.add('delete-button');
+          deleteButton.addEventListener('click', function () {
+            deleteFile(file.name);
+          });
+          fileItem.appendChild(deleteButton);
+          
+          const shareButton = document.createElement('button');
+          shareButton.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-share" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+            <path d="M8.7 10.7l6.6 -3.4" />
+            <path d="M8.7 13.3l6.6 3.4" />
+          </svg>
+          `
+          shareButton.classList.add('share-button');
+          shareButton.addEventListener('click', function () {
+            shareFile(file.name)
+          });
+          fileItem.appendChild(shareButton);
+          
+          const line = document.createElement('div');
+          line.classList.add('line');
+          
+          fileList.appendChild(fileItem);
+          
+          fileList.appendChild(line);
         });
         
         if (firstLoad == false) {
@@ -297,77 +427,38 @@ function loadList() {
     
     listXhr.send()
   };
+  
+   sortSelect.addEventListener('change', function () {
+     const selectedValue = sortSelect.value;
+     
+     sort = selectedValue
+     currentPage = 1
+     loadList()
+   });
+  
+   nextPage.addEventListener('click', function () {
+     currentPage++
+     loadList()
+     console.log("Loading next page")
+   });
+  
+   prePage.addEventListener('click', function () {
+     
+     if (currentPage - 1 >= 1) {
+       currentPage--
+       loadList()
+       console.log("Loading previous page")
+     }
+   });
+  
+  
+}
 
 function logout() {
   window.location.replace("/sessionLogout");
 }
 
-function resizeIFrameToFitContent( iFrame ) {
-    iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
-    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
-}
 
-function openPreview(fileUrl) {
-  let modal = document.getElementById("previewEmbed")
-  modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
-  modal.src = fileUrl
-  $("#previewModal").modal();
-}
 
-function resetUpload() {
-  const successBox = document.getElementById('successBox');
-  const errorBox = document.getElementById('errorBox');
-  const uploadForm = document.getElementById('uploadForm');
-  const fileInput = document.getElementById('fileInput');
   
-  successBox.style.display = "none"
-  errorBox.style.display = "none"
-  uploadForm.style.display = "block"
-  fileInput.value = null
-}
-
-function shareFile(filename) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.open('POST', '/getShareLink', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function () {
-    console.log(xhr.responseText)
-
-    openShareModal(xhr.responseText)
-  }
-  console.log(JSON.stringify({ file: filename }))
-  xhr.send(JSON.stringify({ file: filename }));
-}
-
-function openShareModal(url) {
-  let urlInput = document.getElementById("urlInput")
-  
-  urlInput.value = url
-  $("#shareModal").modal();
-}
-
-function deleteFile(filename) {
-  if(confirm('Are you sure to delete this file?')) {
-      const xhr = new XMLHttpRequest();
-
-      xhr.open('DELETE', '/file/' + filename, true);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      xhr.onload = function () {
-        console.log(xhr.responseText)
-        
-        loadList()
-      }
-      xhr.send();
-  }
-}
-
-function changeSort(newSort) {
-  sort = newSort
-  
-  loadList()
-}
-
-function downloadFile(url) {
-  document.getElementById('download_iframe').src = url + "?download=true";
-}
+window.addEventListener('load', setup);
