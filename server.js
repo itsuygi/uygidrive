@@ -456,7 +456,8 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     console.log(contentDisposition(filenameFromStorage))
     
     //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
-    res.setHeader("Content-Disposition", contentDisposition(filenameFromStorage))
+    
+    res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
     fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
