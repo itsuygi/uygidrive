@@ -172,7 +172,7 @@ window.onload = function() {
     xhr.onload = function () {
       console.log(xhr.responseText)
       
-      openModal(xhr.responseText)
+      openShareModal(xhr.responseText)
     }
     console.log(JSON.stringify({ file: filename }))
     xhr.send(JSON.stringify({ file: filename }));
@@ -184,7 +184,7 @@ window.onload = function() {
     loadList()
   });
   
-  function openModal(name) {
+  function openShareModal(url) {
     
   }
   
@@ -236,9 +236,19 @@ window.onload = function() {
               <li class="fas fa-ellipsis-v" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ></li>
               <div class="dropdown-menu" >
                 <!-- Dropdown menu links -->
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
+                
+                <h6 class="dropdown-header">File actions</h6>
+                <a class="dropdown-item" onclick="shareFile('${file.name}')">
+                  <i class="fa-solid fa-share"></i>
+                  Share
+                </a>
+                
+                <div class="dropdown-divider"></div>
+                
+                <a class="dropdown-item" onclick="deleteFile('${file.name}')">
+                  <i class="fa-solid fa-trash"></i>
+                  Delete
+                </a>
                 
               </div>
             </div>
