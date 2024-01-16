@@ -187,14 +187,6 @@
     </div>
   </header>
     
-  <div id="previewPopup" class="popup">
-    <!-- Your existing popup content -->
-  </div>
-    
-  <div id="sharePopup" class="share-popup">
-    <!-- Your existing share popup content -->
-  </div>
-    
   <div class="container mt-5">
     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#uploadModal">
       <i class="fas fa-upload mr-2"></i> Upload New File
@@ -297,8 +289,8 @@
           Sort by
         </button>
         <div class="dropdown-menu" aria-labelledby="sortDropdown">
-          <a class="dropdown-item" href="#">Alphabetical</a>
-          <a class="dropdown-item" href="#">Newest First</a>
+          <a class="dropdown-item" href="#" onclick="changeSort('alphabetical')">Alphabetical</a>
+          <a class="dropdown-item" href="#" onclick="changeSort('date:new-first')">Newest First</a>
         </div>
       </div>
     </div>

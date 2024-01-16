@@ -2,6 +2,12 @@ let currentPage = 1;
 let sort = ""
 let firstLoad = true
 
+let fileList 
+let nextPage
+let prePage
+let searchBox
+let pageNumber
+
 window.onload = function() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -11,15 +17,16 @@ window.onload = function() {
   //const progressText = document.getElementById('progressText');
   const successBox = document.getElementById('successBox');
   const fileURL = document.getElementById('fileURL');
-  const fileList = document.getElementById('fileList');
   const errorBox = document.getElementById('errorBox');
-  const errorMessage = document.getElementById('errorMessage');
-  const nextPage = document.getElementById('nextPage');
-  const prePage = document.getElementById('previousPage');
-  const pageNumber = document.getElementById('pageNumber');
+  const errorMessage = document.getElementById('errorMessage'); 
   const searchForm = document.getElementById('search');
-  const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
+  
+  fileList = document.getElementById('fileList');
+  nextPage = document.getElementById('nextPage');
+  prePage = document.getElementById('previousPage');
+  searchBox = document.getElementById('searchBox');
+  pageNumber = document.getElementById('pageNumber');
   
   let previewModal = document.getElementById("previewEmbed")
   let urlInput = document.getElementById("urlInput")
@@ -168,7 +175,38 @@ window.onload = function() {
   
   loadList()
   
-  function loadList() {
+  
+  
+  /*sortSelect.addEventListener('change', function () {
+     const selectedValue = sortSelect.value;
+     
+     sort = selectedValue
+     currentPage = 1
+     loadList()
+   });*/
+  
+   nextPage.addEventListener('click', function () {
+     currentPage++
+     loadList()
+     console.log("Loading next page")
+   });
+  
+   prePage.addEventListener('click', function () {
+     
+     if (currentPage - 1 >= 1) {
+       currentPage--
+       loadList()
+       console.log("Loading previous page")
+     }
+   });
+  
+  previewModal.onload = function () {
+    console.log("loaded")
+    //resizeIFrameToFitContent(previewModal)
+  };
+}
+
+function loadList() {
     fileList.innerHTML = 'Loading...';
     
     const search = searchBox.value
@@ -217,6 +255,11 @@ window.onload = function() {
                 
                 <!--<h6 class="dropdown-header">File actions</h6>-->
                 <a class="dropdown-item" onclick="shareFile('${file.name}')">
+                  <i class="fa-solid fa-download"></i>
+                  Download
+                </a>
+                
+                <a class="dropdown-item" onclick="shareFile('${file.name}')">
                   <i class="fa-solid fa-share"></i>
                   Share
                 </a>
@@ -252,35 +295,6 @@ window.onload = function() {
     
     listXhr.send()
   };
-  
-  /*sortSelect.addEventListener('change', function () {
-     const selectedValue = sortSelect.value;
-     
-     sort = selectedValue
-     currentPage = 1
-     loadList()
-   });*/
-  
-   nextPage.addEventListener('click', function () {
-     currentPage++
-     loadList()
-     console.log("Loading next page")
-   });
-  
-   prePage.addEventListener('click', function () {
-     
-     if (currentPage - 1 >= 1) {
-       currentPage--
-       loadList()
-       console.log("Loading previous page")
-     }
-   });
-  
-  previewModal.onload = function () {
-    console.log("loaded")
-    //resizeIFrameToFitContent(previewModal)
-  };
-}
 
 function logout() {
   window.location.replace("/sessionLogout");
@@ -340,8 +354,18 @@ function deleteFile(filename) {
       xhr.onload = function () {
         console.log(xhr.responseText)
         
-        //loadList()
+        loadList()
       }
       xhr.send();
   }
+}
+
+function changeSort(newSort) {
+  sort = newSort
+  
+  loadList()
+}
+
+function download() {
+  
 }
