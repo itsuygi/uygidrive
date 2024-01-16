@@ -143,6 +143,28 @@
     .progress-name {
       padding-right: 10px
     }
+    
+    .preview-iframe {
+      width: 1000px;
+      height: 2000px;
+      border: 0px;
+    }
+
+    .preview-iframe {
+      zoom: 0.75;
+      -moz-transform: scale(0.75);
+      -moz-transform-origin: 0 0;
+      -o-transform: scale(0.75);
+      -o-transform-origin: 0 0;
+      -webkit-transform: scale(0.75);
+      -webkit-transform-origin: 0 0;
+    }
+
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      .preview-iframe {
+        zoom: 1;
+      }
+    }
   </style>
 </head>
 <body>
@@ -231,7 +253,7 @@
           </button>
         </div>
         <div class="modal-body" id="previewContainer">
-          <embed width="100%" heigth="100%" id="previewEmbed">
+          <embed width="100%" heigth="100%" id="previewEmbed" class="preview-iframe" frameborder="no" border="0" scrolling="no"> 
         </div>
       </div>
     </div>

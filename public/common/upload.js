@@ -20,6 +20,7 @@ window.onload = function() {
   const searchForm = document.getElementById('search');
   const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
+  let previewModal = document.getElementById("previewEmbed")
   
   const firebaseConfig = {
     apiKey: "AIzaSyCILjXwpyNilznxbFTWC9J2Ys2JdJTX0vg",
@@ -277,10 +278,20 @@ window.onload = function() {
        console.log("Loading previous page")
      }
    });
+  
+  previewModal.onload = function () {
+    console.log("loaded")
+    //resizeIFrameToFitContent(previewModal)
+  };
 }
 
 function logout() {
   window.location.replace("/sessionLogout");
+}
+
+function resizeIFrameToFitContent( iFrame ) {
+    iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
 }
 
 function openPreview(fileUrl) {
