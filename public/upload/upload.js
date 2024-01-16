@@ -141,6 +141,8 @@ window.onload = function() {
             }
           }
           
+          loadList()
+          
           /*successBox.style.display = 'block';
           fileURL.innerHTML = url;
           fileURL.href = url;
@@ -254,7 +256,7 @@ function loadList() {
                 <!-- Dropdown menu links -->
                 
                 <!--<h6 class="dropdown-header">File actions</h6>-->
-                <a class="dropdown-item" onclick="shareFile('${file.name}')">
+                <a class="dropdown-item" onclick="downloadFile('${file.url}')">
                   <i class="fa-solid fa-download"></i>
                   Download
                 </a>
@@ -366,6 +368,6 @@ function changeSort(newSort) {
   loadList()
 }
 
-function download() {
-  
+function downloadFile(url) {
+  document.getElementById('download_iframe').src = url + "?download=true";
 }
