@@ -28,7 +28,7 @@ window.onload = function() {
   searchBox = document.getElementById('searchBox');
   pageNumber = document.getElementById('pageNumber');
   
-  let previewModal = document.getElementById("previewEmbed")
+  let previewModal = document.getElementsByClassName("previewEmbed")
   let urlInput = document.getElementById("urlInput")
   
   const firebaseConfig = {
@@ -202,10 +202,7 @@ window.onload = function() {
      }
    });
   
-  previewModal.onload = function () {
-    console.log("loaded")
-    //resizeIFrameToFitContent(previewModal)
-  };
+  
 }
 
 function loadList() {
@@ -308,9 +305,27 @@ function resizeIFrameToFitContent( iFrame ) {
 }
 
 function openPreview(fileUrl) {
-  let modal = document.getElementById("previewEmbed")
-  modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
-  modal.src = fileUrl
+  let previews = document.getElementsByClassName("previewEmbed")
+  
+  for (let i = 0; i < previews.length; i++) {
+    let modal = previews[i]
+    
+    modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+    modal.src = fileUrl
+  }
+  
+  $("#previewModal").modal();
+}
+
+function closePreview() {
+  let previews = document.getElementsByClassName("previewEmbed")
+  
+  for (let i = 0; i < previews.length; i++) {
+    let modal = previews[i]
+    
+    modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+  }
+  
   $("#previewModal").modal();
 }
 
