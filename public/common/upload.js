@@ -20,7 +20,9 @@ window.onload = function() {
   const searchForm = document.getElementById('search');
   const searchBox = document.getElementById('searchBox');
   const sortSelect = document.getElementById('sortSelect');
+  
   let previewModal = document.getElementById("previewEmbed")
+  let urlInput = document.getElementById("urlInput")
   
   const firebaseConfig = {
     apiKey: "AIzaSyCILjXwpyNilznxbFTWC9J2Ys2JdJTX0vg",
@@ -178,15 +180,24 @@ window.onload = function() {
     xhr.send(JSON.stringify({ file: filename }));
   }
   
+  function openShareModal(url) {
+    urlInput.value = url
+    $("#shareModal").modal();
+  }
+  
+  document.getElementById("copyShareLink").onclick = function() {
+    urlInput.select();
+    document.execCommand("copy");
+    alert("Link copied to clipboard!");
+  }
+  
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
     loadList()
   });
   
-  function openShareModal(url) {
-    
-  }
+  
   
   loadList()
   
@@ -237,7 +248,7 @@ window.onload = function() {
               <div class="dropdown-menu" >
                 <!-- Dropdown menu links -->
                 
-                <h6 class="dropdown-header">File actions</h6>
+                <!--<h6 class="dropdown-header">File actions</h6>-->f
                 <a class="dropdown-item" onclick="shareFile('${file.name}')">
                   <i class="fa-solid fa-share"></i>
                   Share
