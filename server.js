@@ -364,7 +364,9 @@ app.post('/upload', authenticateToken, (req, res) => {
   bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
     filename = filename.filename
     
-    const filePath = `${user.uid}/${pathQuery + path}`;
+    let pathWithoutUser = pathQuery + filename
+    
+    const filePath = `${user.uid}/${pathWithoutUser}`;
     console.log(filePath)
     
     const fileUpload = bucket.file(filePath);
@@ -387,7 +389,7 @@ app.post('/upload', authenticateToken, (req, res) => {
     });
 
     uploadStream.on('finish', () => {
-      const fileUrl = getFileUrl(filename, req)
+      const fileUrl = getFileUrl(pathWithoutUser, req)
       res.send(fileUrl);
     });
   });
