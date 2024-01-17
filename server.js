@@ -548,7 +548,7 @@ app.put("/folder", authenticateToken, async (req, res) => {
     const foldername = req.body.name;
     const path = req.query.path || ""
     
-    const folderPath = `${user.uid}/${path + foldername}`
+    const folderPath = `${user.uid}/${path + foldername}/`
     
     await bucket.file(folderPath).save("");
     

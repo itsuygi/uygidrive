@@ -357,7 +357,7 @@ function openDirectory(requestedPath) {
   
   pathSplit.forEach(directory => {
     if (directory != "") {
-      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('${directory}')">${directory}</a>`
+      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('${directory + "/"}')">${directory}</a>`
 
       pathDisplay.insertAdjacentHTML( 'beforeend', directoryHTML );
     }
