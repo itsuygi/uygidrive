@@ -346,6 +346,7 @@ function openPreview(fileUrl) {
 function openDirectory(requestedPath) {
   path = requestedPath
   searchBox.value = ""
+  currentPage = 0
   
   pathDisplay.innerHTML = ""
   pathDisplay.innerHTML = `<a href="#" onclick="openDirectory('/')">Your Files</a>`
@@ -356,7 +357,7 @@ function openDirectory(requestedPath) {
   
   pathSplit.forEach(directory => {
     if (directory != "") {
-      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('/')">${directory}</a>`
+      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('${directory}')">${directory}</a>`
 
       pathDisplay.insertAdjacentHTML( 'beforeend', directoryHTML );
     }

@@ -357,12 +357,14 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
 app.post('/upload', authenticateToken, (req, res) => {
   const bb = busboy({ headers: req.headers });
   const user = req.user
+  const pathQuery = req.query.path || ""
   
   let fileUrl = []
   
   bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
     filename = filename.filename
-    const filePath = path.join(user.uid, filename)
+    
+    const filePath = `${user.uid}/${pathQuery + path}`;
     console.log(filePath)
     
     const fileUpload = bucket.file(filePath);
