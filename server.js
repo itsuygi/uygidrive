@@ -532,9 +532,9 @@ app.delete("/file/:filename", authenticateToken, async (req, res) => {
     const user = req.user
     const filename = req.params.filename;
     
-    const pathQuery = req.params.filename || ""
+    const pathQuery = req.query.path || ""
     
-    const filePath = `${user.uid}/${path + filename}`
+    const filePath = `${user.uid}/${pathQuery + filename}`
     
     await bucket.file(filePath).delete();
     
