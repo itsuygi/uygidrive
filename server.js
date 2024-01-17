@@ -550,7 +550,7 @@ app.put("/folder", authenticateToken, async (req, res) => {
     
     const folderPath = `${user.uid}/${path + foldername}/.ghostfile`
     
-    await bucket.file(folderPath).save("");
+    await bucket.file(folderPath).save("", {contentType: "text/plain"});
     
     res.json({result: "success", message: "Folder created successfully."})
   } catch (error) {
