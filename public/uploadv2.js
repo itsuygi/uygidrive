@@ -216,16 +216,7 @@ window.onload = function() {
   });
   
   $('#folderModal').on('hidden.bs.modal', function (e) {
-    let previews = document.getElementsByClassName("preview")
-
-    for (let i = 0; i < previews.length; i++) {
-      let modal = previews[i]
-
-      modal.src = ""
-      modal.style.display = "none"
-    }
-    console.log("File previews resetted.")
-    $("#previewModal").modal();
+    createFolderName.value = ""
   })
   
   $('#previewModal').on('hidden.bs.modal', function (e) {
@@ -437,16 +428,25 @@ function deleteFile(filename) {
 }
 
 function createFolder(foldername) {
-    const xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
 
-    xhr.open('PUT', '/folder?path=' + (path == "/" ? "" : path), true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-      console.log(xhr.responseText)
+  xhr.open('PUT', '/folder?path=' + (path == "/" ? "" : path), true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    console.log(xhr.responseText)
+    $("#folderModal").modal("hide");
+    
+    createFolderButton.innerHTML = "Create folder"
+    createFolderButton.disabled = false
 
-      loadList()
-    }
-    xhr.send({name: foldername});
+    loadList()
+  }
+
+  createFolderButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  <span class="sr-only">Loading...</span>`
+  createFolderButton.disabled = true
+  
+  xhr.send(JSON.stringify({name: foldername}));
 }
 
 function changeSort(newSort) {
