@@ -601,12 +601,12 @@ app.get("/list", authenticateToken, async (req, res) => {
     
     let count = 0
     
-    console.log(filesOnly)
 
     for (const file of filesOnly) {
       count++
       
-      const isFolder = file.name.endsWith('/')
+      console.log(file.metadata.contentType, file.name)
+      const isFolder = (file.metadata.contentType != undefined || file.metadata.contentType == "application/x-www-form-urlencoded;charset=UTF-8") ? false : true
       const fileMetadata = await file.getMetadata();
       
       const mainName = fileMetadata[0].name
@@ -661,11 +661,13 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       fileList = fileList.slice(startIndex, endIndex);
     }
+    
 
     const response = {
       files: fileList,
       next: filesOnly.length > endIndex,
     };
+    
 
     res.json(response);
   } catch (error) {
