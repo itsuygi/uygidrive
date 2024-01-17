@@ -548,9 +548,9 @@ app.put("/folder", authenticateToken, async (req, res) => {
     const foldername = req.body.name;
     const path = req.query.path || ""
     
-    const folderPath = `${user.uid}/${path + foldername}/.ghostfile`
+    const folderPath = `${user.uid}/${path + foldername}`
     
-    await bucket.file(folderPath).save("", {contentType: "text/plain"});
+    await bucket.file(folderPath).save("");
     
     res.json({result: "success", message: "Folder created successfully."})
   } catch (error) {
@@ -589,7 +589,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     });*/
     
     
-    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/'});
+    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/', autoPaginate: false});
     let fileList = [];
 
     const filesOnly = files
@@ -600,6 +600,8 @@ app.get("/list", authenticateToken, async (req, res) => {
     }*/
     
     let count = 0
+    
+    console.log(filesOnly)
 
     for (const file of filesOnly) {
       count++
