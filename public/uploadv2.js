@@ -2,6 +2,8 @@ let currentPage = 1;
 let sort = ""
 let firstLoad = true
 
+let path = "/"
+
 let fileList 
 let nextPage
 let prePage
@@ -232,6 +234,10 @@ function loadList() {
     if (sort) {
       url = url + '&sort=' + sort
     }
+  
+    if (path && path != "/") {
+      url = url + '&path=' + path
+    }
     
     listXhr.open('GET', url, true);
     
@@ -331,6 +337,12 @@ function openPreview(fileUrl) {
   } else {
     downloadFile(fileUrl)
   }
+}
+
+function openDirectory(requestedPath) {
+  path = requestedPath
+  
+  loadList()
 }
 
 function resetUpload() {
