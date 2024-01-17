@@ -10,6 +10,8 @@ let prePage
 let searchBox
 let pageNumber
 
+let pathDisplay
+
 window.onload = function() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -29,6 +31,7 @@ window.onload = function() {
   prePage = document.getElementById('previousPage');
   searchBox = document.getElementById('searchBox');
   pageNumber = document.getElementById('pageNumber');
+  pathDisplay = document.getElementById('pathDisplay');
   
   let previewModal = document.getElementsByClassName("previewEmbed")
   let urlInput = document.getElementById("urlInput")
@@ -343,6 +346,21 @@ function openPreview(fileUrl) {
 function openDirectory(requestedPath) {
   path = requestedPath
   searchBox.value = ""
+  
+  pathDisplay.innerHTML = ""
+  pathDisplay.innerHTML = `<a href="#" onclick="openDirectory('/')">Your Files</a>`
+  
+  let pathSplit = requestedPath.split("/")
+  
+  console.log(pathSplit)
+  
+  pathSplit.forEach(directory => {
+    if (directory != "") {
+      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('/')">${directory}</a>`
+
+      pathDisplay.insertAdjacentHTML( 'beforeend', directoryHTML );
+    }
+  })
   
   loadList()
 }
