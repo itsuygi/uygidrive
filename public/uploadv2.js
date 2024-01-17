@@ -79,7 +79,7 @@ window.onload = function() {
       
       const xhr = new XMLHttpRequest();
 
-      xhr.open('POST', '/upload', true);
+      xhr.open('POST', '/upload?path=' + ((path == "/") ? "" : path), true);
 
       //progressDiv.style.display = "block"
       uploadForm.style.display = "none"
@@ -416,7 +416,7 @@ function deleteFile(filename) {
   if(confirm('Are you sure to delete this file?')) {
       const xhr = new XMLHttpRequest();
 
-      xhr.open('DELETE', '/file/' + filename, true);
+      xhr.open('DELETE', '/file/' + filename + '?path=' + ((path == "/") ? "" : path), true);
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.onload = function () {
         console.log(xhr.responseText)
@@ -430,7 +430,7 @@ function deleteFile(filename) {
 function createFolder(foldername) {
   const xhr = new XMLHttpRequest();
 
-  xhr.open('PUT', '/folder?path=' + (path == "/" ? "" : path), true);
+  xhr.open('PUT', '/folder?path=' + ((path == "/") ? "" : path), true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
     console.log(xhr.responseText)
