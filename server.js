@@ -591,7 +591,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       
       
-      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
       
       const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(name)
      
@@ -599,7 +599,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       const fileDate = fileMetadata[0].timeCreated;
       
 
-      fileList.push({ name, url: fileUrl, date: fileDate, size: formatBytes(fileMetadata[0].size || 0), type: (isFolder) ? "folder" : "file" });
+      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file" });
     }
 
     if (sort) {

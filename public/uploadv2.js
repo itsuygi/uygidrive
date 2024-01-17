@@ -261,7 +261,7 @@ function loadList() {
             url = file.url
           }
           
-          let command = (file.type == "file") ? `openPreview(${file.url})` : `openDirectory(${file.name})`
+          let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.name}')`
           
           let fileHTML = `
           <div class="file-card">
@@ -291,7 +291,7 @@ function loadList() {
               </div>
             </div>
             
-            <div onclick="openPreview('${file.url}')">
+            <div onclick="${command}">
               <h5 class="file-name">${file.name}</h5>
               <p>${file.size}</p>
             </div>
@@ -342,6 +342,7 @@ function openPreview(fileUrl) {
 
 function openDirectory(requestedPath) {
   path = requestedPath
+  searchBox.value = ""
   
   loadList()
 }
