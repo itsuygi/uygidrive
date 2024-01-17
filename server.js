@@ -580,8 +580,11 @@ app.get("/list", authenticateToken, async (req, res) => {
     /*for (const file of files) {
       bucket.file(file.name).makePrivate()
     }*/
+    
+    let count = 0
 
     for (const file of filesOnly) {
+      count++
       
       const isFolder = file.name.endsWith('/')
       const fileMetadata = await file.getMetadata();
@@ -589,8 +592,9 @@ app.get("/list", authenticateToken, async (req, res) => {
       var splitUrl = fileMetadata[0].name.split("/")
       let fileNameSplit = file.name.split("/")
       
-      console.log(fileMetadata[0].name.search(userFolder))
-      
+      if (count == 1 && isFolder) {
+        return
+      }
       
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
@@ -603,6 +607,7 @@ app.get("/list", authenticateToken, async (req, res) => {
 
       fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file" });
     }
+    
 
     if (sort) {
       switch (sort) {
