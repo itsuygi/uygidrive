@@ -321,14 +321,16 @@ function openPreview(fileUrl) {
   const tag = getTagByFileExtension(fileUrl)
   console.log(tag)
   
-  tag.style.display = "block"
-  
-  tag.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
-  tag.src = fileUrl
-  
-  
-  
-  $("#previewModal").modal();
+  if (tag) {
+    tag.style.display = "block"
+
+    tag.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+    tag.src = fileUrl
+
+    $("#previewModal").modal();
+  } else {
+    downloadFile(fileUrl)
+  }
 }
 
 function resetUpload() {

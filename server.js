@@ -567,8 +567,18 @@ app.get("/list", authenticateToken, async (req, res) => {
     }).catch((error) => {
       // Uh-oh, an error occurred!
     });*/
+    
+    let listConf = {}
+    
+    if (pathQuery) {
+      listConf["directory"] = userFolder
+    } else {
+      listConf["prefix"] = userFolder
+    }
+    
+    console.log(listConf)
 
-    const [files] = await bucket.getFiles({ prefix: userFolder });
+    const [files] = await bucket.getFiles(listConf);
     let fileList = [];
 
     const filesOnly = files
