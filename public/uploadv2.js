@@ -202,7 +202,18 @@ window.onload = function() {
      }
    });
   
-  
+  $('#previewModal').on('hidden.bs.modal', function (e) {
+    let previews = document.getElementsByClassName("preview")
+
+    for (let i = 0; i < previews.length; i++) {
+      let modal = previews[i]
+
+      modal.src = ""
+      modal.style.display = "none"
+    }
+    console.log("File previews resetted.")
+    //$("#previewModal").modal();
+  })
 }
 
 function loadList() {
@@ -316,19 +327,6 @@ function openPreview(fileUrl) {
   tag.src = fileUrl
   
   
-  
-  $("#previewModal").modal();
-}
-
-function closePreview() {
-  let previews = document.getElementsByClassName("preview")
-  
-  for (let i = 0; i < previews.length; i++) {
-    let modal = previews[i]
-    
-    modal.src = ""
-    modal.style.display = "none"
-  }
   
   $("#previewModal").modal();
 }

@@ -88,23 +88,27 @@
     </div>
   </div>
     
+  <!-- Preview Modal -->
+    
   <div class="modal fade" id="previewModal" tabindex="-1" role="dialog" aria-labelledby="previewModalLabel" aria-hidden="true">
     <div class="modal-dialog " role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="previewModalLabel"></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="document.getElementById('previewEmbed').src='https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958'">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body" id="previewContainer">
           <embed style="display: none" class="preview" width="100%" heigth="100%" id="filePreview" >
-          <video style="display: none" class="preview" controls id="videoPreview"></video>
+          <video style="display: none" height="100%" width="100%" class="preview" controls id="videoPreview"></video>
           <audio style="display: none" class="preview" controls id="audioPreview"></audio>
         </div>
       </div>
     </div>
   </div>
+    
+  <!-- Share Modal -->
     
   <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true">
     <div class="modal-dialog " role="document">
