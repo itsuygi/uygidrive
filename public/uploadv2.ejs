@@ -39,6 +39,10 @@
     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#uploadModal">
       <i class="fas fa-upload mr-2"></i> Upload New File
     </button>
+    
+    <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#folderModal">
+      <i class="fa-solid fa-folder-plus"></i> Create Folder
+    </button>
   </div>
   
   <!-- Upload Modal -->
@@ -130,17 +134,25 @@
     </div>
   </div>
     
+  <!-- Folder Modal -->
+    
   <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel" aria-hidden="true">
     <div class="modal-dialog " role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="folderModalLabel">Share File</h5>
+          <h5 class="modal-title" id="folderModalLabel">Create Folder</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        
         <div class="modal-body" id="folderContiner">
-          
+          <input id="createFolderName" class="form-control" id="newFolderName" type="text" placeholder="Folder name">
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="createFolderButton" type="button" class="btn btn-primary">Create folder</button>
         </div>
       </div>
     </div>

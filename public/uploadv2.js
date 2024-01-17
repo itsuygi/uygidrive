@@ -9,6 +9,8 @@ let nextPage
 let prePage
 let searchBox
 let pageNumber
+let createFolderButton
+let createFolderName
 
 let pathDisplay
 
@@ -32,6 +34,8 @@ window.onload = function() {
   searchBox = document.getElementById('searchBox');
   pageNumber = document.getElementById('pageNumber');
   pathDisplay = document.getElementById('pathDisplay');
+  createFolderButton = document.getElementById('createFolderButton');
+  createFolderName = document.getElementById("createFolderName")
   
   let previewModal = document.getElementsByClassName("previewEmbed")
   let urlInput = document.getElementById("urlInput")
@@ -207,6 +211,23 @@ window.onload = function() {
      }
    });
   
+  createFolderButton.addEventListener('click', function () {
+     createFolder(createFolderName.value)
+  });
+  
+  $('#folderModal').on('hidden.bs.modal', function (e) {
+    let previews = document.getElementsByClassName("preview")
+
+    for (let i = 0; i < previews.length; i++) {
+      let modal = previews[i]
+
+      modal.src = ""
+      modal.style.display = "none"
+    }
+    console.log("File previews resetted.")
+    $("#previewModal").modal();
+  })
+  
   $('#previewModal').on('hidden.bs.modal', function (e) {
     let previews = document.getElementsByClassName("preview")
 
@@ -316,6 +337,7 @@ function loadList() {
     listXhr.send()
   };
 
+
 function logout() {
   window.location.replace("/sessionLogout");
 }
@@ -412,6 +434,19 @@ function deleteFile(filename) {
       }
       xhr.send();
   }
+}
+
+function createFolder(foldername) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('PUT', '/folder?path=' + (path == "/" ? "" : path), true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+
+      loadList()
+    }
+    xhr.send({name: foldername});
 }
 
 function changeSort(newSort) {
