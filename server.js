@@ -542,6 +542,22 @@ app.delete("/file/:filename", authenticateToken, async (req, res) => {
   }
 });
 
+app.put("/folder", authenticateToken, async (req, res) => {
+  try {
+    const user = req.user
+    const foldername = req.body.name;
+    const path = req.query.path || ""
+    
+    const folderPath = `${user.uid}/${path + foldername}/.ghostfile`
+    
+    await bucket.file(folderPath).save("");
+    
+    res.json({result: "success", message: "Folder created successfully."})
+  } catch (error) {
+    res.status(500).json({result: "error", message: error.message})
+  }
+});
+
 app.get("/list", authenticateToken, async (req, res) => {
   try {
     console.log("Recieved file list request.")
@@ -663,16 +679,33 @@ app.get("/list/folders", authenticateToken, async (req, res) => {
   const userFolder = `${user.uid}/${pathQuery}`;
   console.log(userFolder)
     
+  
   const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/'});
+  let folderList = []
   
-  files.filter((file) => !file.name.endsWith('/'));
+  let foldersOnly = files.filter((file) => file.name.endsWith('/'));
   
-  for (const file of filesOnly) {
-      count++
+  for (const folder of foldersOnly) {
       
-      const isFolder = file.name.endsWith('/')
+      const fileMetadata = await folder.getMetadata();
       
+      const mainName = fileMetadata[0].name
+      
+      var splitUrl = fileMetadata[0].name.split("/")
+      let folderNameSplit = folder.name.split("/")
+      
+      var name = splitUrl[splitUrl.length - 2] + "/"
+      
+      const fileUrl = getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length)))
+     
+      
+      const fileDate = fileMetadata[0].timeCreated;
+      
+
+      folderList.push({ name, url: fileUrl, date: fileDate, size: "folder", type: "folder"})
   }
+  
+  res.json(folderList)
 });
 
 function generateAccessToken(data, time) {
