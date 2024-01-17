@@ -247,7 +247,7 @@ app.get("/login", async (req, res) => {
 
 // Uploading
 
-app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res) => {
+/*app.post("/uploadFile", authenticateToken, upload.single("file"), async (req,res) => {
   try {
     if (!req.file) {
       return res.status(400).send('No file or non-accepted file type.');
@@ -313,7 +313,7 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
         res.status(413).json({error: `The file size exceeded the limit of ${maxFileSize} bytes`});
 
         req.connection.destroy();
-      }*/
+      }
     })
     .pipe(file.createWriteStream({
       metadata: fileOptions
@@ -352,7 +352,7 @@ app.post("/uploadFileV2", authenticateToken, async (req,res) => {
     console.error('File uploading error:', error);
     res.status(500).send(error.message);
   }
-});
+});*/
 
 app.post('/upload', authenticateToken, (req, res) => {
   const bb = busboy({ headers: req.headers });
