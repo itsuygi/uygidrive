@@ -568,17 +568,8 @@ app.get("/list", authenticateToken, async (req, res) => {
       // Uh-oh, an error occurred!
     });*/
     
-    let listConf = {}
     
-    if (pathQuery) {
-      listConf["directory"] = userFolder
-    } else {
-      listConf["prefix"] = userFolder
-    }
-    
-    console.log(listConf)
-
-    const [files] = await bucket.getFiles({prefix: userFolder});
+    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/'});
     let fileList = [];
 
     const filesOnly = files
@@ -596,10 +587,9 @@ app.get("/list", authenticateToken, async (req, res) => {
       var splitUrl = fileMetadata[0].name.split("/")
       let fileNameSplit = file.name.split("/")
       
+      console.log(fileMetadata[0].name.search(userFolder))
       
-      if (path.join.apply(null, splitUrl.splice(1, splitUrl.length)) != userFolder) {
-        return
-      }
+      
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
