@@ -346,7 +346,7 @@ function openPreview(fileUrl) {
 function openDirectory(requestedPath) {
   path = requestedPath
   searchBox.value = ""
-  currentPage = 0
+  currentPage = 1
   
   pathDisplay.innerHTML = ""
   pathDisplay.innerHTML = `<a href="#" onclick="openDirectory('/')">Your Files</a>`

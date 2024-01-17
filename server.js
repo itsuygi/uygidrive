@@ -593,7 +593,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       let fileNameSplit = file.name.split("/")
       
       if (count == 1 && isFolder) {
-        return
+        continue
       }
       
       
