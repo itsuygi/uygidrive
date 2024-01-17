@@ -305,14 +305,17 @@ function resizeIFrameToFitContent( iFrame ) {
 }
 
 function openPreview(fileUrl) {
-  let previews = document.getElementsByClassName("preview")
+  //let previews = document.getElementsByClassName("preview")
   
-  for (let i = 0; i < previews.length; i++) {
-    let modal = previews[i]
-    
-    modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
-    modal.src = fileUrl
-  }
+  const tag = getTagByFileExtension(fileUrl)
+  console.log(tag)
+  
+  tag.style.display = "block"
+  
+  tag.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+  tag.src = fileUrl
+  
+  
   
   $("#previewModal").modal();
 }
@@ -323,7 +326,8 @@ function closePreview() {
   for (let i = 0; i < previews.length; i++) {
     let modal = previews[i]
     
-    modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
+    modal.src = ""
+    modal.style.display = "none"
   }
   
   $("#previewModal").modal();
@@ -385,4 +389,36 @@ function changeSort(newSort) {
 
 function downloadFile(url) {
   document.getElementById('download_iframe').src = url + "?download=true";
+}
+
+function getTagByFileExtension(fileUrl) {
+  const extensionMapping = {
+    'mp3': 'audioPreview',
+    'wav': 'audioPreview',
+    'ogg': 'audioPreview',
+    'mp4': 'videoPreview',
+    'mov': 'videoPreview',
+    'webm': 'videoPreview',
+    'png': 'filePreview',
+    'jpg': 'filePreview',
+    'jpeg': 'filePreview',
+    'gif': 'filePreview',
+    'pdf': 'filePreview',
+    'doc': 'filePreview',
+    'py': 'filePreview',
+    'c': 'filePreview',
+    'json': 'filePreview',
+    'js': 'filePreview',
+    'css': 'filePreview',
+    'html': 'filePreview',
+    'txt': 'filePreview'
+  };
+
+  const fileExtension = fileUrl.split('.').pop();
+  console.log(fileExtension)
+
+  const tag = extensionMapping[fileExtension.toLowerCase()];
+  console.log(tag)
+
+  return document.getElementById(tag)
 }
