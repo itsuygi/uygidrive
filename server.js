@@ -470,7 +470,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/folder/*", authenticateToken, async (req, res) => {
+/*app.get("/folder/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
     let folderName = req.params[0];
@@ -506,7 +506,7 @@ app.get("/folder/*", authenticateToken, async (req, res) => {
     
     res.status(error.code).send((error.code == 404) ? "File not found" : error.message)
   }
-});
+});*/
 
 app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
   try {
@@ -591,6 +591,8 @@ app.get("/list", authenticateToken, async (req, res) => {
       const isFolder = file.name.endsWith('/')
       const fileMetadata = await file.getMetadata();
       
+      const mainName = fileMetadata[0].name
+      
       var splitUrl = fileMetadata[0].name.split("/")
       let fileNameSplit = file.name.split("/")
       
@@ -601,7 +603,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
       
-      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(name)
+      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
      
       
       const fileDate = fileMetadata[0].timeCreated;
@@ -651,6 +653,25 @@ app.get("/list", authenticateToken, async (req, res) => {
   } catch (error) {
     console.error("Error while listing the files:", error);
     res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while listing files"});
+  }
+});
+
+app.get("/list/folders", authenticateToken, async (req, res) => {
+  let user = req.user
+  let pathQuery = req.query.path || ""
+  
+  const userFolder = `${user.uid}/${pathQuery}`;
+  console.log(userFolder)
+    
+  const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/'});
+  
+  files.filter((file) => !file.name.endsWith('/'));
+  
+  for (const file of filesOnly) {
+      count++
+      
+      const isFolder = file.name.endsWith('/')
+      
   }
 });
 
