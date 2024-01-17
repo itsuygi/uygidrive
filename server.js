@@ -578,7 +578,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     
     console.log(listConf)
 
-    const [files] = await bucket.getFiles(listConf);
+    const [files] = await bucket.getFiles({prefix: userFolder});
     let fileList = [];
 
     const filesOnly = files
