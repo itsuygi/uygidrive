@@ -261,6 +261,7 @@ function loadList() {
             url = file.url
           }
           
+          let command = (file.type == "file") ? `openPreview(${file.url})` : `openDirectory(${file.name})`
           
           let fileHTML = `
           <div class="file-card">
