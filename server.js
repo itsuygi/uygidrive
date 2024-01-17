@@ -589,14 +589,19 @@ app.get("/list", authenticateToken, async (req, res) => {
     }*/
 
     for (const file of filesOnly) {
+      
       const isFolder = file.name.endsWith('/')
       const fileMetadata = await file.getMetadata();
       
       var splitUrl = fileMetadata[0].name.split("/")
       let fileNameSplit = file.name.split("/")
       
-      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
+      if (path.join.apply(null, splitUrl.splice(1, splitUrl.length)) != userFolder) {
+        return
+      }
+      
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
       const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(name)
      
