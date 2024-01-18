@@ -359,7 +359,11 @@ function openPreview(fileUrl) {
 function openDirectory(requestedPath) {
   if (requestedPath != "/") {
     path += requestedPath
-    path = p.substring(1)
+    
+    if (path[0] == "/") {
+      path = path.substring(1)
+    }
+    console.log("Updated path: " + path)
   } else {
     path = requestedPath
   }

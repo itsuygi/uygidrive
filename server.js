@@ -625,8 +625,22 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       //getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length)))
       
-      const fileUrl = (isFolder) ? undefined : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
+      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
      
+      let folderPath
+      
+      if (isFolder) {
+        folderPath = splitUrl.splice(1, splitUrl.length)
+        
+        folderPath.forEach((path) => {
+          if (path == "") {
+            path = undefined
+          }
+        })
+        console.log(folderPath)
+        
+        if folderPath
+      }
       
       const fileDate = fileMetadata[0].timeCreated;
       
