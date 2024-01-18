@@ -276,7 +276,7 @@ function loadList() {
             url = file.url
           }
           
-          let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.name}')`
+          let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.folderPath}')`
           
           let fileHTML = `
           <div class="file-card">
@@ -357,7 +357,7 @@ function openPreview(fileUrl) {
 }
 
 function openDirectory(requestedPath) {
-  if (requestedPath != "/") {
+  /*if (requestedPath != "/") {
     path += requestedPath
     
     if (path[0] == "/") {
@@ -366,7 +366,9 @@ function openDirectory(requestedPath) {
     console.log("Updated path: " + path)
   } else {
     path = requestedPath
-  }
+  }*/
+  
+  path = requestedPath
   
   searchBox.value = ""
   currentPage = 1
@@ -380,7 +382,7 @@ function openDirectory(requestedPath) {
   
   pathSplit.forEach(directory => {
     if (directory != "") {
-      let directoryHTML = `<a> > </a> <a href="#" onclick="openDirectory('${directory + "/"}')">${directory}</a>`
+      let directoryHTML = `<a> > </a> <a  onclick="openDirectory('${directory + "/"}')">${directory}</a>`
 
       pathDisplay.insertAdjacentHTML( 'beforeend', directoryHTML );
     }

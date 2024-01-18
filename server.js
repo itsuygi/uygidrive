@@ -591,7 +591,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     });*/
     
     
-    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : null, autoPaginate: false});
+    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? undefined : undefined, autoPaginate: false});
     let fileList = [];
 
     const filesOnly = files
@@ -621,11 +621,12 @@ app.get("/list", authenticateToken, async (req, res) => {
       }
       
       
-      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
+      var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
-      const folderPath = (isFolder) ? path.join.apply(null, splitUrl.splice(1, splitUrl.length)) : undefined
+      const folderPath = (isFolder) ? (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/" : undefined
+      const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
       
-      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
+      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl()
      
       /*let folderPath
       
