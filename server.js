@@ -542,8 +542,9 @@ app.delete("/file/*", authenticateToken, async (req, res) => {
     try {
       await bucket.file(filePath).delete();
     } catch {
-      return bucket.deleteFiles({
-        prefix: `users/${userId}/`
+      filename += "/"
+      await bucket.deleteFiles({
+        prefix: `${user.uid}/${filename}`
       })
     }
     

@@ -296,7 +296,10 @@ function loadList() {
                     <i class="fa-solid fa-trash"></i>
                     Delete
                   </a>` 
-            : `<h6 class="dropdown-header">Folder actions are coming soon!</h6>`
+            : `<a class="dropdown-item" onclick="deleteFile('${file.path}')">
+                <i class="fa-solid fa-trash"></i>
+                Delete
+               </a>`
           
           let fileHTML = `
           <div class="file-card">
