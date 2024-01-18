@@ -277,31 +277,39 @@ function loadList() {
           }
           
           let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.folderPath}')`
+          let actions = 
+              (file.type == "file") 
+            ?   
+                `<a class="dropdown-item" onclick="downloadFile('${file.url}')">
+                    <i class="fa-solid fa-download"></i>
+                    Download
+                  </a>
+
+                  <a class="dropdown-item" onclick="shareFile('${file.name}')">
+                    <i class="fa-solid fa-share"></i>
+                    Share
+                  </a>
+
+                  <div class="dropdown-divider"></div>
+
+                  <a class="dropdown-item" onclick="deleteFile('${file.name}')">
+                    <i class="fa-solid fa-trash"></i>
+                    Delete
+                  </a>` 
+            : `<h6 class="dropdown-header">Folder actions are coming soon!</h6>`
           
           let fileHTML = `
           <div class="file-card">
+            ${(file.type == "file") ? '<i class="fa-solid fa-file"></i>' : '<i class="fa-regular fa-folder"></i>'}
+          
             <div class="file-actions" >
               <li class="fas fa-ellipsis-v" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ></li>
               <div class="dropdown-menu" >
                 <!-- Dropdown menu links -->
                 
                 <!--<h6 class="dropdown-header">File actions</h6>-->
-                <a class="dropdown-item" onclick="downloadFile('${file.url}')">
-                  <i class="fa-solid fa-download"></i>
-                  Download
-                </a>
                 
-                <a class="dropdown-item" onclick="shareFile('${file.name}')">
-                  <i class="fa-solid fa-share"></i>
-                  Share
-                </a>
-                
-                <div class="dropdown-divider"></div>
-                
-                <a class="dropdown-item" onclick="deleteFile('${file.name}')">
-                  <i class="fa-solid fa-trash"></i>
-                  Delete
-                </a>
+                ${actions}
                 
               </div>
             </div>

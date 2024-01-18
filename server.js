@@ -624,13 +624,13 @@ app.get("/list", authenticateToken, async (req, res) => {
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
       const resultPath = (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/"
+      /*if (isFolder) {
+        resultPath + "/" 
+      }*/
       //const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
       
       console.log(mainName)
       
-      /*splitUrl = splitUrl.filter(function(item) {
-        return item.length !== 0
-      })*/
       
       fileNameSplit = fileNameSplit.filter(function(item) {
         return item.length !== 0
