@@ -357,7 +357,13 @@ function openPreview(fileUrl) {
 }
 
 function openDirectory(requestedPath) {
-  path = requestedPath
+  if (requestedPath != "/") {
+    path += requestedPath
+    path = p.substring(1)
+  } else {
+    path = requestedPath
+  }
+  
   searchBox.value = ""
   currentPage = 1
   
