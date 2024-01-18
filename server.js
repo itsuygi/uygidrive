@@ -632,14 +632,14 @@ app.get("/list", authenticateToken, async (req, res) => {
       if (isFolder) {
         folderPath = splitUrl.splice(1, splitUrl.length)
         
-        folderPath.forEach((path) => {
-          if (path == "") {
-            path = undefined
-          }
+        folderPath = folderPath.filter(function(item) {
+          return item.length !== 0
         })
         console.log(folderPath)
         
-        if folderPath
+        if (folderPath[.length - 1 != pathQuery) {
+          
+        }
       }
       
       const fileDate = fileMetadata[0].timeCreated;
