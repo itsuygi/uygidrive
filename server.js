@@ -637,10 +637,13 @@ app.get("/list", authenticateToken, async (req, res) => {
       }*/
     
       fileNameSplit.shift()
-      console.log(fileNameSplit.join())
-      console.log(fileNameSplit.join().split(pathQuery))
+      fileNameSplit.pop()
       
-      if (fileNameSplit.join().split(pathQuery)) {
+      let fileNameJoin = fileNameSplit.join("/")
+
+      console.log(fileNameJoin)
+      
+      if (!(fileNameSplit.join("/") == pathQuery)) {
         continue;
       }
       
