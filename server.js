@@ -607,7 +607,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     for (const file of filesOnly) {
       count++
       
-      console.log(file.metadata.contentType, file.name)
+      //console.log(file.metadata.contentType, file.name)
       const isFolder = (file.metadata.contentType != undefined || file.metadata.contentType == "application/x-www-form-urlencoded;charset=UTF-8") ? false : true
       const fileMetadata = await file.getMetadata();
       
@@ -626,7 +626,22 @@ app.get("/list", authenticateToken, async (req, res) => {
       const folderPath = (isFolder) ? (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/" : undefined
       const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
       
-      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl()
+      console.log(splitUrl)
+      console.log(splitUrl[splitUrl.length - 2], pathQuery)
+      
+      splitUrl = splitUrl.filter(function(item) {
+        return item.length !== 0
+      })
+      
+      /*if ((splitUrl[splitUrl.length - 2] == pathQuery)) {
+        continue
+      }*/
+      
+      if (pathQuery && !mainName.startsWith(userFolder)) {
+        continue;
+      }
+      
+      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl(filePath)
      
       /*let folderPath
       
