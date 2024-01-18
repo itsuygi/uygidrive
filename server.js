@@ -591,7 +591,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     });*/
     
     
-    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : '/', autoPaginate: false});
+    const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? null : null, autoPaginate: false});
     let fileList = [];
 
     const filesOnly = files
@@ -623,7 +623,9 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
       
-      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
+      //getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length)))
+      
+      const fileUrl = (isFolder) ? undefined : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
      
       
       const fileDate = fileMetadata[0].timeCreated;
