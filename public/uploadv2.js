@@ -276,7 +276,7 @@ function loadList() {
             url = file.url
           }
           
-          let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.folderPath}')`
+          let command = (file.type == "file") ? `openPreview('${file.url}')` : `openDirectory('${file.path}')`
           let actions = 
               (file.type == "file") 
             ?   
@@ -292,7 +292,7 @@ function loadList() {
 
                   <div class="dropdown-divider"></div>
 
-                  <a class="dropdown-item" onclick="deleteFile('${file.name}')">
+                  <a class="dropdown-item" onclick="deleteFile('${file.path}')">
                     <i class="fa-solid fa-trash"></i>
                     Delete
                   </a>` 
@@ -324,7 +324,7 @@ function loadList() {
         });
         
         if (firstLoad == false) {
-          document.documentElement.scrollTop = document.body.scrollTop = 420;
+          //document.documentElement.scrollTop = document.body.scrollTop = 420;
         }
         
         firstLoad = false
@@ -432,11 +432,11 @@ function openShareModal(url) {
   $("#shareModal").modal();
 }
 
-function deleteFile(filename) {
+function deleteFile(filePath) {
   if(confirm('Are you sure to delete this file?')) {
       const xhr = new XMLHttpRequest();
 
-      xhr.open('DELETE', '/file/' + filename + '?path=' + ((path == "/") ? "" : path), true);
+      xhr.open('DELETE', '/file/' + filePath, true)
       xhr.setRequestHeader('Content-Type', 'application/json');
       xhr.onload = function () {
         console.log(xhr.responseText)

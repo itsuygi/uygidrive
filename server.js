@@ -527,16 +527,25 @@ app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
   }
 });
 
-app.delete("/file/:filename", authenticateToken, async (req, res) => {
+app.delete("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
-    const filename = req.params.filename;
+    let filename = req.params[0];
     
-    const pathQuery = req.query.path || ""
+    if (filename.endsWith("/")) {
+      filename = filename.slice(0, -1);
+    }
+    console.log(filename)
     
-    const filePath = `${user.uid}/${pathQuery + filename}`
+    const filePath = `${user.uid}/${filename}`
     
-    await bucket.file(filePath).delete();
+    try {
+      await bucket.file(filePath).delete();
+    } catch {
+      return bucket.deleteFiles({
+        prefix: `users/${userId}/`
+      })
+    }
     
     res.json({result: "success", message: "File deleted successfully."})
   } catch (error) {
@@ -623,11 +632,11 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
-      const resultPath = (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/"
+      const folderPath = (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/"
       /*if (isFolder) {
         resultPath + "/" 
       }*/
-      //const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
+      const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
       
       console.log(mainName)
       
@@ -651,7 +660,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       }
       // check end
       
-      const fileUrl = (isFolder) ? getFolderUrl(resultPath) : getFileUrl(resultPath)
+      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl(filePath)
      
       /*let folderPath
       
@@ -671,7 +680,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       const fileDate = fileMetadata[0].timeCreated;
       
 
-      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", folderPath: resultPath });
+      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", path: (isFolder) ? folderPath: filePath });
     }
     
 
