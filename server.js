@@ -628,24 +628,28 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       console.log(mainName)
       
-      splitUrl = splitUrl.filter(function(item) {
+      /*splitUrl = splitUrl.filter(function(item) {
+        return item.length !== 0
+      })*/
+      
+      fileNameSplit = fileNameSplit.filter(function(item) {
         return item.length !== 0
       })
       
-      /*if ((splitUrl[splitUrl.length - 2] == pathQuery)) {
-        continue
-      }*/
-    
+      // Is subfolder or subfile check start
       fileNameSplit.shift()
       fileNameSplit.pop()
       
-      let fileNameJoin = fileNameSplit.join("/")
-
-      console.log(fileNameJoin)
+      let fileNameJoin = fileNameSplit.join("/") + "/"
       
-      if (!(fileNameSplit.join("/") == pathQuery)) {
+      if (fileNameJoin == "/") {
+        fileNameJoin = ""
+      }
+      
+      if (!(fileNameJoin == pathQuery)) {
         continue;
       }
+      // check end
       
       const fileUrl = (isFolder) ? getFolderUrl(resultPath) : getFileUrl(resultPath)
      
