@@ -623,11 +623,11 @@ app.get("/list", authenticateToken, async (req, res) => {
       
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2] + "/"
       
-      //getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length)))
+      const folderPath = (isFolder) ? path.join.apply(null, splitUrl.splice(1, splitUrl.length)) : undefined
       
-      const fileUrl = (isFolder) ? getFolderUrl(path.join.apply(null, splitUrl.splice(1, splitUrl.length))) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
+      const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl(mainName.substring(mainName.indexOf('/') + 1))
      
-      let folderPath
+      /*let folderPath
       
       if (isFolder) {
         folderPath = splitUrl.splice(1, splitUrl.length)
@@ -637,15 +637,15 @@ app.get("/list", authenticateToken, async (req, res) => {
         })
         console.log(folderPath)
         
-        if (folderPath[.length - 1 != pathQuery) {
+        if (folderPath[folderPath.length - 1] != pathQuery) {
           
         }
-      }
+      }*/
       
       const fileDate = fileMetadata[0].timeCreated;
       
 
-      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file" });
+      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", folderPath });
     }
     
 
