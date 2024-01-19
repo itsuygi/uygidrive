@@ -219,6 +219,18 @@ window.onload = function() {
     createFolderName.value = ""
   })
   
+  $('#uploadModal').on('hidden.bs.modal', function (e) {
+    const successBox = document.getElementById('successBox');
+    const errorBox = document.getElementById('errorBox');
+    const uploadForm = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+
+    successBox.style.display = "none"
+    errorBox.style.display = "none"
+    uploadForm.style.display = "block"
+    fileInput.value = null
+  });
+  
   $('#previewModal').on('hidden.bs.modal', function (e) {
     let previews = document.getElementsByClassName("preview")
 
@@ -402,17 +414,6 @@ function openDirectory(requestedPath) {
   loadList()
 }
 
-function resetUpload() {
-  const successBox = document.getElementById('successBox');
-  const errorBox = document.getElementById('errorBox');
-  const uploadForm = document.getElementById('uploadForm');
-  const fileInput = document.getElementById('fileInput');
-  
-  successBox.style.display = "none"
-  errorBox.style.display = "none"
-  uploadForm.style.display = "block"
-  fileInput.value = null
-}
 
 function shareFile(filename) {
   const xhr = new XMLHttpRequest();
