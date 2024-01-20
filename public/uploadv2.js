@@ -1,5 +1,5 @@
 let currentPage = 1;
-let sort = ""
+let sort = "date:new-first"
 let firstLoad = true
 
 let path = "/"
@@ -198,16 +198,20 @@ window.onload = function() {
   
    nextPage.addEventListener('click', function () {
      currentPage++
+     prePage.style.display = "inline"
+     
      loadList()
      console.log("Loading next page")
    });
   
    prePage.addEventListener('click', function () {
-     
      if (currentPage - 1 >= 1) {
+       prePage.style.display = "inline"
        currentPage--
        loadList()
        console.log("Loading previous page")
+     } else {
+       prePage.style.display = "none"
      }
    });
   
