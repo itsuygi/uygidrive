@@ -27,9 +27,6 @@ window.addEventListener("load", function(){
     themeIcon.innerHTML = '<i class="fas fa-moon"></i>'; 
   }
   
-  document.getElementById('btnSwitch').addEventListener('click',()=>{
-      
-  })
 
   themeToggle.addEventListener("click", () => {
     changeColorMode()

@@ -314,7 +314,7 @@ function loadList() {
                </a>`
           
           let fileHTML = `
-          <div class="file-card">
+          <div class="file-card $light">
             ${(file.type == "file") ? '<i class="fa-solid fa-file"></i>' : '<i class="fa-regular fa-folder"></i>'}
           
             <div class="file-actions" >
