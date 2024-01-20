@@ -241,7 +241,7 @@ window.onload = function() {
     for (let i = 0; i < previews.length; i++) {
       let modal = previews[i]
 
-      modal.src = ""
+      modal.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
       modal.style.display = "none"
     }
     console.log("File previews resetted.")
@@ -250,7 +250,13 @@ window.onload = function() {
 }
 
 function loadList() {
-    fileList.innerHTML = 'Loading...';
+    fileList.innerHTML = `
+      <div>
+        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+        <br>
+        <!--<h5>Loading...</h5>-->
+      </div>
+    `
     
     const search = searchBox.value
     
@@ -374,8 +380,11 @@ function openPreview(fileUrl) {
   if (tag) {
     tag.style.display = "block"
 
-    tag.src = "https://cdn.glitch.global/7fd03d08-8029-486c-9567-032d359a4c03/loading.gif?v=1705350315958"
     tag.src = fileUrl
+    
+    let urlSplit = fileUrl.split("/")
+    
+    document.getElementById("previewModalLabel").innerHTML = urlSplit[urlSplit.length - 1]
 
     $("#previewModal").modal();
   } else {
