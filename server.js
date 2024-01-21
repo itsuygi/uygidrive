@@ -726,7 +726,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Error while listing the files:", error);
-    res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while listing files"});
+    res.status(500).send(error.message);
   }
 });
 
