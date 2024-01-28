@@ -307,7 +307,7 @@ function loadList() {
                     Download
                   </a>
 
-                  <a class="dropdown-item" onclick="shareFile('${file.name}')">
+                  <a class="dropdown-item" onclick="shareFile('${file.path}')">
                     <i class="fa-solid fa-share"></i>
                     Share
                   </a>
@@ -428,7 +428,7 @@ function openDirectory(requestedPath) {
 }
 
 
-function shareFile(filename) {
+function shareFile(filepath) {
   const xhr = new XMLHttpRequest();
 
   xhr.open('POST', '/getShareLink', true);
@@ -438,8 +438,9 @@ function shareFile(filename) {
 
     openShareModal(xhr.responseText)
   }
-  console.log(JSON.stringify({ file: filename }))
-  xhr.send(JSON.stringify({ file: filename }));
+  
+  console.log(JSON.stringify({ file: filepath }))
+  xhr.send(JSON.stringify({ file: filepath }));
 }
 
 function openShareModal(url) {
