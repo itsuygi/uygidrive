@@ -517,10 +517,25 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
     
     const file = bucket.file(sharePath);
     const fileMetadata = await file.getMetadata();
-    const fileContent = await file.download();
+    
+    const splitUrl = fileMetadata[0].name.split("/")
+    
+    res.header("Content-Type", fileMetadata[0].contentType || "")
+    res.header("Content-Length", fileMetadata[0].size || 0)
+    
+    const fileReadStream = file.createReadStream();
+
+    //res.setHeader('Content-Type', 'application/octet-stream');
+    const filenameFromStorage = splitUrl[splitUrl.length - 1]
+    console.log(contentDisposition(filenameFromStorage))
+    
+    //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
+    
+    res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
+    fileReadStream.pipe(res);
     
     res.header("Content-Type", fileMetadata[0].contentType)
-    res.send(fileContent[0])
+    //res.send(fileContent[0])
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while getting file"});
