@@ -55,7 +55,7 @@ async function authenticateShareToken(req, res, next) {
   let shareToken = req.query.shareToken
   let user = req.params.user
   
-  let filename = req.params[0]
+  let filepath = req.params[0]
   
   if (shareToken) {
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
@@ -64,7 +64,7 @@ async function authenticateShareToken(req, res, next) {
       }
 
       try {
-        const requestedPath = `${user}/${filename}`
+        const requestedPath = `${user}/${filepath}`
         console.log(requestedPath, token_data.path)
         
         if (requestedPath == token_data.path) {
