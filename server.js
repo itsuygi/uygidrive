@@ -55,7 +55,7 @@ async function authenticateShareToken(req, res, next) {
   let shareToken = req.query.shareToken
   let user = req.params.user
   
-  let filename = req.params.filename
+  let filename = req.params[0]
   
   if (shareToken) {
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
@@ -508,12 +508,12 @@ app.get("/file/*", authenticateToken, async (req, res) => {
   }
 });*/
 
-app.get("/shared/:user/:filename", authenticateShareToken, async (req, res) => {
+app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
   try {
     const sharePath = req.sharePath
     
     const user = req.params.user;
-    const filename = req.params.filename;
+    //const filename = req.params.filename;
     
     const file = bucket.file(sharePath);
     const fileMetadata = await file.getMetadata();
