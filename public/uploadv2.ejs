@@ -124,11 +124,30 @@
           </button>
         </div>
         <div class="modal-body" id="shareContainer">
-          <h6>Everyone has this link can access the file. Link expires in 14 days.</h6>
-          <label for="urlInput">URL:</label>
-          <input widght="90%" class="url-input" type="text" id="urlInput" readonly>
+          <div class="card">
+            <div class="card-body">
+              <h6>Make this file public to get a public link.</h6>
+              <!--<label for="urlInput">URL:</label>
+              <input widght="90%" class="url-input" type="text" id="urlInput" readonly>
 
-          <button class="btn btn-success" type="button" id="copyShareLink">Copy Link</button>
+              <button class="btn btn-success" type="button" id="copyShareLink">Copy Link</button>-->
+            </div>
+          </div>
+          
+          <br>
+
+          <div class="card">
+            <div class="card-body">
+              <h5>Private Link</h5>
+              <h8>This url has a access token so anyone without it cannot access the file.</h8>
+              <br>
+              <label for="urlInput">URL:</label>
+              <input widght="90%" class="url-input" type="text" id="urlInput" readonly>
+
+              <button class="btn btn-success" type="button" id="copyShareLink">Copy Link</button>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
