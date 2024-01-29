@@ -399,39 +399,37 @@ function openPreview(fileUrl) {
 }
 
 function openDirectory(requestedPath) {
-  /*if (requestedPath != "/") {
-    path += requestedPath
-    
-    if (path[0] == "/") {
-      path = path.substring(1)
-    }
-    console.log("Updated path: " + path)
-  } else {
-    path = requestedPath
+  path = requestedPath;
+
+  searchBox.value = "";
+  currentPage = 1;
+
+  pathDisplay.innerHTML = "";
+  pathDisplay.innerHTML = `<a href="#" onclick="openDirectory('/')">Your Files</a>`;
+
+  let pathSplit = requestedPath.split("/");
+
+  console.log(pathSplit);
+
+  let currentPath = "";
+  
+  /*if (requestedPath != "") {
+    pathDisplay.insertAdjacentHTML('beforeend', " > ");
   }*/
   
-  path = requestedPath
-  
-  searchBox.value = ""
-  currentPage = 1
-  
-  pathDisplay.innerHTML = ""
-  pathDisplay.innerHTML = `<a href="#" onclick="openDirectory('/')">Your Files</a>`
-  
-  let pathSplit = requestedPath.split("/")
-  
-  console.log(pathSplit)
-  
-  pathSplit.forEach(directory => {
+  pathSplit.forEach((directory, index) => {
     if (directory != "") {
-      let directoryHTML = `<a> > </a> <a  onclick="openDirectory('${directory + "/"}')">${directory}</a>`
+      currentPath += directory + "/";
+      //let separator = index === 0 ? "" : " > ";
+      let directoryHTML = `<i class="fa-solid fa-chevron-right" style="padding: 6px"></i> <a href="#" onclick="openDirectory('${currentPath}')">${directory}</a>`;
 
-      pathDisplay.insertAdjacentHTML( 'beforeend', directoryHTML );
-    }
-  })
-  
-  loadList()
+      pathDisplay.insertAdjacentHTML('beforeend', directoryHTML);
+    } else {}
+  });
+
+  loadList();
 }
+
 
 
 function shareFile(filepath) {

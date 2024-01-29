@@ -631,44 +631,25 @@ app.get("/list", authenticateToken, async (req, res) => {
     
     const pathQuery = req.query.path || "";
 
-    
-    
     const userFolder = `${user.uid}/${pathQuery}`;
     console.log(userFolder)
     
-    /*let testref = admin.storage().bucket().ref(`${user.uid}/${pathQuery}`)
-    admin.listAll(testref)
-      .then((res) => {
-      res.prefixes.forEach((folderRef) => {
-        console.log(folderRef)
-      });
-      res.items.forEach((itemRef) => {
-       console.log(itemRef)
-      });
-    }).catch((error) => {
-      // Uh-oh, an error occurred!
-    });*/
-    
-    
     const [files] = await bucket.getFiles({prefix: userFolder, delimiter:(!pathQuery) ? undefined : undefined, autoPaginate: false});
+    console.log("Recieved files from storage.")
+    
     let fileList = [];
 
     const filesOnly = files
-          //files.filter((file) => !file.name.endsWith('/'));
     
-    /*for (const file of files) {
-      bucket.file(file.name).makePrivate()
-    }*/
+    let loopStartDate = new Date()
     
     let count = 0
-    
-
     for (const file of filesOnly) {
       count++
       
       //console.log(file.metadata.contentType, file.name)
       const isFolder = (file.metadata.contentType != undefined || file.metadata.contentType == "application/x-www-form-urlencoded;charset=UTF-8") ? false : true
-      const fileMetadata = await file.getMetadata();
+      const fileMetadata = [file.metadata]
       
       const mainName = fileMetadata[0].name
       
@@ -683,13 +664,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       var name = (!isFolder) ? splitUrl[splitUrl.length - 1] : splitUrl[splitUrl.length - 2]
       
       const folderPath = (path.join.apply(null, splitUrl.splice(1, splitUrl.length))) + "/"
-      /*if (isFolder) {
-        resultPath + "/" 
-      }*/
       const filePath = (!isFolder) ? mainName.substring(mainName.indexOf('/') + 1) : undefined
-      
-      console.log(mainName)
-      
       
       fileNameSplit = fileNameSplit.filter(function(item) {
         return item.length !== 0
@@ -711,21 +686,6 @@ app.get("/list", authenticateToken, async (req, res) => {
       // check end
       
       const fileUrl = (isFolder) ? getFolderUrl(folderPath) : getFileUrl(filePath)
-     
-      /*let folderPath
-      
-      if (isFolder) {
-        folderPath = splitUrl.splice(1, splitUrl.length)
-        
-        folderPath = folderPath.filter(function(item) {
-          return item.length !== 0
-        })
-        console.log(folderPath)
-        
-        if (folderPath[folderPath.length - 1] != pathQuery) {
-          
-        }
-      }*/
       
       const fileDate = fileMetadata[0].timeCreated;
       
@@ -733,6 +693,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", path: (isFolder) ? folderPath: filePath });
     }
     
+    console.log("Time took for loop: " + (new Date().getTime() - loopStartDate.getTime()) / 1000)
 
     if (sort) {
       switch (sort) {
@@ -778,6 +739,8 @@ app.get("/list", authenticateToken, async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+
 
 app.get("/list/folders", authenticateToken, async (req, res) => {
   let user = req.user
