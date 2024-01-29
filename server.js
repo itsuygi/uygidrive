@@ -855,10 +855,19 @@ app.post('/getShareLink', authenticateToken, async (req,res) => {
   }
 });
 
-app.get("/upload.js", (req,res) => {
-  c
+app.get("/:path", (req,res) => {
+  let paramPath = req.params.path
+  
+  console.log(paramPath)
+  
+  if (paramPath.endsWith("/")) {
+    paramPath = paramPath.slice(0, -1);
+  }
+  
+  const filePath = path.join(__dirname, 'public/' + paramPath)
   
   if (minifiedCache[filePath]) {
+    console.log("found in cache")
     res.set('Content-Type', 'application/javascript');
     res.send(minifiedCache[filePath]);
   } else {
