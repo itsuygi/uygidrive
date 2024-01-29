@@ -535,4 +535,6 @@ function getTagByFileExtension(fileUrl) {
   return document.getElementById(tag)
 }
 
-fu
+function closeModal(modalId) {
+  $("#" + modalId).modal("hide");
+}
