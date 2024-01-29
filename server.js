@@ -19,6 +19,7 @@ const ytdl = require("ytdl-core")
 const busboy = require('busboy');
 const contentDisposition = require('content-disposition');
 
+const { minify } = require('uglify-js')
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -26,6 +27,7 @@ const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOU
 const app = express();
 
 app.use(express.static("public"));
+
 app.use('/common',express.static(path.join(__dirname, 'public/common')));
 
 const bodyParser = require("body-parser");
@@ -33,7 +35,36 @@ app.use(express.json());
 app.use(cookie())
 app.set("view engine", "ejs");
 
+let minifiedCache = {}
 
+app.use((req, res, next) => {
+  console.log(req.url)
+  if (req.url.endsWith('.js')) {
+    const filePath = `public${req.url}`;
+    
+    // Cache'te var mı kontrol et
+    if (minifiedCache[filePath]) {
+      res.set('Content-Type', 'application/javascript');
+      res.send(minifiedCache[filePath]);
+    } else {
+      try {
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+        const minifiedContent = minify(fileContent).code;
+        
+        // Cache'e ekle
+        minifiedCache[filePath] = minifiedContent;
+
+        res.set('Content-Type', 'application/javascript');
+        res.send(minifiedContent);
+      } catch (error) {
+        console.error('Error while minifying JavaScript:', error);
+        res.status(500).send('Internal Server Error');
+      }
+    }
+  } else {
+    next();
+  }
+});
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
