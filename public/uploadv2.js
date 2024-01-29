@@ -217,7 +217,7 @@ window.onload = function() {
        loadList()
        console.log("Loading previous page")
      } else {
-       prePage.style.display = "none"
+        prePage.style.display = "none"
      }
    });
   
