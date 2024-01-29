@@ -161,3 +161,7 @@ header {
   justify-content: center;
   align-items: center;
 }
+
+.embed {
+  height: 400px;
+}

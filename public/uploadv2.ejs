@@ -47,12 +47,13 @@
   </div>
   
   <!-- Upload Modal -->
+    
   <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="uploadModal">Upload File</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('uploadModal')"></button>
         </div>
         <div class="modal-body" id="uploadContainer">
           <!-- Your existing upload form content -->
@@ -104,7 +105,7 @@
           </button>
         </div>
         <div class="modal-body" id="previewContainer">
-          <embed style="display: none" class="preview" width="100%" heigth="100%" id="filePreview" >
+          <embed style="display: none" class="preview embed" width="100%" heigth="300px" id="filePreview" >
           <video style="display: none" height="100%" width="100%" class="preview" controls id="videoPreview"></video>
           <audio style="display: none" class="preview" controls id="audioPreview"></audio>
         </div>
