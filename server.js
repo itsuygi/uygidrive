@@ -19,7 +19,7 @@ const ytdl = require("ytdl-core")
 const busboy = require('busboy');
 const contentDisposition = require('content-disposition');
 
-const { minify } = require('uglify-js')
+const { minify } = require('uglify-js');
 
 const admin = require('firebase-admin');
 const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString());
@@ -37,7 +37,7 @@ app.set("view engine", "ejs");
 
 let minifiedCache = {}
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   console.log(req.url)
   if (req.url.endsWith('.js')) {
     const filePath = `public${req.url}`;
@@ -65,6 +65,7 @@ app.use((req, res, next) => {
     next();
   }
 });
+*/
 
 const server = createServer(app);
 const wss = new WebSocketServer({ server });
@@ -853,6 +854,29 @@ app.post('/getShareLink', authenticateToken, async (req,res) => {
     res.status(500).send(error.message)
   }
 });
+
+app.get("/upload.js", (req,res) => {
+  c
+  
+  if (minifiedCache[filePath]) {
+    res.set('Content-Type', 'application/javascript');
+    res.send(minifiedCache[filePath]);
+  } else {
+    try {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const minifiedContent = minify(fileContent).code;
+
+      // Cache'e ekle
+      minifiedCache[filePath] = minifiedContent;
+
+      res.set('Content-Type', 'application/javascript');
+      res.send(minifiedContent);
+    } catch (error) {
+      console.error('Error while minifying JavaScript:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  }
+})
 
 app.post("/qr", (req,res) => {
  console.log(req.body)
