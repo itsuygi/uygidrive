@@ -27,6 +27,7 @@ window.onload = function() {
   const errorMessage = document.getElementById('errorMessage'); 
   const searchForm = document.getElementById('search');
   const sortSelect = document.getElementById('sortSelect');
+  const copyShareLink = document.getElementById("copyShareLink")
   
   fileList = document.getElementById('fileList');
   nextPage = document.getElementById('nextPage');
@@ -170,10 +171,15 @@ window.onload = function() {
    
   });
   
-  document.getElementById("copyShareLink").onclick = function() {
+  copyShareLink.onclick = function() {
     urlInput.select();
     document.execCommand("copy");
-    alert("Link copied to clipboard!");
+    
+    copyShareLink.innerHTML = '<i class="fa-solid fa-check"></i>'
+    
+    setTimeout(function() {
+      copyShareLink.innerHTML = "Copy Link"
+    }, 2000)
   }
   
   searchForm.addEventListener('submit', function (e) {
