@@ -485,7 +485,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     const splitUrl = fileMetadata[0].name.split("/")
     
     res.header("Content-Type", fileMetadata[0].contentType || "")
-    res.header("Content-Length", fileMetadata[0].size || 0)
+    res.header("Content-Range", fileMetadata[0].size || 0)
     
     const fileReadStream = file.createReadStream();
 
