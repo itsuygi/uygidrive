@@ -649,7 +649,8 @@ app.get("/list", authenticateToken, async (req, res) => {
       count++
       
       //console.log(file.metadata.contentType, file.name)
-      const isFolder = (file.metadata.contentType != undefined || file.metadata.contentType == "application/x-www-form-urlencoded;charset=UTF-8") ? false : true
+      //const isFolder = (file.metadata.contentType != undefined || file.metadata.contentType == "application/x-www-form-urlencoded;charset=UTF-8") ? false : true
+      const isFolder = (file.name.endsWith("/"))
       const fileMetadata = [file.metadata]
       
       const mainName = fileMetadata[0].name
