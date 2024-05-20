@@ -89,7 +89,7 @@ function setup() {
       previews[i].src = "";
     }
     popup.style.display = "none";
-    popupMessage.innerHTML = ""
+    document.getElementById("urlList").innerHTML = ""
   }
   
   window.onclick = function(event) {

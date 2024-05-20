@@ -234,11 +234,12 @@ window.onload = function() {
     const errorBox = document.getElementById('errorBox');
     const uploadForm = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
+    const urlList = document.getElementById('urlList');
 
     successBox.style.display = "none"
     errorBox.style.display = "none"
     uploadForm.style.display = "block"
-    fileInput.value = null
+    urlList.innerHTML = ""
   });
   
   $('#previewModal').on('hidden.bs.modal', function (e) {
