@@ -518,10 +518,11 @@ app.get("/file/*", authenticateToken, async (req, res) => {
         "Content-Type": fileMetadata[0].contentType
       });
 
-      let readable = createReadStream(sampleVideo, { start: start, end: end });
-      pipeline(readable, res, err => {
-        console.log(err);
-      });
+      let readable = file.createReadStream({                      
+        start: start,
+        end: end
+      })
+      .pipe(res);
 
     } else {
 
@@ -530,27 +531,19 @@ app.get("/file/*", authenticateToken, async (req, res) => {
         "Content-Type": fileMetadata[0].contentType
       });
 
-      let readable = createReadStream(sampleVideo);
-      pipeline(readable, res, err => {
-        console.log(err);
-      });
+      file.createReadStream()
+      .pipe(res);
 
     }
     
-    res.header("Content-Type", fileMetadata[0].contentType || "")
-    res.header("Content-Range", fileMetadata[0].size || 0)
-    
-    const fileReadStream = file.createReadStream();
-
-    //res.setHeader('Content-Type', 'application/octet-stream');
     const filenameFromStorage = splitUrl[splitUrl.length - 1]
     console.log(contentDisposition(filenameFromStorage))
     
     //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
     
     //res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
-    res.status(206)
-    fileReadStream.pipe(res);
+    //res.status(206)
+    //fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
     
