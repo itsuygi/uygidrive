@@ -591,7 +591,7 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
   }
 });
 
-app.set('/file/', authenticateToken, async (req,res) => {
+app.post('/file/visibility', authenticateToken, async (req,res) => {
   try {
     const file = req.body.file
 
