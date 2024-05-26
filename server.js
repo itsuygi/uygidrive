@@ -36,36 +36,6 @@ app.set("view engine", "ejs");
 
 let minifiedCache = {}
 
-/*app.use((req, res, next) => {
-  console.log(req.url)
-  if (req.url.endsWith('.js')) {
-    const filePath = `public${req.url}`;
-    
-    // Cache'te var mı kontrol et
-    if (minifiedCache[filePath]) {
-      res.set('Content-Type', 'application/javascript');
-      res.send(minifiedCache[filePath]);
-    } else {
-      try {
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-        const minifiedContent = minify(fileContent).code;
-        
-        // Cache'e ekle
-        minifiedCache[filePath] = minifiedContent;
-
-        res.set('Content-Type', 'application/javascript');
-        res.send(minifiedContent);
-      } catch (error) {
-        console.error('Error while minifying JavaScript:', error);
-        res.status(500).send('Internal Server Error');
-      }
-    }
-  } else {
-    next();
-  }
-});
-*/
-
 const server = createServer(app);
 
 async function authenticateToken(req, res, next) {
@@ -92,7 +62,7 @@ async function authenticateShareToken(req, res, next) {
   if (shareToken) {
     jwt.verify(shareToken, process.env.TOKEN_SECRET, (err, token_data) => {
       if (err) {
-        return res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": (err.message == "jwt expired") ? "url expired" : err.message});
+        return res.render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": (err.message == "jwt expired") ? "link expired" : err.message});
       }
 
       try {
@@ -487,7 +457,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     const size = fileMetadata[0].size
 
     /** Check for Range header */
-    if (range && req.query.download == false) {
+    if (range && req.query.download == undefined) {
       /** Extracting Start and End value from Range Header */
       let [start, end] = range.replace(/bytes=/, "").split("-");
       start = parseInt(start, 10);
@@ -526,11 +496,10 @@ app.get("/file/*", authenticateToken, async (req, res) => {
       .pipe(res);
 
     } else {
-
       res.writeHead(200, {
         "Content-Length": size,
         "Content-Type": fileMetadata[0].contentType,
-        "Content-Disposition": "attachment; filename=" + replaceSpecialChars(filenameFromStorage)
+        "Content-Disposition": (req.query.download == "true") ? "attachment; filename=" + replaceSpecialChars(filenameFromStorage) : ""
       });
 
       file.createReadStream()
