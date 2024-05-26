@@ -4,7 +4,6 @@ const express = require("express");
 const router = express.Router();
 
 const { createServer } = require("http");
-const { WebSocketServer } = require("ws");
 const { format } = require('util');
 const { compareDesc, compareAsc } = require("date-fns");
 const axios = require('axios');
@@ -68,7 +67,6 @@ let minifiedCache = {}
 */
 
 const server = createServer(app);
-const wss = new WebSocketServer({ server });
 
 async function authenticateToken(req, res, next) {
   let sessionCookie = req.cookies.session || '';

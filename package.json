@@ -14,28 +14,24 @@
     "multer": "^1.4.4",
     "pug": "^3.0.2",
     "uglify-es": "^3.3.9",
-    "ws": "^8.12.1",
     "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.5"
   },
   "scripts": {
     "start": "node server.js"
   },
-  "name": "expresswsserver",
+  "name": "uygidrive",
   "version": "0.0.3",
-  "description": "a node.js server with express.js for streaming music room via ids",
+  "description": "a node.js server with express.js for cloud storage service",
   "main": "server.js",
   "devDependencies": {
     "uglify-js": "^3.17.4"
   },
   "engines": {
-    "node": "16.x"
+    "node": "16.14.2"
   },
   "keywords": [
-    "node",
-    "express",
-    "ws",
-    "websockets"
+    "node"
   ],
   "author": "Uygi"
 }
