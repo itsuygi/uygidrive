@@ -481,12 +481,13 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     const fileMetadata = await file.getMetadata();
     
     const splitUrl = fileMetadata[0].name.split("/")
+    const filenameFromStorage = splitUrl[splitUrl.length - 1]
     
     const range = req.headers.range;
     const size = fileMetadata[0].size
 
     /** Check for Range header */
-    if (range) {
+    if (range && req.query.download == false) {
       /** Extracting Start and End value from Range Header */
       let [start, end] = range.replace(/bytes=/, "").split("-");
       start = parseInt(start, 10);
@@ -515,7 +516,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
         "Content-Range": `bytes ${start}-${end}/${size}`,
         "Accept-Ranges": "bytes",
         "Content-Length": end - start + 1,
-        "Content-Type": fileMetadata[0].contentType
+        "Content-Type": fileMetadata[0].contentType,
       });
 
       let readable = file.createReadStream({                      
@@ -528,16 +529,14 @@ app.get("/file/*", authenticateToken, async (req, res) => {
 
       res.writeHead(200, {
         "Content-Length": size,
-        "Content-Type": fileMetadata[0].contentType
+        "Content-Type": fileMetadata[0].contentType,
+        "Content-Disposition": "attachment; filename=" + replaceSpecialChars(filenameFromStorage)
       });
 
       file.createReadStream()
       .pipe(res);
 
     }
-    
-    const filenameFromStorage = splitUrl[splitUrl.length - 1]
-    console.log(contentDisposition(filenameFromStorage))
     
     //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
     
