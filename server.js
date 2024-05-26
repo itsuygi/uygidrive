@@ -591,6 +591,29 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
   }
 });
 
+app.set('/file/', authenticateToken, async (req,res) => {
+  try {
+    const file = req.body.file
+
+    if (!file) {
+      return res.status(500).send("No file found in parameters.")
+    }
+    
+    const user = req.user.uid
+
+    const filePath = `${req.user.uid}/${file}`
+    
+    const token = generateAccessToken({path: filePath})
+    const url = getSharedFileUrl(file, user) + "?shareToken=" + token
+
+    res.send(url)
+  
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error.message)
+  }
+});
+
 app.delete("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
