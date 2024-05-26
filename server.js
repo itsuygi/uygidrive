@@ -482,6 +482,61 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     
     const splitUrl = fileMetadata[0].name.split("/")
     
+    const range = req.headers.range;
+    const size = fileMetadata[0].size
+
+    /** Check for Range header */
+    if (range) {
+      /** Extracting Start and End value from Range Header */
+      let [start, end] = range.replace(/bytes=/, "").split("-");
+      start = parseInt(start, 10);
+      end = end ? parseInt(end, 10) : size - 1;
+
+      if (!isNaN(start) && isNaN(end)) {
+        start = start;
+        end = size - 1;
+      }
+      if (isNaN(start) && !isNaN(end)) {
+        start = size - end;
+        end = size - 1;
+      }
+
+      // Handle unavailable range request
+      if (start >= size || end >= size) {
+        // Return the 416 Range Not Satisfiable.
+        res.writeHead(416, {
+          "Content-Range": `bytes */${size}`
+        });
+        return res.end();
+      }
+
+      /** Sending Partial Content With HTTP Code 206 */
+      res.writeHead(206, {
+        "Content-Range": `bytes ${start}-${end}/${size}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": end - start + 1,
+        "Content-Type": fileMetadata[0].contentType
+      });
+
+      let readable = createReadStream(sampleVideo, { start: start, end: end });
+      pipeline(readable, res, err => {
+        console.log(err);
+      });
+
+    } else {
+
+      res.writeHead(200, {
+        "Content-Length": size,
+        "Content-Type": fileMetadata[0].contentType
+      });
+
+      let readable = createReadStream(sampleVideo);
+      pipeline(readable, res, err => {
+        console.log(err);
+      });
+
+    }
+    
     res.header("Content-Type", fileMetadata[0].contentType || "")
     res.header("Content-Range", fileMetadata[0].size || 0)
     
@@ -493,8 +548,8 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     
     //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
     
-    res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
-    //res.status(206)
+    //res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
+    res.status(206)
     fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
