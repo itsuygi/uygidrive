@@ -6,17 +6,17 @@ const router = express.Router();
 const { createServer } = require("http");
 const { format } = require('util');
 const { compareDesc, compareAsc } = require("date-fns");
-const axios = require('axios');
 const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
 const cookie = require('cookie-parser');
-const ytsearch = require("yt-search");
-const ytdl = require("ytdl-core")
 const busboy = require('busboy');
 const contentDisposition = require('content-disposition');
+
+//const ytsearch = require("yt-search");
+//const ytdl = require("ytdl-core")
 
 const { minify } = require('uglify-js');
 
