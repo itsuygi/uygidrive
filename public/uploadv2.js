@@ -467,6 +467,7 @@ function confirmDeletion(filePath) {
 
 function deleteFile(filePath) {
   //if(confirm('Are you sure to delete this file?')) {
+    $("#confirmationModal").modal("hide")
       const xhr = new XMLHttpRequest();
 
       xhr.open('DELETE', '/file/' + filePath, true)
