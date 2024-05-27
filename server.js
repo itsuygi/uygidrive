@@ -8,7 +8,6 @@ const { format } = require('util');
 const { compareDesc, compareAsc } = require("date-fns");
 const fs = require("fs");
 const path = require("path");
-const multer = require("multer");
 const jwt = require('jsonwebtoken');
 const cache = require('memory-cache');
 const cookie = require('cookie-parser');
@@ -178,7 +177,7 @@ admin.initializeApp({
 });
 const bucket = admin.storage().bucket();
 
-const multerStorage = multer.diskStorage({
+/*const multerStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
   },
@@ -191,11 +190,13 @@ const multerStorage = multer.diskStorage({
       return cb(new Error("Not valid file type"), false);
     }
     cb(null, true);
-  },*/
+  },
 });
 
-
 const upload = multer({ storage: multer.memoryStorage() });
+*/
+
+
 const maxRetries = 10
 const hostUrl = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
 
