@@ -499,8 +499,8 @@ app.get("/file/*", authenticateToken, async (req, res) => {
     } else {
       res.writeHead(200, {
         "Content-Length": size,
-        "Content-Type": fileMetadata[0].contentType,
-        "Content-Disposition": (req.query.download == "true") ? "attachment; filename=" + replaceSpecialChars(filenameFromStorage) : ""
+        "Content-Type": fileMetadata[0].contentType || "",
+        "Content-Disposition": (req.query.download == "true") ? "attachment" : ""
       });
 
       file.createReadStream()

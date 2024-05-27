@@ -44,6 +44,10 @@
     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#folderModal">
       <i class="fa-solid fa-folder-plus"></i> Create Folder
     </button>
+    
+    <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#confirmationModal">
+      <i class="fa-solid fa-folder-plus"></i> Test Button
+    </button>
   </div>
   
   <!-- Upload Modal -->
@@ -171,6 +175,28 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button id="createFolderButton" type="button" class="btn btn-primary">Create folder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
+  <!-- Confirmation Modal -->
+    
+  <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationModalLabel">Alert</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('confirmationModal')"></button>
+        </div>
+        
+        <div class="modal-body" id="confirmationContainer">
+          Are you sure to delete this file?
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          <button id="confirmButton" type="button" class="btn btn-primary">Confirm</button>
         </div>
       </div>
     </div>
