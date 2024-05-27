@@ -14,6 +14,8 @@ let createFolderName
 
 let pathDisplay
 
+let confirmationModal
+
 window.onload = function() {
   const uploadForm = document.getElementById('uploadForm');
   const uploadButton = document.getElementById('uploadButton');
@@ -37,6 +39,7 @@ window.onload = function() {
   pathDisplay = document.getElementById('pathDisplay');
   createFolderButton = document.getElementById('createFolderButton');
   createFolderName = document.getElementById("createFolderName")
+  confirmationModal = document.getElementById("confirmationModal")
   
   let previewModal = document.getElementsByClassName("previewEmbed")
   let urlInput = document.getElementById("urlInput")
@@ -321,11 +324,11 @@ function loadList() {
 
                   <div class="dropdown-divider"></div>
 
-                  <a class="dropdown-item" onclick="deleteFile('${file.path}')">
+                  <a class="dropdown-item" onclick="confirmDeletion('${file.path}')">
                     <i class="fa-solid fa-trash"></i>
                     Delete
                   </a>` 
-            : `<a class="dropdown-item" onclick="deleteFile('${file.path}')">
+            : `<a class="dropdown-item" onclick="confirmDeletion('${file.path}')">
                 <i class="fa-solid fa-trash"></i>
                 Delete
                </a>`
@@ -455,8 +458,15 @@ function openShareModal(url) {
   $("#shareModal").modal();
 }
 
+function confirmDeletion(filePath) {
+  const confirmButton = document.getElementById("confirmButton")
+  
+  confirmButton.setAttribute( "onClick", `javascript: deleteFile('${filePath}');` )
+  $("#confirmationModal").modal();
+}
+
 function deleteFile(filePath) {
-  if(confirm('Are you sure to delete this file?')) {
+  //if(confirm('Are you sure to delete this file?')) {
       const xhr = new XMLHttpRequest();
 
       xhr.open('DELETE', '/file/' + filePath, true)
@@ -467,7 +477,7 @@ function deleteFile(filePath) {
         loadList()
       }
       xhr.send();
-  }
+  //}
 }
 
 function createFolder(foldername) {
