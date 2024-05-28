@@ -531,6 +531,7 @@ function getTagByFileExtension(fileUrl) {
     'gif': 'filePreview',
     'pdf': 'filePreview',
     'doc': 'filePreview',
+    'docx': 'filePreview',
     'py': 'filePreview',
     'c': 'filePreview',
     'json': 'filePreview',
