@@ -15,6 +15,8 @@ let createFolderName
 let pathDisplay
 
 let confirmationModal
+let confirmButton
+  
 
 window.onload = function() {
   const uploadForm = document.getElementById('uploadForm');
@@ -39,7 +41,8 @@ window.onload = function() {
   pathDisplay = document.getElementById('pathDisplay');
   createFolderButton = document.getElementById('createFolderButton');
   createFolderName = document.getElementById("createFolderName")
-  confirmationModal = document.getElementById("confirmationModal")
+  confirmationModal = document.getElementById("confirmationContainer")
+  confirmButton = document.getElementById("confirmButton")
   
   let previewModal = document.getElementsByClassName("previewEmbed")
   let urlInput = document.getElementById("urlInput")
@@ -398,7 +401,9 @@ function openPreview(fileUrl) {
 
     $("#previewModal").modal();
   } else {
-    downloadFile(fileUrl)
+    confirmationModal.innerText = "This file type cannot be previewed. Would you like to download?"
+    confirmButton.setAttribute( "onClick", `javascript: downloadFile('${fileUrl}'); $("#confirmationModal").modal('hide')` )
+    $("#confirmationModal").modal();
   }
 }
 
@@ -459,8 +464,7 @@ function openShareModal(url) {
 }
 
 function confirmDeletion(filePath) {
-  const confirmButton = document.getElementById("confirmButton")
-  
+  confirmationModal.innerText = "Are you sure want to delete this file? This cannot be undone."
   confirmButton.setAttribute( "onClick", `javascript: deleteFile('${filePath}');` )
   $("#confirmationModal").modal();
 }
