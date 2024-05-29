@@ -37,11 +37,11 @@ window.onload = function() {
   // Check if user is logged in
   firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      messageElement.innerHTML = 'Logged in';
+      //messageElement.innerHTML = 'Logged in';
       console.log('User is logged in');
     } else {
       // User is logged out
-      messageElement.innerHTML = 'Not logged in';
+      //messageElement.innerHTML = 'Not logged in';
       console.log('User is logged out');
     }
   });

@@ -2,35 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!--<link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="signup.js"></script>
   <script src="/common/color-mode.js"></script>
-  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="signup.css">
   <link rel="stylesheet" href="/common/style-dark.css">
   <script src="https://kit.fontawesome.com/6135f8c6a5.js" crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
-  <title>UygiDrive  - Sign Up</title>
+  <title>UygiDrive - Sign Up</title>
 </head>
 <body>
-  <div class="widget container">
-    <h1>Sign Up</h1>
-    <hr>
-    
-    <form name="signUpForm" id="signUp" class="signup-form">
-      <input type="email" name="email" id="email" class="login-input" placeholder="E-mail">
-      <input type="password" name="password" id="password" class="login-input" placeholder="Password">
-      <br>
-      <input type="submit" value="Sign Up" id="signUpButton" class="signup-button">
-    </form>
-    
-    <div id="message"></div>
+  <!-- Top Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark ">
+    <a class="navbar-brand" href="#">UygiDrive</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-lg mt-5">
+          <div class="card-body">
+            <h1 class="card-title text-center">Sign Up</h1>
+            <hr>
+            <form name="signUpForm" id="signUp" class="signup-form">
+              <div class="form-group">
+                <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+              </div>
+              <div class="form-group">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Sign Up" id="signUpButton" class="btn btn-primary btn-block">
+              </div>
+            </form>
+            <div id="message" class="text-center"></div>
+            <hr>
+            <div class="text-center">
+              <b>Already have an account?</b> <a href="/login">Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  
-  <b>Already have a account?</b> <a href="/login">Login</a>
-  <br>
-  </body>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>

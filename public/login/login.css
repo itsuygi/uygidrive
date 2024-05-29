@@ -1,4 +1,4 @@
-header {
+nav {
   background-color: #007bff;
 }
 
@@ -6,4 +6,50 @@ header {
   color: white;
   font-size: 24px;
   font-weight: bold;
+}
+
+body {
+  background-color: #f8f9fa;
+  font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.card-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.login-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+#loginButton {
+  font-size: 1.2rem;
+  padding: 0.5rem 0;
+}
+
+#message {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.text-center a {
+  color: #007bff;
+}
+
+.text-center a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  .card {
+    margin: 1rem;
+  }
 }
