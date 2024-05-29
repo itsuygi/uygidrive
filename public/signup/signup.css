@@ -6,6 +6,12 @@ nav {
   background-color: #007bff;
 }
 
+.site-name {
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+}
+
 .navbar {
   margin-bottom: 20px;
 }

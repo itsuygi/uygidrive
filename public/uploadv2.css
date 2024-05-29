@@ -1,5 +1,9 @@
-header {
+header, nav {
   background-color: #007bff;
+}
+
+.navbar {
+  margin-bottom: 20px;
 }
 
 .site-name {
