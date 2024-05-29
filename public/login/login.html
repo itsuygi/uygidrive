@@ -2,35 +2,66 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
- <!-- <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon"> -->
+  <!-- <link id="favicon" rel="icon" href="https://cdn.glitch.global/09cea16e-eb78-4d1a-81a4-6b24ad8afe1c/favicon.ico?v=1698655501304" type="image/x-icon"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="login.js"></script>
   <script src="/common/color-mode.js"></script>
   
   <link rel="stylesheet" href="login.css">
   <link rel="stylesheet" href="/common/style-dark.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://kit.fontawesome.com/6135f8c6a5.js" crossorigin="anonymous"></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-auth.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js" defer></script>
   <title>UygiDrive - Login</title>
 </head>
-<body>
-  <div class="widget container">
-    <h1>Login</h1>
-    <hr>
-    
-    <form name="loginForm" id="login" class="login-form">
-      <input type="email" name="email" id="email" class="login-input" placeholder="E-mail">
-      <input type="password" name="password" id="password" class="login-input" placeholder="Password">
-      <br>
-      <input type="submit" value="Login" id="loginButton" class="login-button">
-    </form>
-    
-    <div id="message"></div>
-  </div>
   
-  <b>Don't have a account?</b> <a href="/signup">Sign up</a>
-  <br>
-  </body>
+<body>
+  
+  <header class="p-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="site-name">UygiDrive</div>
+        </div>
+        <div class="col-md-6 text-right user-info">
+          
+          <button id="logout-btn"  class="btn btn-danger">Sign up</button>
+        </div>
+      </div>
+    </div>
+  </header>
+    
+  <div class="container d-flex align-items-center justify-content-center min-vh-100">
+    <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
+      <div class="card-body">
+        <h1 class="card-title text-center">Login</h1>
+        <hr>
+        
+        <form name="loginForm" id="login" class="login-form">
+          <div class="form-group">
+            <label for="email" class="sr-only">E-mail</label>
+            <input type="email" name="email" id="email" class="form-control" placeholder="E-mail" required>
+          </div>
+          <div class="form-group">
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+          </div>
+          <button type="submit" id="loginButton" class="btn btn-primary btn-block">Login</button>
+        </form>
+        
+        <div id="message" class="mt-3"></div>
+        
+        <div class="text-center mt-4">
+          <b>Don't have an account?</b> <a href="/signup">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
