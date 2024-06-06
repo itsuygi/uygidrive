@@ -1,3 +1,5 @@
+
+
 // Wait for the page to load before trying to access the form elements
 window.onload = function() {
   const firebaseConfig = {
