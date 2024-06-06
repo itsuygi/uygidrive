@@ -443,7 +443,7 @@ app.get("/file/*", authenticateToken, async (req, res) => {
      if (filename.endsWith("/")) {
       filename = filename.slice(0, -1);
     }
-    console.log(filename)
+    
     const rangeHeader = req.headers.range;
     
     let filePath = `${user.uid}/${filename}`
