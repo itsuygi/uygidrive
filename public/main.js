@@ -559,7 +559,7 @@ function renameFile() {
     newName.value = ""
     loadList()
   }
-  xhr.send(JSON.stringify({file: renamingFile.value, name: path + newName.value}));
+  xhr.send(JSON.stringify({file: renamingFile.value, name: (path != "/") ? path + newName.value : newName.value}));
 }
 
 function confirmDeletion(filePath) {
