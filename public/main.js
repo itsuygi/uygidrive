@@ -448,8 +448,10 @@ function shareFile(filePath) {
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
     console.log(xhr.responseText)
-
+    let result = JSON.dumps(xhr.responseText)
     
+    if (result.public == "true")
+    $("#shareModal").modal();
   }
   
   xhr.send(JSON.stringify({ file: filePath }));
@@ -462,21 +464,15 @@ function generatePrivateShareLink(filePath){
   xhr.open('POST', '/getShareLink', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
-    console.log(xhr.responseText)
-
-    openShareModal(xhr.responseText)
+    let urlInput = document.getElementById("urlInput")
+  
+    urlInput.value = xhr.responseText
   }
   
   console.log(JSON.stringify({ file: filePath }))
   xhr.send(JSON.stringify({ file: filePath }));
 }
 
-function openShareModal(url) {
-  let urlInput = document.getElementById("urlInput")
-  
-  urlInput.value = url
-  $("#shareModal").modal();
-}
 
 function confirmDeletion(filePath) {
   confirmationModal.innerText = "Are you sure want to delete this file? This cannot be undone."

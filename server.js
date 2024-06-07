@@ -454,7 +454,8 @@ app.get('/file/visibility', authenticateToken, async (req,res) => {
   
   } catch (error) {
     console.error(error)
-    res.status(500).send(error.message)
+    
+    res.json({success: false, public: false})
   }
 });
 
