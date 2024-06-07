@@ -586,69 +586,9 @@ app.get("/file/*", authenticateToken, async (req, res) => {
       filename = filename.slice(0, -1);
     }
     
-    const rangeHeader = req.headers.range;
-    
     let filePath = `${user.uid}/${filename}`
     
-    const file = bucket.file(filePath);
-    const fileMetadata = await file.getMetadata();
-    
-    const splitUrl = fileMetadata[0].name.split("/")
-    const filenameFromStorage = splitUrl[splitUrl.length - 1]
-    
-    const range = req.headers.range;
-    const size = fileMetadata[0].size
-
-    /** Check for Range header */
-    if (range && req.query.download == undefined) {
-      /** Extracting Start and End value from Range Header */
-      let [start, end] = range.replace(/bytes=/, "").split("-");
-      start = parseInt(start, 10);
-      end = end ? parseInt(end, 10) : size - 1;
-
-      if (!isNaN(start) && isNaN(end)) {
-        start = start;
-        end = size - 1;
-      }
-      if (isNaN(start) && !isNaN(end)) {
-        start = size - end;
-        end = size - 1;
-      }
-
-      // Handle unavailable range request
-      if (start >= size || end >= size) {
-        // Return the 416 Range Not Satisfiable.
-        res.writeHead(416, {
-          "Content-Range": `bytes */${size}`
-        });
-        return res.end();
-      }
-
-      /** Sending Partial Content With HTTP Code 206 */
-      res.writeHead(206, {
-        "Content-Range": `bytes ${start}-${end}/${size}`,
-        "Accept-Ranges": "bytes",
-        "Content-Length": end - start + 1,
-        "Content-Type": fileMetadata[0].contentType,
-      });
-
-      let readable = file.createReadStream({                      
-        start: start,
-        end: end
-      })
-      .pipe(res);
-
-    } else {
-      res.writeHead(200, {
-        "Content-Length": size,
-        "Content-Type": fileMetadata[0].contentType || "",
-        "Content-Disposition": (req.query.download == "true") ? "attachment" : ""
-      });
-
-      file.createReadStream()
-      .pipe(res);
-
-    }
+    sendFile(filePath, req, res)
     
   } catch (error) {
     console.log("Error getting file: ", error)
@@ -702,27 +642,7 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
     const user = req.params.user;
     //const filename = req.params.filename;
     
-    const file = bucket.file(sharePath);
-    const fileMetadata = await file.getMetadata();
-    
-    const splitUrl = fileMetadata[0].name.split("/")
-    
-    res.header("Content-Type", fileMetadata[0].contentType || "")
-    res.header("Content-Length", fileMetadata[0].size || 0)
-    
-    const fileReadStream = file.createReadStream();
-
-    //res.setHeader('Content-Type', 'application/octet-stream');
-    const filenameFromStorage = splitUrl[splitUrl.length - 1]
-    console.log(contentDisposition(filenameFromStorage))
-    
-    //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
-    
-    res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
-    fileReadStream.pipe(res);
-    
-    res.header("Content-Type", fileMetadata[0].contentType)
-    //res.send(fileContent[0])
+    sendFile(sharePath, req, res)
   } catch (error) {
     console.log("Error getting file: ", error)
     res.status(500).render(__dirname + '/public/views/error.ejs', {"title": 500, "detail": "error while getting file"});
