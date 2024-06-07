@@ -508,11 +508,6 @@ app.get("/file/*", authenticateToken, async (req, res) => {
 
     }
     
-    //res.setHeader('Content-Disposition', "inline; filename=" + replaceSpecialChars(filenameFromStorage));
-    
-    //res.setHeader("Content-Disposition", (req.query.download != null) ? contentDisposition(filenameFromStorage) : "inline; filename=" + replaceSpecialChars(filenameFromStorage))
-    //res.status(206)
-    //fileReadStream.pipe(res);
   } catch (error) {
     console.log("Error getting file: ", error)
     
@@ -595,19 +590,16 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
 app.post('/file/visibility', authenticateToken, async (req,res) => {
   try {
     const file = req.body.file
+    const isPublic = req.body.public
 
     if (!file) {
-      return res.status(500).send("No file found in parameters.")
+      return res.status(500).send("No file or value found in parameters.")
     }
     
     const user = req.user.uid
-
     const filePath = `${req.user.uid}/${file}`
     
-    const token = generateAccessToken({path: filePath})
-    const url = getSharedFileUrl(file, user) + "?shareToken=" + token
-
-    res.send(url)
+    
   
   } catch (error) {
     console.error(error)
