@@ -405,7 +405,7 @@ app.get("/local/:filename", (req, res) => {
   console.log("Sending file: " + filename);
   
   //res.set("Content-Type", "audio/mpeg")
-  res.sendFile(__dirname + "/uploads/" + filename);
+  res.sendFile(__dirname + "/public/" + filename);
 });
 
 function getPublicUrl(filename) {
