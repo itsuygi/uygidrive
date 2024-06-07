@@ -585,9 +585,8 @@ app.post("/file/rename", authenticateToken, async (req, res) => {
     const user = req.user
     const path = `${user.uid}/${filePath}`
     const file = bucket.file(path)
-    const nameWithPath = `${user.uid}/${filePath}`
     
-    await file.rename(newName)
+    await file.rename(`${user.uid}/${newName}`)
     
     res.json({success: true, newName})
   } catch (error){
