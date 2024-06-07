@@ -457,10 +457,10 @@ function shareFile(filePath) {
     
     if (result.public == true) {
       label.textContext = "Public"
-      publicUrlInput.value = result.url
+      publicUrlInput.innerHTML = result.url
       publicUrlDiv.style.display = "block"
     } else {
-      label.textContext = "Select Access"
+      label.innerHTML = "Private"
       publicUrlDiv.style.display = "none"
     }
     $("#shareModal").modal();
@@ -501,17 +501,29 @@ function setVisibility(visibility) {
     let result = JSON.parse(xhr.responseText)
     
     if (result.public == true) {
-      label.textContext = "Public"
+      label.innerHTML = "Public"
       publicUrlInput.value = result.url
       publicUrlDiv.style.display = "block"
     } else {
-      label.textContext = "Select Access"
+      label.innerHTML = "Private"
       publicUrlDiv.style.display = "none"
     }
   }
   
   console.log(JSON.stringify({ file: shareFilePath, public: (visibility == "Public") ? true : false}))
   xhr.send(JSON.stringify({ file: shareFilePath, public: (visibility == "Public") ? true : false}))
+}
+
+function copyUrl(input) {
+  const urlInput = document.getElementById(input)
+  urlInput.select();
+  document.execCommand("copy");
+
+  this.innerHTML = '<i class="fa-solid fa-check"></i>'
+
+  setTimeout(function() {
+    this.innerHTML = "Copy Link"
+  }, 2000)
 }
 
 

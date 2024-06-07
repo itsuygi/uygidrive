@@ -482,7 +482,7 @@ app.post('/file/visibility', authenticateToken, async (req,res) => {
     console.log(newMetadata)
     let result = await file.setMetadata(newMetadata);
     console.log(result)
-    res.json({success: true, url: `${hostUrl}/public/${user}/${fileName}`})
+    res.json({success: true, public: req.body.public, url: `${hostUrl}/public/${user}/${fileName}`})
   
   } catch (error) {
     console.error(error)
