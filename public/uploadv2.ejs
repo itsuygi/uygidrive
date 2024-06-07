@@ -133,18 +133,27 @@
               <br>
               <br>
               
-            <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="visibilityDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span id="visibilityLabel">Select Access</span>
-              </button>
-              <div class="dropdown-menu" aria-labelledby="visibilityDropdown">
-                <a class="dropdown-item" href="#" onclick="setVisibility('Public')">Public</a>
-                <a class="dropdown-item" href="#" onclick="setVisibility('Private')">Private</a>
+            
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="visibilityDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span id="visibilityLabel">Select Access</span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="visibilityDropdown">
+                  <a class="dropdown-item" href="#" onclick="setVisibility('Public')">Public</a>
+                  <a class="dropdown-item" href="#" onclick="setVisibility('Private')">Private</a>
+                </div>
+              </div>
+              
+              <br>
+              <div id="publicLinkDiv">
+                <label for="urlInput">URL:</label>
+                <input widght="90%" class="url-input" type="text" id="publicUrl" readonly>
+
+                <button class="btn btn-success" type="button" id="copyUrl()">Copy Link</button>
               </div>
             </div>
-            <div id="message" class="mt-3">https://sex.com</div>
-            </div>
           </div>
+          
           
           <br>
 
