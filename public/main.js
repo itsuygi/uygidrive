@@ -456,8 +456,8 @@ function shareFile(filePath) {
     let result = JSON.parse(xhr.responseText)
     
     if (result.public == true) {
-      label.textContext = "Public"
-      publicUrlInput.innerHTML = result.url
+      label.innerHTML = "Public"
+      publicUrlInput.value = result.url
       publicUrlDiv.style.display = "block"
     } else {
       label.innerHTML = "Private"
@@ -516,6 +516,7 @@ function setVisibility(visibility) {
 
 function copyUrl(input) {
   const urlInput = document.getElementById(input)
+  
   urlInput.select();
   document.execCommand("copy");
 
