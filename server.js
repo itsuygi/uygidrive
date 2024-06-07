@@ -471,19 +471,36 @@ app.post('/file/visibility', authenticateToken, async (req,res) => {
     const filePath = `${req.user.uid}/${fileName}`
     
     const file = await bucket.file(filePath)
-    var newMetadata = metadata: {
+    var newMetadata = {
+        metadata:{
         'public': isPublic
       }
+    }
     
 
     console.log(newMetadata)
     let result = await file.setMetadata(newMetadata);
     console.log(result)
-    res.json({success: true, public: isPublic})
+    res.json({success: true})
   
   } catch (error) {
     console.error(error)
     res.status(500).send(error.message)
+  }
+});
+
+app.get("/public/:user/*", async (req, res) => {
+  try {
+    const fileOwner = req.params.user
+    const filePath = req.params[0]
+
+    const generalFilePath = `${fileOwner}/${filePath}`
+
+    const file = await bucket.file(generalFilePath)
+  } catch(error) {
+    console.log("Error getting public file: ", error)
+    
+    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "File not found" : error.message});
   }
 });
 
