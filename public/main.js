@@ -32,6 +32,7 @@ window.onload = function() {
   const searchForm = document.getElementById('search');
   const sortSelect = document.getElementById('sortSelect');
   const copyShareLink = document.getElementById("copyShareLink")
+  const renameFile = document.getElementById("renameFile")
   
   fileList = document.getElementById('fileList');
   nextPage = document.getElementById('nextPage');
@@ -188,6 +189,10 @@ window.onload = function() {
     }, 2000)
   }
   
+  renameFile.onclick = function() {
+    renameFile()
+  }
+  
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     
@@ -326,6 +331,11 @@ function loadList() {
                   </a>
 
                   <div class="dropdown-divider"></div>
+                  
+                  <a class="dropdown-item" onclick="openRenameModal('${file.path}')">
+                    <i class="fa-solid fa-pen"></i>
+                    Rename
+                  </a>
 
                   <a class="dropdown-item" onclick="confirmDeletion('${file.path}')">
                     <i class="fa-solid fa-trash"></i>
@@ -527,6 +537,28 @@ function copyUrl(input) {
   }, 2000)
 }
 
+function openRenameModal(filePath) {
+  const renamingFile = document.getElementById("renamingFile")
+  
+  renamingFile.value = filePath
+   $("#renameModal").modal();
+}
+
+function renameFile() {
+  const renamingFile = document.getElementById("renamingFile")
+  const newName = document.getElementById("newName")
+  
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('POST', '/file/rename', true)
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    console.log(xhr.responseText)
+
+    loadList()
+  }
+  xhr.send(JSON.stringify({file: renamingFile, name: path + newName}));
+}
 
 function confirmDeletion(filePath) {
   confirmationModal.innerText = "Are you sure want to delete this file? This cannot be undone."

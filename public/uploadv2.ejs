@@ -199,6 +199,29 @@
     </div>
   </div>
     
+  <!-- Rename Modal -->
+    
+  <div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="renameModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="renameModalLabel">Rename File</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="closeModal('renameModal')"></button>
+        </div>
+        
+        <div class="modal-body" id="folderContiner">
+          <input type="hidden" id="renamingFile" name="renamingFile" value="">
+          <input id="newName" class="form-control" type="text" placeholder="New name">
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="renameFile" type="button" class="btn btn-primary">Create folder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    
   <!-- Confirmation Modal -->
     
   <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
