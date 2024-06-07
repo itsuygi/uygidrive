@@ -589,17 +589,25 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
 
 app.post('/file/visibility', authenticateToken, async (req,res) => {
   try {
-    const file = req.body.file
-    const isPublic = req.body.public
+    const fileName = req.body.file
+    const isPublic = (req.body.public == true) ? "true" : "false"
 
-    if (!file) {
+    if (!fileName) {
       return res.status(500).send("No file or value found in parameters.")
     }
     
     const user = req.user.uid
-    const filePath = `${req.user.uid}/${file}`
+    const filePath = `${req.user.uid}/${fileName}`
     
-    
+    const file = await bucket.file(filePath)
+    var newMetadata = {
+      customMetadata: {
+        'public': isPublic
+      }
+    }
+
+    let result = await file.setMetadata(newMetadata);
+    res.send(result)
   
   } catch (error) {
     console.error(error)
