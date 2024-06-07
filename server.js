@@ -577,6 +577,24 @@ async function sendFile(filePath, req, res) {
     
 }
 
+app.post("/file/rename", authenticateToken, async (req, res) => {
+  try {
+    const filePath = req.body.file
+    const newName = req.body.name
+
+    const user = req.user
+    const path = `${user.uid}/${filePath}`
+    const file = bucket.file(path)
+    const nameWithPath = `${user.uid}/${filePath}`
+    
+    await file.rename(newName)
+    
+    res.json({success: true, newName})
+  } catch (error){
+    res.status(500).json({success: false, message: error.message})
+  }
+});
+
 app.get("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
