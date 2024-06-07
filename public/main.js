@@ -189,9 +189,9 @@ window.onload = function() {
     }, 2000)
   }
   
-  renameFile.onclick = function() {
+  /*renameFile.onclick = function() {
     renameFile()
-  }
+  }*/
   
   searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -555,9 +555,11 @@ function renameFile() {
   xhr.onload = function () {
     console.log(xhr.responseText)
 
+    $("#renameModal").modal("hide");
+    newName.value = ""
     loadList()
   }
-  xhr.send(JSON.stringify({file: renamingFile, name: path + newName}));
+  xhr.send(JSON.stringify({file: renamingFile.value, name: path + newName.value}));
 }
 
 function confirmDeletion(filePath) {
