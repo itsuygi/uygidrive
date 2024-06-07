@@ -481,7 +481,7 @@ app.post('/file/visibility', authenticateToken, async (req,res) => {
     console.log(newMetadata)
     let result = await file.setMetadata(newMetadata);
     console.log(result)
-    res.json({success: true})
+    res.json({success: true, url: `${hostUrl}/public/${user}/${fileName}`})
   
   } catch (error) {
     console.error(error)
@@ -499,8 +499,8 @@ app.get("/public/:user/*", async (req, res) => {
     const file = await bucket.file(generalFilePath)
     const fileMetadata = await file.getMetadata()
     
-    if (fileMetadata[0].metadata.public || "false" == "true") {
-      sendFile(req, res)
+    if (fileMetadata[0].metadata.public == "true") {
+      sendFile(generalFilePath, req, res)
     } else {
       res.render(__dirname + '/public/views/error.ejs', {"title": "500", "detail": "This file is not public"});
     }

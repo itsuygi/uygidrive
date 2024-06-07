@@ -441,7 +441,22 @@ function openDirectory(requestedPath) {
 
 
 
-function shareFile(filepath) {
+function shareFile(filePath) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('GET', '/file/visibility', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    console.log(xhr.responseText)
+
+    
+  }
+  
+  xhr.send(JSON.stringify({ file: filePath }));
+
+}
+
+function generatePrivateShareLink(filePath){
   const xhr = new XMLHttpRequest();
 
   xhr.open('POST', '/getShareLink', true);
@@ -452,8 +467,8 @@ function shareFile(filepath) {
     openShareModal(xhr.responseText)
   }
   
-  console.log(JSON.stringify({ file: filepath }))
-  xhr.send(JSON.stringify({ file: filepath }));
+  console.log(JSON.stringify({ file: filePath }))
+  xhr.send(JSON.stringify({ file: filePath }));
 }
 
 function openShareModal(url) {
