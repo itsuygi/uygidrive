@@ -442,18 +442,30 @@ function openDirectory(requestedPath) {
 
 
 function shareFile(filePath) {
+  const label = document.getElementById("visibilityLabel")
+  const publicUrlInput = document.getElementById("publicUrl")
+  const publicUrlDiv = document.getElementById("publicLinkDiv")
+  
   const xhr = new XMLHttpRequest();
 
-  xhr.open('GET', '/file/visibility', true);
+  xhr.open('GET', '/file/visibility?file=' + filePath, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onload = function () {
     console.log(xhr.responseText)
-    let result = JSON.dumps(xhr.responseText)
+    let result = JSON.parse(xhr.responseText)
     
-    if (result.public == "true")
+    if (result.public == "true") {
+      label.textContext = "Public"
+      publicUrlInput = result.url
+      publicUrlDiv.style.display = "block"
+    } else {
+      label.textContext = "Select Access"
+      publicUrlDiv.style.display = "none"
+    }
     $("#shareModal").modal();
   }
   
+  generatePrivateShareLink(filePath)
   xhr.send(JSON.stringify({ file: filePath }));
 
 }
@@ -472,6 +484,8 @@ function generatePrivateShareLink(filePath){
   console.log(JSON.stringify({ file: filePath }))
   xhr.send(JSON.stringify({ file: filePath }));
 }
+
+function setVisibility(file, visibility)
 
 
 function confirmDeletion(filePath) {

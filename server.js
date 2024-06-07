@@ -437,7 +437,7 @@ const replaceSpecialChars = (str) => {
 
 app.get('/file/visibility', authenticateToken, async (req,res) => {
   try {
-    const fileName = req.body.file
+    const fileName = req.query.file
 
     if (!fileName) {
       return res.status(500).send("No file or value found in parameters.")
@@ -450,7 +450,7 @@ app.get('/file/visibility', authenticateToken, async (req,res) => {
     console.log(fileMetadata)
     const isPublic = fileMetadata[0].metadata.public || false
     
-    res.json({success: true, public: (isPublic == "true") ? true : false})
+    res.json({success: true, public: (isPublic == "true") ? true : false, url: (isPublic == "true") ? `${hostUrl}/public/${user}/${fileName}` : undefined})
   
   } catch (error) {
     console.error(error)
