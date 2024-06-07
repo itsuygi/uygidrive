@@ -445,6 +445,7 @@ function shareFile(filePath) {
   const label = document.getElementById("visibilityLabel")
   const publicUrlInput = document.getElementById("publicUrl")
   const publicUrlDiv = document.getElementById("publicLinkDiv")
+  const shareFilePath = document.getElementById("shareFilePath")
   
   const xhr = new XMLHttpRequest();
 
@@ -454,9 +455,9 @@ function shareFile(filePath) {
     console.log(xhr.responseText)
     let result = JSON.parse(xhr.responseText)
     
-    if (result.public == "true") {
+    if (result.public == true) {
       label.textContext = "Public"
-      publicUrlInput = result.url
+      publicUrlInput.value = result.url
       publicUrlDiv.style.display = "block"
     } else {
       label.textContext = "Select Access"
@@ -465,6 +466,7 @@ function shareFile(filePath) {
     $("#shareModal").modal();
   }
   
+  shareFilePath.value = filePath
   generatePrivateShareLink(filePath)
   xhr.send(JSON.stringify({ file: filePath }));
 
@@ -485,7 +487,32 @@ function generatePrivateShareLink(filePath){
   xhr.send(JSON.stringify({ file: filePath }));
 }
 
-function setVisibility(file, visibility)
+function setVisibility(visibility) {
+  const shareFilePath = document.getElementById("shareFilePath").value
+  const label = document.getElementById("visibilityLabel")
+  const publicUrlInput = document.getElementById("publicUrl")
+  const publicUrlDiv = document.getElementById("publicLinkDiv")
+  
+  const xhr = new XMLHttpRequest();
+
+  xhr.open('POST', '/file/visibility', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    let result = JSON.parse(xhr.responseText)
+    
+    if (result.public == true) {
+      label.textContext = "Public"
+      publicUrlInput.value = result.url
+      publicUrlDiv.style.display = "block"
+    } else {
+      label.textContext = "Select Access"
+      publicUrlDiv.style.display = "none"
+    }
+  }
+  
+  console.log(JSON.stringify({ file: shareFilePath, public: (visibility == "Public") ? true : false}))
+  xhr.send(JSON.stringify({ file: shareFilePath, public: (visibility == "Public") ? true : false}))
+}
 
 
 function confirmDeletion(filePath) {
