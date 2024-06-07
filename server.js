@@ -497,13 +497,84 @@ app.get("/public/:user/*", async (req, res) => {
     const generalFilePath = `${fileOwner}/${filePath}`
 
     const file = await bucket.file(generalFilePath)
+    const fileMetadata = await file.getMetadata()
+    
+    if (fileMetadata[0].metadata.public || "false" == "true") {
+      sendFile(req, res)
+    } else {
+      res.render(__dirname + '/public/views/error.ejs', {"title": "500", "detail": "This file is not public"});
+    }
   } catch(error) {
     console.log("Error getting public file: ", error)
     
-    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "File not found" : error.message});
+    res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "File not found" : "No access to this file"});
   }
 });
 
+async function sendFile(filePath, req, res) {
+    const rangeHeader = req.headers.range;
+    
+    const file = bucket.file(filePath);
+    const fileMetadata = await file.getMetadata();
+    
+    const splitUrl = fileMetadata[0].name.split("/")
+    const filenameFromStorage = splitUrl[splitUrl.length - 1]
+    
+    const range = req.headers.range;
+    const size = fileMetadata[0].size
+
+    /** Check for Range header */
+    if (range && req.query.download == undefined) {
+      /** Extracting Start and End value from Range Header */
+      let [start, end] = range.replace(/bytes=/, "").split("-");
+      start = parseInt(start, 10);
+      end = end ? parseInt(end, 10) : size - 1;
+
+      if (!isNaN(start) && isNaN(end)) {
+        start = start;
+        end = size - 1;
+      }
+      if (isNaN(start) && !isNaN(end)) {
+        start = size - end;
+        end = size - 1;
+      }
+
+      // Handle unavailable range request
+      if (start >= size || end >= size) {
+        // Return the 416 Range Not Satisfiable.
+        res.writeHead(416, {
+          "Content-Range": `bytes */${size}`
+        });
+        return res.end();
+      }
+
+      /** Sending Partial Content With HTTP Code 206 */
+      res.writeHead(206, {
+        "Content-Range": `bytes ${start}-${end}/${size}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": end - start + 1,
+        "Content-Type": fileMetadata[0].contentType,
+      });
+
+      let readable = file.createReadStream({                      
+        start: start,
+        end: end
+      })
+      .pipe(res);
+
+    } else {
+      res.writeHead(200, {
+        "Content-Length": size,
+        "Content-Type": fileMetadata[0].contentType || "",
+        "Content-Disposition": (req.query.download == "true") ? "attachment" : ""
+      });
+
+      file.createReadStream()
+      .pipe(res);
+
+    }
+    
+}
 
 app.get("/file/*", authenticateToken, async (req, res) => {
   try {
