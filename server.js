@@ -435,6 +435,59 @@ const replaceSpecialChars = (str) => {
 		.replace(/(^-+|-+$)/g, ''); // Remove extra hyphens from beginning or end of the string
 }
 
+app.get('/file/visibility', authenticateToken, async (req,res) => {
+  try {
+    const fileName = req.body.file
+
+    if (!fileName) {
+      return res.status(500).send("No file or value found in parameters.")
+    }
+    
+    const user = req.user.uid
+    const filePath = `${req.user.uid}/${fileName}`
+    
+    const fileMetadata = await bucket.file(filePath).getMetadata()
+    console.log(fileMetadata)
+    const isPublic = fileMetadata[0].metadata.public || false
+    
+    res.json({success: true, public: (isPublic == "true") ? true : false})
+  
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error.message)
+  }
+});
+
+app.post('/file/visibility', authenticateToken, async (req,res) => {
+  try {
+    const fileName = req.body.file
+    const isPublic = (req.body.public == true) ? "true" : "false"
+
+    if (!fileName) {
+      return res.status(500).send("No file or value found in parameters.")
+    }
+    
+    const user = req.user.uid
+    const filePath = `${req.user.uid}/${fileName}`
+    
+    const file = await bucket.file(filePath)
+    var newMetadata = metadata: {
+        'public': isPublic
+      }
+    
+
+    console.log(newMetadata)
+    let result = await file.setMetadata(newMetadata);
+    console.log(result)
+    res.json({success: true, public: isPublic})
+  
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error.message)
+  }
+});
+
+
 app.get("/file/*", authenticateToken, async (req, res) => {
   try {
     const user = req.user
@@ -587,33 +640,6 @@ app.get("/shared/:user/*", authenticateShareToken, async (req, res) => {
   }
 });
 
-app.post('/file/visibility', authenticateToken, async (req,res) => {
-  try {
-    const fileName = req.body.file
-    const isPublic = (req.body.public == true) ? "true" : "false"
-
-    if (!fileName) {
-      return res.status(500).send("No file or value found in parameters.")
-    }
-    
-    const user = req.user.uid
-    const filePath = `${req.user.uid}/${fileName}`
-    
-    const file = await bucket.file(filePath)
-    var newMetadata = {
-      customMetadata: {
-        'public': isPublic
-      }
-    }
-
-    let result = await file.setMetadata(newMetadata);
-    res.send(result)
-  
-  } catch (error) {
-    console.error(error)
-    res.status(500).send(error.message)
-  }
-});
 
 app.delete("/file/*", authenticateToken, async (req, res) => {
   try {
