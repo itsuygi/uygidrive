@@ -421,33 +421,38 @@ app.post('/convert', authenticateToken, (req, res) => {
     });
 
     // ffmpeg ile video dosyasını optimize edilmiş GIF'e dönüştürme
-    ffmpeg(file)
+    const ffmpegProcess = ffmpeg(file)
       .outputOptions([
         '-vf', 'scale=320:-1:flags=lanczos,fps=15', // GIF boyutlandırma ve fps ayarları
         '-pix_fmt', 'rgb24', // Renk formatı
         '-loop', '0' // GIF'in döngü ayarı
       ])
-      .toFormat('gif')
+      .format('gif')
       .on('error', (err) => {
         console.error('Error processing video to GIF:', err);
-        res.status(500).send({ "title": 500, "detail": "Error processing video to GIF" });
+        passthroughStream.end(); // akışı bitir
+        res.status(500).render(__dirname + '/public/views/error.ejs', { "title": 500, "detail": "Error processing video to GIF" });
       })
       .on('end', () => {
         console.log('ffmpeg processing finished');
-        const fileUrl = getFileUrl(filePath, req);
-        res.send(fileUrl);
-      })
-      .pipe(passthroughStream);
+        passthroughStream.end(); // akışı bitir
+      });
 
+    // ffmpeg çıktı akışını PassThrough akışına bağla
+    ffmpegProcess.pipe(passthroughStream);
+
+    // PassThrough akışını Firebase Storage yükleme akışına bağla
     passthroughStream.pipe(uploadStream);
 
     uploadStream.on('error', (err) => {
       console.error('Error uploading file to Firebase Storage:', err);
-      return res.status(500).send({ "title": 500, "detail": "Error while uploading" });
+      return res.status(500).render(__dirname + '/public/views/error.ejs', { "title": 500, "detail": "Error while uploading" });
     });
 
     uploadStream.on('finish', () => {
       console.log('File uploaded to Firebase Storage:', filePath);
+      const fileUrl = "ok"
+      res.send(fileUrl);
     });
   });
 
