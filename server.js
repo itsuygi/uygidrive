@@ -400,6 +400,58 @@ app.post('/upload', authenticateToken, (req, res) => {
   req.pipe(bb);
 });
 
+app.post('/convert', authenticateToken, (req, res) => {
+  const bb = busboy({ headers: req.headers });
+  const user = req.user;
+  const pathQuery = req.query.path || "";
+
+  bb.on('file', (fieldname, file, info) => {
+    const { filename, encoding, mimetype } = info;
+    
+    let pathWithoutUser = path.join(pathQuery, filename);
+    const filePath = path.join(user.uid, pathWithoutUser);
+    
+    const fileUpload = bucket.file(filePath);
+
+    const uploadStream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: mimetype,
+      },
+    });
+
+    file.pipe(uploadStream);
+
+    file.on("data", () => {
+      console.log("[File Upload]: Data received");
+    });
+
+    uploadStream.on('error', (err) => {
+      console.error(err);
+      return res.status(500).render(path.join(__dirname, '/public/views/error.ejs'), {"title": 500, "detail": "error while uploading"});
+    });
+
+    uploadStream.on('finish', async () => {
+      try {
+        const fileUrl = await fileUpload.getSignedUrl({
+          action: 'read',
+          expires: '03-01-2500'
+        });
+        res.send(fileUrl[0]);
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Error generating signed URL');
+      }
+    });
+  });
+
+  bb.on('finish', () => {
+    console.log('Upload complete');
+  });
+
+  req.pipe(bb);
+});
+
+
 app.get("/local/:filename", (req, res) => {
  const filename = req.params.filename;
   console.log("Sending file: " + filename);
