@@ -421,6 +421,7 @@ app.post('/convert', authenticateToken, (req, res) => {
     });
 
     // ffmpeg ile video dosyasını optimize edilmiş GIF'e dönüştürme
+    console.log("ffmpeg")
     const ffmpegProcess = ffmpeg(file)
       .outputOptions([
         '-vf', 'scale=320:-1:flags=lanczos,fps=15', // GIF boyutlandırma ve fps ayarları
@@ -438,6 +439,7 @@ app.post('/convert', authenticateToken, (req, res) => {
       });
 
     // ffmpeg çıktı akışını PassThrough akışına bağla
+    console.log("start")
     ffmpegProcess.pipe(passthroughStream);
 
     // PassThrough akışını Firebase Storage yükleme akışına bağla
