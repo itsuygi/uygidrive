@@ -424,8 +424,7 @@ app.post('/convert', authenticateToken, (req, res) => {
     const ffmpegProcess = ffmpeg(file)
       .outputOptions([
         '-vf', 'scale=320:-1:flags=lanczos,fps=15', // GIF boyutlandırma ve fps ayarları
-        '-pix_fmt', 'rgb24', // Renk formatı
-        '-loop', '0' // GIF'in döngü ayarı
+       
       ])
       .format('gif')
       .on('error', (err) => {
