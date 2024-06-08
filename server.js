@@ -13,6 +13,8 @@ const cache = require('memory-cache');
 const cookie = require('cookie-parser');
 const busboy = require('busboy');
 const contentDisposition = require('content-disposition');
+const { PassThrough } = require('stream');
+const ffmpeg = require('fluent-ffmpeg');
 
 //const ytsearch = require("yt-search");
 //const ytdl = require("ytdl-core")
@@ -405,47 +407,48 @@ app.post('/convert', authenticateToken, (req, res) => {
   const user = req.user;
   const pathQuery = req.query.path || "";
 
-  bb.on('file', (fieldname, file, info) => {
-    const { filename, encoding, mimetype } = info;
-    
-    let pathWithoutUser = path.join(pathQuery, filename);
-    const filePath = path.join(user.uid, pathWithoutUser);
-    
-    const fileUpload = bucket.file(filePath);
+  bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    filename = filename.filename;
+    const pathWithoutUser = pathQuery + filename;
+    const filePath = `${user.uid}/${path.parse(filename).name}.gif`;
 
-    const uploadStream = fileUpload.createWriteStream({
+    // PassThrough stream oluştur
+    const passthroughStream = new PassThrough();
+    const uploadStream = bucket.file(filePath).createWriteStream({
       metadata: {
-        contentType: mimetype,
+        contentType: 'image/gif',
       },
     });
 
-    file.pipe(uploadStream);
+    // ffmpeg ile video dosyasını optimize edilmiş GIF'e dönüştürme
+    ffmpeg(file)
+      .outputOptions([
+        '-vf', 'scale=320:-1:flags=lanczos,fps=15', // GIF boyutlandırma ve fps ayarları
+        '-pix_fmt', 'rgb24', // Renk formatı
+        '-loop', '0' // GIF'in döngü ayarı
+      ])
+      .toFormat('gif')
+      .on('error', (err) => {
+        console.error('Error processing video to GIF:', err);
+        res.status(500).send({ "title": 500, "detail": "Error processing video to GIF" });
+      })
+      .on('end', () => {
+        console.log('ffmpeg processing finished');
+        const fileUrl = getFileUrl(filePath, req);
+        res.send(fileUrl);
+      })
+      .pipe(passthroughStream);
 
-    file.on("data", () => {
-      console.log("[File Upload]: Data received");
-    });
+    passthroughStream.pipe(uploadStream);
 
     uploadStream.on('error', (err) => {
-      console.error(err);
-      return res.status(500).render(path.join(__dirname, '/public/views/error.ejs'), {"title": 500, "detail": "error while uploading"});
+      console.error('Error uploading file to Firebase Storage:', err);
+      return res.status(500).send({ "title": 500, "detail": "Error while uploading" });
     });
 
-    uploadStream.on('finish', async () => {
-      try {
-        const fileUrl = await fileUpload.getSignedUrl({
-          action: 'read',
-          expires: '03-01-2500'
-        });
-        res.send(fileUrl[0]);
-      } catch (err) {
-        console.error(err);
-        res.status(500).send('Error generating signed URL');
-      }
+    uploadStream.on('finish', () => {
+      console.log('File uploaded to Firebase Storage:', filePath);
     });
-  });
-
-  bb.on('finish', () => {
-    console.log('Upload complete');
   });
 
   req.pipe(bb);
