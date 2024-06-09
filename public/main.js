@@ -421,7 +421,9 @@ function openPreview(fileUrl) {
 
     $("#previewModal").modal();
   } else {
-    confirmationModal.innerText = "This file type cannot be previewed. Would you like to download?"
+    confirmationModal.innerHTML = `This file type cannot be previewed. Would you like to download?
+    
+    `
     confirmButton.setAttribute( "onClick", `javascript: downloadFile('${fileUrl}'); $("#confirmationModal").modal('hide')` )
     $("#confirmationModal").modal();
   }
