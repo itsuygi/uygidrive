@@ -843,7 +843,7 @@ app.get("/list", authenticateToken, async (req, res) => {
       const fileDate = fileMetadata[0].timeCreated;
       
 
-      fileList.push({ name, url: fileUrl, date: fileDate, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", path: (isFolder) ? folderPath: filePath });
+      fileList.push({ name, url: fileUrl, date: fileDate, rawSize: fileMetadata[0].size || 0, size: (!isFolder) ? formatBytes(fileMetadata[0].size || 0) : "folder", type: (isFolder) ? "folder" : "file", path: (isFolder) ? folderPath: filePath });
     }
     
     console.log("Time took for loop: " + (new Date().getTime() - loopStartDate.getTime()) / 1000)
@@ -857,9 +857,11 @@ app.get("/list", authenticateToken, async (req, res) => {
           fileList.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
           break;
         case "size:largest-first":
-          fileList.sort((a, b) => a.size - b.size);
+          fileList.sort(function (a, b) {return b.rawSize - a.rawSize});
+          break
         case "size:smallest-first":
-          break;
+          fileList.sort(function (a, b) {return a.rawSize - b.rawSize});
+          break
       }
     }
 
