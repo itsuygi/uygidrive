@@ -779,7 +779,7 @@ app.get("/list", authenticateToken, async (req, res) => {
     const page = req.query.page; 
     const search = req.query.search;
     const sort = req.query.sort;
-    const pageSize = req.query.pageSize || 25;
+    const pageSize = parseInt(req.query.pageSize) || 25;
     
     const pathQuery = req.query.path || "";
 

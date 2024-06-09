@@ -204,7 +204,8 @@ window.onload = function() {
   
   for (let i = 0; i < sizeOptions.length; i++) {
     sizeOptions[i].onclick = function() {
-      pageSize = sizeOptions[i].value
+      document.getElementById("sizeDropdown").innerHTML = sizeOptions[i].innerHTML
+      pageSize = parseInt(sizeOptions[i].innerHTML)
       loadList()
     }
   }
@@ -288,7 +289,7 @@ function loadList() {
     const search = searchBox.value
     
     const listXhr = new XMLHttpRequest();
-    let url = '/list?page=' + currentPage
+    let url = `/list?page=${currentPage}&pageSize=${pageSize}`
     
     console.log(search)
     if (search) {
