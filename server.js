@@ -851,10 +851,14 @@ app.get("/list", authenticateToken, async (req, res) => {
     if (sort) {
       switch (sort) {
         case "date:old-first":
-          fileList.sort((a, b) => compareAsc(new Date(b.date), new Date(a.date)));
+          fileList.sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
           break;
         case "date:new-first":
           fileList.sort((a, b) => compareDesc(new Date(a.date), new Date(b.date)));
+          break;
+        case "size:largest-first":
+          fileList.sort((a, b) => a.size - b.size);
+        case "size:smallest-first":
           break;
       }
     }
