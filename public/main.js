@@ -422,7 +422,7 @@ function openPreview(fileUrl) {
     $("#previewModal").modal();
   } else {
     confirmationModal.innerHTML = `This file type cannot be previewed. Would you like to download?
-    
+    You can alternatively view the <a onclick="viewRawFile('${fileUrl}')" href="#"> raw file </a>
     `
     confirmButton.setAttribute( "onClick", `javascript: downloadFile('${fileUrl}'); $("#confirmationModal").modal('hide')` )
     $("#confirmationModal").modal();
