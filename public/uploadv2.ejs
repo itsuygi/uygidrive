@@ -264,13 +264,24 @@
       </form>
     
       <div class="dropdown sorting-menu">
-        
         <button class="btn btn-warning dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Sort by
         </button>
         <div class="dropdown-menu" aria-labelledby="sortDropdown">
           <a class="dropdown-item" href="#" onclick="changeSort('alphabetical')">Alphabetical</a>
           <a class="dropdown-item" href="#" onclick="changeSort('date:new-first')">Newest First</a>
+        </div>
+      </div>
+      
+      <div class="dropdown sorting-menu">
+        <button class="btn dropdown-toggle" type="button" id="sizeDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          25
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sortDropdown">
+          <a class="dropdown-item" name="sizeOption" value="10" href="#">10</a>
+          <a class="dropdown-item" name="sizeOption" value="25" href="#">25</a>
+          <a class="dropdown-item" name="sizeOption" value="50" href="#">50</a>
+          <a class="dropdown-item" name="sizeOption" value="100" href="#">100</a>
         </div>
       </div>
     </div>

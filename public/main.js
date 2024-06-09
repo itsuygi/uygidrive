@@ -1,5 +1,6 @@
 let currentPage = 1;
 let sort = "date:new-first"
+let pageSize = 25
 let firstLoad = true
 
 let path = "/"
@@ -199,6 +200,14 @@ window.onload = function() {
     loadList()
   });
   
+  const sizeOptions = document.getElementsByName("sizeOption")
+  
+  for (let i = 0; i < sizeOptions.length; i++) {
+    sizeOptions[i].onclick = function() {
+      pageSize = sizeOptions[i].value
+      loadList()
+    }
+  }
   
   
   loadList()
