@@ -215,8 +215,9 @@ window.onload = function() {
 
   for (let i = 0; i < sortOptions.length; i++) {
     sortOptions[i].onclick = function() {
-      document.getElementById("sizeDropdown").innerHTML = sizeOptions[i].innerHTML
-      pageSize = parseInt(sizeOptions[i].innerHTML)
+      document.getElementById("sortDropdown").innerHTML = sortOptions[i].innerHTML
+      
+      sort = sortOptions[i].getAttribute('data-value')
       loadList()
     }
   }
@@ -628,11 +629,11 @@ function createFolder(foldername) {
 }
 
 function changeSort(newSort) {
-  sort = newSort
+  /*sort = newSort
   
   document.getElementById("sortDropdown").innerHTML = this.innerHTML
   
-  loadList()
+  loadList()*/
 }
 
 function downloadFile(url) {
