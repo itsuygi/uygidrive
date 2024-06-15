@@ -3,8 +3,10 @@ header, nav {
 }
 
 .navbar {
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 }
+
 
 .site-name {
   color: white;
@@ -168,4 +170,18 @@ header, nav {
 
 .embed {
   height: 400px;
+}
+
+.btn-modern {
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  transition: all 0.3s;
+  
+  /*background-color: red*/
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
