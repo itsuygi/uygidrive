@@ -20,8 +20,6 @@ body {
   margin-bottom: 0;
 }
 
-
-
 .jumbotron .btn-gradient {
   text-align: center;
   transition: 0.5s;
@@ -38,16 +36,6 @@ body {
 }
 
 .btn-gradient:hover { --x: 100%; }
-
-.jumbotron h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
-}
-
-.jumbotron p {
-  font-size: 1.25rem;
-  font-weight: 400;
-}
 
 .section-title {
   margin-bottom: 40px;
@@ -117,4 +105,27 @@ footer {
   color: #fff;
   background-color: #343a40;
   border-color: #343a40;
+}
+
+.icon-box {
+  text-align: center;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.icon-box:hover {
+  transform: translateY(-5px);
+}
+
+.progress {
+  height: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  border-radius: 10px;
 }
