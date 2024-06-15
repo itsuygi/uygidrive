@@ -4,22 +4,33 @@ body {
 }
 
 .navbar {
-  margin-bottom: 3px;
+  margin-bottom: 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.navbar.navbar-dark .navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 .jumbotron {
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
-  padding: 100px 0;
+  padding: 150px 0;
+  margin-bottom: 0;
 }
 
-.jumbotron .btn-primary {
-  background-color: #4e54c8;
+.jumbotron .btn-gradient {
+  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
   border: none;
+  color: white;
+  transition: all 0.3s;
 }
 
-.jumbotron .btn-primary:hover {
-  background-color: #8f94fb;
+.jumbotron .btn-gradient:hover {
+  background: linear-gradient(135deg, #8f94fb 0%, #4e54c8 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .jumbotron h1 {
@@ -57,8 +68,47 @@ footer {
 .bg-banner {
   background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
   color: white;
+  padding-top: 50px;
+  padding-bottom: 100px;
 }
 
 .text-primary {
   color: #4e54c8 !important;
+}
+
+.btn-modern {
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.btn-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-light.btn-modern {
+  color: #fff;
+  border-color: #fff;
+  transition: all 0.3s;
+}
+
+.btn-outline-light.btn-modern:hover {
+  color: #343a40;
+  background-color: #fff;
+  border-color: #fff;
+}
+
+.btn-light.btn-modern {
+  color: #343a40;
+  background-color: #fff;
+  border-color: #fff;
+  transition: all 0.3s;
+}
+
+.btn-light.btn-modern:hover {
+  color: #fff;
+  background-color: #343a40;
+  border-color: #343a40;
 }
