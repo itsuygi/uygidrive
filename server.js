@@ -48,6 +48,10 @@ async function authenticateToken(req, res, next) {
     req.user = decodedClaims
     next();
   } catch (error) {
+    if (req.originalUrl == "/") {
+      
+    }
+    
     if (!req.sharePath) {
       res.redirect('/login');
     }
@@ -236,6 +240,10 @@ app.get('/sessionLogout', (req, res) => {
 });
 
 app.get("/", authenticateToken, (req, res) => {
+  res.sendFile(__dirname + '/public/home/home.html');
+});
+
+app.get("/drive", authenticateToken, (req, res) => {
   res.render(__dirname + '/public/uploadv2.ejs', { email: req.user.email });
 });
 
