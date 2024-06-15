@@ -48,10 +48,6 @@ async function authenticateToken(req, res, next) {
     req.user = decodedClaims
     next();
   } catch (error) {
-    if (req.originalUrl == "/") {
-      
-    }
-    
     if (!req.sharePath) {
       res.redirect('/login');
     }
@@ -240,7 +236,11 @@ app.get('/sessionLogout', (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + '/public/home/home.html');
+  let sessionCookie = req.cookies.session
+  
+  let buttonData = (sessionCookie != undefined) ? {label: "Go to your Drive", href:"/drive"} : {label: "Get Started", href:"/signup"}
+  
+  res.render(__dirname + '/public/home/home.ejs', { header_button: buttonData});
 });
 
 app.get("/drive", authenticateToken, (req, res) => {
@@ -252,7 +252,7 @@ app.get("/login", async (req, res) => {
   try {
     const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie, true /** checkRevoked */);
     
-    res.redirect("/")
+    res.redirect("/drive")
   } catch (error) {
     res.sendFile(__dirname + '/public/login/login.html');
   }

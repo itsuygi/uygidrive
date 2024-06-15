@@ -7,7 +7,7 @@ function request(url, idToken) {
       console.log(xhr.responseText)
       
       if (JSON.parse(xhr.responseText).status = "success") {
-        window.location.replace("/");
+        window.location.replace("/drive");
       }
     }
     xhr.send(JSON.stringify({ idToken: idToken }));
