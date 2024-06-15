@@ -239,7 +239,7 @@ app.get('/sessionLogout', (req, res) => {
   res.redirect("/login")
 });
 
-app.get("/", authenticateToken, (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(__dirname + '/public/home/home.html');
 });
 
