@@ -173,6 +173,25 @@ header {
   height: 400px;
 }
 
+.btn-gradient {
+  text-align: center;
+  transition: 0.5s;
+  background: linear-gradient(60deg, var(--c1, #f6d365), var(--c2, #fda085) 51%, var(--c1, #f6d365)) var(--x, 0)/ 200%;
+  color: white;
+  text-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 1px #eee;
+  border-radius: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+ }
+
+.btn-gradient {
+  --c1: #ff3333;
+  --c2: #b31717;
+}
+
+.btn-gradient:hover { --x: 100%; }
+
 .btn-modern {
   border-radius: 5px;
   padding: 10px 20px;
@@ -184,5 +203,14 @@ header {
 
 .btn-modern:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(255, 84, 84, 1);
+  background-color: rgba(235, 45, 45, 1);
+}
+
+.email {
+  text-align: center;
+}
+
+.page-control {
+  margin-bottom: 14px;
 }

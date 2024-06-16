@@ -49,17 +49,17 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-1 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link mr-2"><%= email %></a>
+          <a class="email nav-link mr-2"><%= email %></a>
         </li>
         <li class="nav-item">
-          <a id="logout-btn" onclick="logout()" class="nav-link btn btn-modern mr-2">Logout</a>
+          <a id="logout-btn" onclick="logout()" class="nav-link btn btn-gradient mr-2">Logout</a>
         </li>
       </ul>
     </div>
   </nav>
   
     
-  <div class="container mt-5">
+  <div class="container mt-4">
     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#uploadModal">
       <i class="fas fa-upload mr-2"></i> Upload New File
     </button>
@@ -67,8 +67,6 @@
     <button type="button" class="btn btn-primary rounded-pill" data-toggle="modal" data-target="#folderModal">
       <i class="fa-solid fa-folder-plus"></i> Create Folder
     </button>
-    
-    
   </div>
   
   <!-- Upload Modal -->
@@ -327,7 +325,7 @@
       
     </div>
     
-    <div id="page" class="button-group mt-3">
+    <div id="page" class="button-group mt-3 page-control">
       <button id="previousPage" class="btn btn-outline-primary" style="display: none">Previous</button>
       <b id="pageNumber" class="mx-2">1</b>
       <button id="nextPage" class="btn btn-outline-primary">Next</button>
