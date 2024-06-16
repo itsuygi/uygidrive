@@ -175,6 +175,8 @@ header {
 
 .btn-gradient {
   text-align: center;
+  font-size: 1em;
+  
   transition: 0.5s;
   background: linear-gradient(60deg, var(--c1, #f6d365), var(--c2, #fda085) 51%, var(--c1, #f6d365)) var(--x, 0)/ 200%;
   color: white;

@@ -1013,7 +1013,7 @@ app.get("/:path", (req,res) => {
       res.set('Content-Type', 'application/javascript');
       res.send(minifiedContent);
     } catch (error) {
-      console.error('Error while minifying JavaScript:', error);
+      
       res.status(500).send('Internal Server Error');
     }
   }
