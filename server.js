@@ -232,7 +232,7 @@ app.post('/sessionLogin', (req, res) => {
 
 app.get('/sessionLogout', (req, res) => {
   res.clearCookie('session');
-  res.redirect("/login")
+  res.redirect("/")
 });
 
 app.get("/", (req, res) => {
@@ -240,7 +240,9 @@ app.get("/", (req, res) => {
   
   let buttonData = (sessionCookie != undefined) ? {label: "Go to your Drive", href:"/drive"} : {label: "Get Started", href:"/signup"}
   
-  res.render(__dirname + '/public/home/home.ejs', { header_button: buttonData});
+  let navbarData = (sessionCookie != undefined) ? {label: "Go to your Drive", href:"/drive"} : {label: "Login", href:"/login"}
+  
+  res.render(__dirname + '/public/home/home.ejs', { header_button: buttonData, navbar_data: navbarData});
 });
 
 app.get("/drive", authenticateToken, (req, res) => {
