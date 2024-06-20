@@ -561,8 +561,12 @@ function copyUrl(input) {
 
 function openRenameModal(filePath) {
   const renamingFile = document.getElementById("renamingFile")
+  const newName = document.getElementById("newName")
+  
+  const split = filePath.split("/")
   
   renamingFile.setAttribute("value", filePath)
+  newName.setAttribute("value", split[split.length -1])
    $("#renameModal").modal();
 }
 
