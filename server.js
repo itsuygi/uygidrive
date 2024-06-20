@@ -15,6 +15,7 @@ const busboy = require('busboy');
 const contentDisposition = require('content-disposition');
 const { PassThrough } = require('stream');
 const ffmpeg = require('fluent-ffmpeg');
+const archiver = require('archiver');
 
 //const ytsearch = require("yt-search");
 //const ytdl = require("ytdl-core")
@@ -580,6 +581,34 @@ app.get("/public/:user/*", async (req, res) => {
     console.log("Error getting public file: ", error)
     
     res.render(__dirname + '/public/views/error.ejs', {"title": error.code, "detail": (error.code == 404) ? "File not found" : "No access to this file"});
+  }
+});
+
+app.get('/download-zip', async (req, res) => {
+  try {
+    const folderPath = 'path/to/your/folder/'; // Firebase Storage'daki klasör yolu
+    const files = await bucket.getFiles({ prefix: folderPath });
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    res.attachment('files.zip');
+
+    archive.on('error', (err) => {
+      throw err;
+    });
+
+    archive.pipe(res);
+
+    for (const file of files[0]) {
+      const remoteFile = bucket.file(file.name);
+      const fileStream = remoteFile.createReadStream();
+
+      archive.append(fileStream, { name: file.name.replace(folderPath, '') });
+    }
+
+    await archive.finalize();
+  } catch (error) {
+    console.error('Error creating zip:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
