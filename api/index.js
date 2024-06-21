@@ -1,6 +1,6 @@
 // Cloud Storage System by Uygi © 2023
 
-const DIR = path.join(__dirname, '../views/')
+const DIR = ""
 
 const express = require("express");
 const router = express.Router();
@@ -181,7 +181,7 @@ app.get("/login", async (req, res) => {
     
     res.redirect("/drive")
   } catch (error) {
-    res.sendFile(DIR + 'login/login.html');
+    res.render(DIR + 'login/login.html', {});
   }
 });
 
