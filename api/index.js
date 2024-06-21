@@ -1,6 +1,6 @@
 // Cloud Storage System by Uygi © 2023
 
-const DIR = ""
+const DIR = path.join(__dirname, '../views/')
 
 const express = require("express");
 const router = express.Router();
