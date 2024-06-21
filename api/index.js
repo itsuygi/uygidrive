@@ -181,7 +181,7 @@ app.get("/login", async (req, res) => {
     
     res.redirect("/drive")
   } catch (error) {
-    res.render(DIR + 'login/login.html', {});
+    res.sendFile("login/login.html", {root: "./views"})
   }
 });
 
