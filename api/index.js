@@ -38,6 +38,8 @@ app.use('/common',express.static(path.join(DIR, 'public/common')));
 const bodyParser = require("body-parser");
 app.use(express.json());
 app.use(cookie())
+
+app.set('views', path.join(__dirname, '../views'));
 app.set("view engine", "ejs");
 
 let minifiedCache = {}
