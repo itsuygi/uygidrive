@@ -707,9 +707,6 @@ app.get("/list", authenticateToken, async (req, res) => {
   }
 });
 
-
-
-
 app.get("/list/folders", authenticateToken, async (req, res) => {
   let user = req.user
   let pathQuery = req.query.path || ""
@@ -838,8 +835,7 @@ function serverStart() {
 // start the server:
 server.listen(process.env.PORT || 3000, serverStart);
 
-
-
+module.exports = app
 
 
 
