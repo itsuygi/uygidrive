@@ -1,23 +1,24 @@
 {
   "dependencies": {
+    "archiver": "^7.0.1",
     "busboy": "^1.6.0",
     "cookie-parser": "^1.4.6",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "firebase-admin": "^11.11.0",
-    "memory-cache": "^0.2.0",
-    "pug": "^3.0.2",
     "fluent-ffmpeg": "^2.1.3",
-    "archiver": "^7.0.1"
+    "memory-cache": "^0.2.0",
+    "pug": "^3.0.2"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node api/index.js"
   },
   "name": "uygidrive",
   "version": "0.0.3",
   "description": "a node.js server with express.js for cloud storage service",
-  "main": "server.js",
+  "main": "api/index.js",
   "devDependencies": {
     "uglify-js": "^3.17.4"
   },
